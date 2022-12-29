@@ -22,7 +22,7 @@ const Login: Component<{ open: boolean }> = (props) => {
 		const { data: userData, error: userErr } = await supabase.from('users').select();
 		if (!userData) return setFlash({ type: 'error', message: 'An unknown error has occurred.' });
 		setStoreData(userData[0]);
-		return location.href = '/home';
+		return location.reload();
 	};
 
 	return (

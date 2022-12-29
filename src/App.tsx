@@ -1,7 +1,6 @@
 import {Component, createSignal, ParentProps} from "solid-js";
 import {createClient} from "@supabase/supabase-js";
 import {Route, Routes} from "@solidjs/router";
-import Landing from "@/pages/Landing";
 import RestrictedRoute from "@/components/RestrictedRoute";
 import Home from "@/pages/Home";
 import {setStoreData} from "@/store";
@@ -27,7 +26,7 @@ const App: Component = () => {
 
 	return (
 		<Routes>
-			<Route path={'/'} component={Landing}/>
+			<Route path={'/'} component={Home}/>
 			<Route path={'/home'} element={<RR><Home/></RR>}/>
 		</Routes>
 	);

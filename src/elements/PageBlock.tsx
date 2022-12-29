@@ -1,5 +1,6 @@
 import {Component, onMount, ParentProps} from "solid-js";
 import Navigation from "@/elements/Navigation";
+import Container from "@/components/Container";
 
 const PageBlock: Component<ParentProps<{ title?: string }>> = (props) => {
 	onMount(() => {if (props.title) document.title = props.title});
@@ -7,7 +8,9 @@ const PageBlock: Component<ParentProps<{ title?: string }>> = (props) => {
 	return (
 		<>
 			<Navigation/>
-			{props.children}
+			<Container>
+				{props.children}
+			</Container>
 		</>
 	)
 };

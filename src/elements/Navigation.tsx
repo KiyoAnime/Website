@@ -5,10 +5,10 @@ import Btn from "@/components/Button";
 import Login from "@/modals/Login";
 import {useLocation} from "@solidjs/router";
 
-const Brand: Component = () => <span><h2>Kiyo</h2></span>;
+const Brand: Component = () => <span class={'inline-flex items-center'}><img src={'https://cdn.discordapp.com/attachments/1056117951415193621/1057926704896679946/Template_logo_w_kiyo-chan_2.png'} alt={'Kiyo'} height={64} width={64} class={'-ml-3.5 mr-1.5'}/><h1>Kiyo</h1></span>;
 
 const Bar: Component<ParentProps> = ({ children }) => (
-	<div class={'flex p-4 my-4 h-16 justify-between items-center bg-slate-900 rounded-xl'}>
+	<div class={'flex p-4 my-4 h-20 justify-between items-center bg-slate-900 rounded-xl'}>
 		{children}
 	</div>
 );
