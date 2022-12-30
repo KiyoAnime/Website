@@ -32,7 +32,7 @@ const App: Component = () => {
 			<Route path={'/'} component={Home}/>
 			<Route path={'/view/:id'} component={View}/>
 			<Route path={'/search/:query'} component={Search}/>
-			<Route path={'/watch/:sId/'} component={Watch}/>
+			<Route path={'/watch/:sId'} component={Watch}/>
 		</Routes>
 	);
 };

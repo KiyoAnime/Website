@@ -15,7 +15,6 @@ const Watch: Component = () => {
 	const [streams, setStreams] = createSignal<Stream[]|undefined>();
 	const [data, setData] = createStore<{ total: number; episodes?: Episode[]; }>({ total: 0 });
 	let [current, setCurrent] = createSignal(1);
-	let [src, setSrc] = createSignal("");
 	onMount(async () => {
 		await getInfo(parseInt(sId)).then((res) => setInfo(res.data));
 		await getEpisodes(parseInt(sId)).then((res) => setData({ total: res.data.total, episodes: res.data.episodes }));
