@@ -1,11 +1,13 @@
 import {Component, createSignal} from "solid-js";
-import Modal from "@/components/Modal";
+import Modal from "@/components/Modal/Modal";
 import {supabase} from "@/App";
 import {clearFlash, setFlash} from "@/components/Flash";
 import {setStoreData} from "@/store";
+import {inspect} from "util";
+import styles from '../components/Modal/style.module.css'
 
 const Login: Component<{ open: boolean }> = (props) => {
-	const inputClass = 'h-10 w-full p-2 bg-slate-800 rounded-md outline-none focus:border-2 focus:border-blue-600';
+	const inputClass = 'h-10 w-full p-2 bg-primary rounded-md outline-none';
 	const [email, setEmail] = createSignal('');
 	const [pass, setPass] = createSignal('');
 	const [loading, setLoading] = createSignal(false);
@@ -30,7 +32,9 @@ const Login: Component<{ open: boolean }> = (props) => {
 			<div class={'flex flex-col justify-center mt-6'}>
 				<div>
 					<span>Email</span>
-					<input type={'email'} class={inputClass} onChange={({ currentTarget: { value } }) => setEmail(value)} required/>
+					<div class={styles.rainbowGradient}>
+						<input type={'email'} class={inputClass} onChange={({ currentTarget: { value } }) => setEmail(value)} required/>
+					</div>
 				</div>
 				<div class={'mt-2'}>
 					<span>Password</span>

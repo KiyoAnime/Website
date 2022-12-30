@@ -3,16 +3,22 @@
 @tailwind utilities;
 
 @layer base {
+    :root {
+        --primary-color: rgb(22, 22, 22);
+        --secondary-color: rgb(30, 30, 30);
+        --background-color: rgb(12, 12, 12);
+    }
+
     body {
-        @apply bg-gray-800 text-gray-200;
+        @apply bg-background text-gray-300;
     }
 
     h1 {
-        @apply text-4xl text-gray-100;
+        @apply text-4xl text-gray-200;
     }
 
     h2 {
-        @apply text-3xl text-gray-100;
+        @apply text-3xl text-gray-200;
     }
 
     h3 {
@@ -26,4 +32,9 @@
     h5 {
         @apply text-lg;
     }
+}
+
+.swiper-pagination-bullet {
+    @apply bg-white;
+    background-color: rgb(38, 215, 255) !important;
 }
