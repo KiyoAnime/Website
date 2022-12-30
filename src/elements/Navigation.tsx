@@ -27,29 +27,18 @@ const Navigation: Component = () => {
 				<Match when={!store.user} keyed={false}>
 					<Bar>
 						<Brand/>
-
-						<div>
-
-						</div>
-						<div>
+						<div class={'inline-flex items-center'}>
+							<Search/>
 							<Btn.Text onClick={() => setLogin(!login())}>
 								Login
-							</Btn.Text>
-							<Btn.Text>
-								Register
 							</Btn.Text>
 						</div>
 					</Bar>
 				</Match>
 				<Match when={!!store.user} keyed={false}>
 					<Bar>
-						<div class={'inline-flex items-center'}>
-							<Brand/>
-							<Search/>
-						</div>
-						<div>
-
-						</div>
+						<Brand/>
+						<Search/>
 						<div>
 							{store.user?.name}
 						</div>

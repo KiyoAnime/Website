@@ -7,19 +7,16 @@ interface Response extends ApiRes {
 export interface SearchResults {
 	id: string;
 	title: string;
+	episodes: number;
+	released: number;
 	thumbnail: string;
-    description: string;
-    rating: number | null;
-    episodes: number | null;
-    type: string;
-    release: string | null;
+	type: 'TV'|'OVA'|'MOVIE'|'SPECIAL';
 }
 
-
-const getSearch = (q: string): Promise<Response> => {
+const search = (query: string): Promise<Response> => {
 	return new Promise((resolve, reject) => {
-		const req = http.get(`/search?query=${q}`).then((res => resolve(res.data))).catch((err) => { reject(err) });
+		http.get(`/search?query=${query}`).then((res) => resolve(res.data)).catch(reject);
 	});
 };
 
-export default getSearch;
+export default search;

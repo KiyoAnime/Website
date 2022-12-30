@@ -5,6 +5,8 @@ import RestrictedRoute from "@/components/RestrictedRoute";
 import Home from "@/pages/Home";
 import {setStoreData} from "@/store";
 import View from "@/pages/View";
+import Search from "@/pages/Search";
+import Watch from "@/pages/Watch";
 
 export const supabase = createClient('https://uoolamthpyzpiqrbchee.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvb2xhbXRocHl6cGlxcmJjaGVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzIxNDE4NzUsImV4cCI6MTk4NzcxNzg3NX0.Q_hoRdaysvhUI4n5BcMyOOB6qzzENoBP9gZ0pVht3rk');
 
@@ -29,6 +31,8 @@ const App: Component = () => {
 		<Routes>
 			<Route path={'/'} component={Home}/>
 			<Route path={'/view/:id'} component={View}/>
+			<Route path={'/search/:query'} component={Search}/>
+			<Route path={'/watch/:sId/:epId'} component={Watch}/>
 		</Routes>
 	);
 };

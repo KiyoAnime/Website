@@ -7,7 +7,9 @@ module.exports = {
 			colors: {
 				primary: 'var(--primary-color)',
 				secondary: 'var(--secondary-color)',
-				background: 'var(--background-color)'
+				background: 'var(--background-color)',
+				'accent-blue': 'var(--accent-color-blue)',
+				'accent-pink': 'var(--accent-color-pink)'
 			}
 		},
 	},

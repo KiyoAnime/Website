@@ -7,7 +7,7 @@ import {inspect} from "util";
 import styles from '../components/Modal/style.module.css'
 
 const Login: Component<{ open: boolean }> = (props) => {
-	const inputClass = 'h-10 w-full p-2 bg-primary rounded-md outline-none';
+	const inputClass = 'w-full';
 	const [email, setEmail] = createSignal('');
 	const [pass, setPass] = createSignal('');
 	const [loading, setLoading] = createSignal(false);
@@ -32,13 +32,11 @@ const Login: Component<{ open: boolean }> = (props) => {
 			<div class={'flex flex-col justify-center mt-6'}>
 				<div>
 					<span>Email</span>
-					<div class={styles.rainbowGradient}>
-						<input type={'email'} class={inputClass} onChange={({ currentTarget: { value } }) => setEmail(value)} required/>
-					</div>
+					<input type={'email'} class={'w-full'} onChange={({ currentTarget: { value } }) => setEmail(value)} required/>
 				</div>
 				<div class={'mt-2'}>
 					<span>Password</span>
-					<input type={'password'} class={inputClass} onChange={({ currentTarget: { value } }) => setPass(value)} required/>
+					<input type={'password'} class={'w-full'} onChange={({ currentTarget: { value } }) => setPass(value)} required/>
 				</div>
 			</div>
 		</Modal>
