@@ -13,7 +13,8 @@ const Search: Component = () => {
         });
         input.addEventListener('keydown', (event) => {
             if (event.code !== 'Enter') return;
-            if(event.keyCode === 13) event.preventDefault();
+            if (event.code === 'Enter') submit();
+            if (event.keyCode === 13) submit();
             submit();
         })
     });
