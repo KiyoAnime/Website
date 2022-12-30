@@ -4,6 +4,7 @@ import store from "@/store";
 import Btn from "@/components/Button";
 import Login from "@/modals/Login";
 import {A, useLocation} from "@solidjs/router";
+import Search from "@/components/Search";
 
 const Brand: Component = () => <A href={'/'} class={'inline-flex items-center'}><img src={'https://cdn.discordapp.com/attachments/1056117951415193621/1057926704896679946/Template_logo_w_kiyo-chan_2.png'} alt={'Kiyo'} height={64} width={64} class={'-ml-3.5 mr-1.5'}/><h1>Kiyo</h1></A>;
 
@@ -26,6 +27,7 @@ const Navigation: Component = () => {
 				<Match when={!store.user} keyed={false}>
 					<Bar>
 						<Brand/>
+
 						<div>
 
 						</div>
@@ -43,6 +45,7 @@ const Navigation: Component = () => {
 					<Bar>
 						<div class={'inline-flex items-center'}>
 							<Brand/>
+							<Search/>
 						</div>
 						<div>
 
