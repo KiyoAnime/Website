@@ -38,12 +38,6 @@ const Watch: Component = () => {
 		hls.attachMedia(player);
 	});
 
-	const changeQuality = (q: number, hls: Hls) => {
-		hls.levels.forEach((level, index) => {
-			if (level.height !== q) return;
-			hls.currentLevel = index;
-		});
-	};
 	const handleClick = async function (e: any) {
 		currentEP = e.target.getAttribute("ep-number") as number;
 		setCurrent(currentEP);

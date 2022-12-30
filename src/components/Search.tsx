@@ -12,6 +12,7 @@ const Search: Component = () => {
         input.addEventListener('keyup', (event) => {
             event.preventDefault();
             if (event.code !== 'Enter') return;
+            if (event.which === 13) submit();
             submit();
         });
     });
