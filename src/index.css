@@ -44,3 +44,10 @@
     @apply bg-white;
     background-color: rgb(38, 215, 255) !important;
 }
+
+#player {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+}
+

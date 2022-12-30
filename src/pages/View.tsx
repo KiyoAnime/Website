@@ -31,7 +31,7 @@ const View: Component = () => {
 							<span class={'h-14 mt-2 text-5xl text-gray-200 line-clamp-1 md:mt-0'}>{anime()?.title}</span>
 							<span>Genres: {anime()?.genres.join(', ')}</span>
 							<div class={'inline-flex items-center mt-3'}>
-								<Btn.Blue>
+								<Btn.Blue onClick={() => { window.location.href = `/watch/${id}` }}>
 									<HiOutlinePlay size={20} class={'mr-1'}/>
 									<span>Watch Now</span>
 								</Btn.Blue>
