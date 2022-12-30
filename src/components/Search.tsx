@@ -1,7 +1,4 @@
 import {Component, createSignal, onMount} from "solid-js";
-import getSearch from "@/api/search";
-import SearchResults from "@/components/SearchResults";
-import {Navigate} from "@solidjs/router";
 
 const Search: Component = () => {
     const [query, setQuery] = createSignal<string|undefined>();
@@ -12,9 +9,13 @@ const Search: Component = () => {
         input.addEventListener('keyup', (event) => {
             event.preventDefault();
             if (event.code !== 'Enter') return;
-            if (event.which === 13) submit();
             submit();
         });
+        input.addEventListener('keydown', (event) => {
+            if (event.code !== 'Enter') return;
+            if(event.keyCode === 13) submit();
+            submit();
+        })
     });
 
     const submit = () => {
