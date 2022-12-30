@@ -14,7 +14,8 @@ const Watch: Component = () => {
 	const [info, setInfo] = createSignal<Anime|undefined>();
 	const [streams, setStreams] = createSignal<Stream[]|undefined>();
 	const [data, setData] = createStore<{ total: number; episodes?: Episode[]; }>({ total: 0 });
-	let [current, setCurrent] = createSignal(1);
+	const [current, setCurrent] = createSignal(1);
+	const [quality, setQuality] = createSignal('');
 	onMount(async () => {
 		await getInfo(parseInt(sId)).then((res) => setInfo(res.data));
 		await getEpisodes(parseInt(sId)).then((res) => setData({ total: res.data.total, episodes: res.data.episodes }));
@@ -26,6 +27,8 @@ const Watch: Component = () => {
 		if (!player) return;
 		const hls = new Hls();
 		const stream = streams()!.find((stream) => stream.quality === "1080p");
+		if (!stream) return;
+		await setQuality(stream.quality);
 		hls.loadSource(stream!.url);
 		createEffect(() => {
 			hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
@@ -48,8 +51,8 @@ const Watch: Component = () => {
 		const player = document.getElementById('player') as HTMLMediaElement;
 		if (!player) return;
 		const hls = new Hls();
-		const stream = meow[3].url;
-		hls.loadSource(stream);
+		const stream = quality() === '1080p' ? streams()!.find((stream) => stream.quality === "1080p") : streams()!.find((stream) => stream.quality === "720p");
+		hls.loadSource(stream!.url);
 		createEffect(() => {
 			hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
 				new plyr(player);
