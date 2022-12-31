@@ -1,7 +1,7 @@
-import {Component, createSignal, onMount} from "solid-js";
+import { Component, createSignal, onMount } from "solid-js";
 
 const Search: Component = () => {
-    const [query, setQuery] = createSignal<string|undefined>();
+    const [query, setQuery] = createSignal<string | undefined>();
 
     onMount(() => {
         const input = document.getElementById('search');
@@ -17,6 +17,16 @@ const Search: Component = () => {
             if (event.keyCode === 13) submit();
             submit();
         })
+        input.addEventListener("keypress", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                submit();
+            }
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                submit();
+            }
+        });
     });
 
     const submit = () => {
@@ -25,7 +35,7 @@ const Search: Component = () => {
 
     return (
         <div class={'p-0.5 xl:w-96 w-32 rounded-xl max-w-sm bg-gradient-to-br from-accent-pink to-accent-blue'}>
-            <input type={'text'} id={'search'} class={'w-full rounded-xl'} placeholder={'Search...'} onChange={({ currentTarget: { value } }) => setQuery(value)}/>
+            <input type={'text'} id={'search'} class={'w-full rounded-xl'} placeholder={'Search...'} onChange={({ currentTarget: { value } }) => setQuery(value)} />
         </div>
     );
 };
