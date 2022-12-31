@@ -9,13 +9,25 @@ const Search: Component = () => {
         input.addEventListener('keyup', (event) => {
             event.preventDefault();
             if (event.code !== 'Enter') return;
-            submit();
+            if (event.code === 'Enter') {
+                event.preventDefault();
+                submit();
+            }
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                submit();
+            }
         });
         input.addEventListener('keydown', (event) => {
             if (event.code !== 'Enter') return;
-            if (event.code === 'Enter') submit();
-            if (event.keyCode === 13) submit();
-            submit();
+            if (event.code === 'Enter') {
+                event.preventDefault();
+                submit();
+            }
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                submit();
+            }
         })
         input.addEventListener("keypress", function (event) {
             if (event.key === "Enter") {
