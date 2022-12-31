@@ -10,7 +10,9 @@ import getStreams from "@/api/streams";
 import {HiSolidFastForward, HiSolidRewind} from "solid-icons/hi";
 
 const Watch: Component = () => {
-	new Plyr('#player');
+	new Plyr('#player', {
+		controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'fullscreen']
+	});
 	const hls = new Hls();
 	const { sId } = useParams();
 	const [info, setInfo] = createSignal<Anime|undefined>();
@@ -33,19 +35,21 @@ const Watch: Component = () => {
 		await getStreams(data.episodes[ep-1].id).then(async (res) => {
 			console.log('streams loaded');
 			if (!player) return console.log('player failed');
-			const stream = res.data.filter((s) => s.quality === '1080p' || s.quality === '720p')[0].url;
+			const stream = res.data.filter((s) => s.quality === '1080p' || s.quality === '720p' || s.quality == 'default')[0].url;
 			console.log(stream);
 			if (!stream) console.log('stream failed');
 			await hls.loadSource(stream);
 			console.log('source loaded');
-			if () {
-				hls.on(Hls.Events.MANIFEST_PARSED, async () => {
-					if (first) {
-						hls.attachMedia(player);
-						console.log('attached and first');
-					}
-				});
-			} else console.log('NOT FIRST');
+			await hls.attachMedia(player);
+			console.log('media attached');
+			await hls.on(Hls.Events.MANIFEST_PARSED, () => {
+				console.log('manifest parsed');
+				if (first) player.play();
+				else {
+					player.currentTime = 0;
+					player.play();
+				}
+			});
 		});
 	};
 

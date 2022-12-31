@@ -19,11 +19,8 @@ const Search: Component = () => {
     };
 
     return (
-        <div class={'flex flex-col p-0.5 xl:w-96 w-20 rounded-xl max-w-sm bg-gradient-to-br from-accent-pink to-accent-blue'}>
-            <form>
-                <input type={'text'} id={'search'} class={'w-full rounded-xl'} placeholder={'Search...'} onChange={({ currentTarget: { value } }) => setQuery(value)} />
-                <Btn onClick={submit}>Search</Btn>
-            </form>
+        <div class={'p-0.5 xl:w-96 w-32 rounded-xl max-w-sm bg-gradient-to-br from-accent-pink to-accent-blue'}>
+            <input type={'text'} id={'search'} class={'w-full rounded-xl'} placeholder={'Search...'} onChange={({ currentTarget: { value } }) => setQuery(value)} />
         </div>
     );
 };
