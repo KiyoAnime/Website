@@ -10,24 +10,18 @@ const View: Component = () => {
 	const { id } = useParams();
 	const stats = 'hidden md:block';
 	const [anime, setAnime] = createSignal<Anime|undefined>();
-	const [bgColor, setBgColor] = createSignal<string|undefined>();
 	const [popularity, setPopularity] = createSignal<string|undefined>();
 
 	onMount(() => {
 		getInfo(parseInt(id)).then((res) => {
 			setAnime(res.data);
-			setBgColor(res.data.color);
 			setPopularity(Intl.NumberFormat('en', { notation: 'compact' }).format(res.data.popularity));
+			document.title = `${res.data.title} • Kiyo`;
 		});
 	});
 
-	createEffect(() => {
-		if (anime()) {
-			window.document.title = `Viewing ${anime()?.title} - Kiyo`;
-		}
-	});
 	return (
-		<PageBlock title={`Viewing `} bgGradient={{ position: 'to bottom', color1: bgColor(), color2: 'var(--background-color)' }}>
+		<PageBlock title={`Kiyo`} bgGradient={{ position: 'to bottom', color1: anime()?.color, color2: 'var(--background-color)' }}>
 			<Show when={anime()} keyed={false} fallback={<h3>Loading...</h3>}>
 				<div class={'flex justify-center mt-12 md:justify-start sm:mt-20 md:mt-28'}>
 					<div class={'flex flex-col items-center w-11/12 md:flex-row md:items-start'}>

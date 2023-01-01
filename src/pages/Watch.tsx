@@ -26,7 +26,10 @@ const Watch: Component = () => {
 			alert('This website is not supported on iOS devices. Please use a desktop browser.');
 			return;
 		}
-		await getInfo(parseInt(sId)).then((res) => setInfo(res.data));
+		await getInfo(parseInt(sId)).then((res) => {
+			setInfo(res.data);
+			document.title = `Watching: ${res.data.title} • Kiyo`;
+		});
 		await getEpisodes(parseInt(sId)).then((res) => setData({ total: res.data.total, episodes: res.data.episodes }));
 		if (!data.episodes) return;
 		if (!player) return;
@@ -68,13 +71,8 @@ const Watch: Component = () => {
 		});
 	};
 
-	createEffect(async () => {
-		const title = await info()?.title;
-		if (title)  window.document.title = `Watching ${title} - Kiyo`;
-	});
-
 	return (
-		<PageBlock title={`Watching`}>
+		<PageBlock title={'Kiyo'}>
 			<div class={'flex flex-col h-full'}>
 				<h1 class={'mb-6'}>{info()?.title} | Ep: {episode()}</h1>
 				<video id={'player'} class={'w-full max-w-6xl'} preload={'none'} controls src={''} />

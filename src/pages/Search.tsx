@@ -13,7 +13,7 @@ const Search: Component = () => {
 	});
 
 	return (
-		<PageBlock title={`Search - ${query} - Kiyo`}>
+		<PageBlock title={`Search • Kiyo`}>
 			<section>
 				<h2>Results for: <span class={'text-gray-400'}>{decodeURI(query)}</span></h2>
 				<div class={'flex flex-wrap justify-around mt-6 gap-x-2 gap-y-10 sm:justify-between'}>
