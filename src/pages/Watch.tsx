@@ -1,4 +1,4 @@
-import { Component, createSignal, onMount } from "solid-js";
+import {Component, createEffect, createSignal, onMount} from "solid-js";
 import PageBlock from "@/elements/PageBlock";
 import { useParams } from "@solidjs/router";
 import Plyr from 'plyr';
@@ -68,8 +68,13 @@ const Watch: Component = () => {
 		});
 	};
 
+	createEffect(async () => {
+		const title = await info()?.title;
+		if (title)  window.document.title = `Watching ${title} - Kiyo`;
+	});
+
 	return (
-		<PageBlock title={'watch'}>
+		<PageBlock title={`Watching`}>
 			<div class={'flex flex-col h-full'}>
 				<h1 class={'mb-6'}>{info()?.title} | Ep: {episode()}</h1>
 				<video id={'player'} class={'w-full max-w-6xl'} preload={'none'} controls src={''} />
@@ -77,8 +82,8 @@ const Watch: Component = () => {
 					<div class={'flex justify-between h-8 bg-primary'}>
 						<span />
 						<div class={'inline-flex px-3'}>
-							<HiSolidRewind size={28} onClick={() => setEp(episode()! - 1, false)} />&nbsp;
-							<HiSolidFastForward size={28} onClick={async () => await setEp(episode()! + 1, false)} />
+							<HiSolidRewind size={28} onClick={() => setEp(episode()! - 1, false)} class={'cursor-pointer'}/>&nbsp;
+							<HiSolidFastForward size={28} onClick={async () => await setEp(episode()! + 1, false)} class={'cursor-pointer'}/>
 						</div>
 					</div>
 				</div>
