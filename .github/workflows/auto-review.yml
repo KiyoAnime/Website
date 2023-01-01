@@ -1,0 +1,16 @@
+name: auto-review
+on:
+  pull_request:
+    types: [opened, ready_for_review, reopened]
+    
+jobs:
+  auto-request-review:
+  name: Auto Request Review
+    runs-on: ubuntu-latest
+    steps:
+      - name: Automatically assign reviewers to pull requests.
+        uses: necojackarc/auto-request-review@v0.10.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          config: .github/reviewers.yml
+          use_local: true
