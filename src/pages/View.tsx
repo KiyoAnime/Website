@@ -1,4 +1,4 @@
-import {Component, createSignal, onMount, Show} from "solid-js";
+import {Component, createEffect, createSignal, onMount, Show} from "solid-js";
 import PageBlock from "@/elements/PageBlock";
 import {useParams} from "@solidjs/router";
 import getInfo, {Anime} from "@/api/info";
@@ -21,8 +21,13 @@ const View: Component = () => {
 		});
 	});
 
+	createEffect(() => {
+		if (anime()) {
+			window.document.title = `Viewing ${anime()?.title} - Kiyo`;
+		}
+	});
 	return (
-		<PageBlock title={'gg lol'} bgGradient={{ position: 'to bottom', color1: bgColor(), color2: 'var(--background-color)' }}>
+		<PageBlock title={`Viewing `} bgGradient={{ position: 'to bottom', color1: bgColor(), color2: 'var(--background-color)' }}>
 			<Show when={anime()} keyed={false} fallback={<h3>Loading...</h3>}>
 				<div class={'flex justify-center mt-12 md:justify-start sm:mt-20 md:mt-28'}>
 					<div class={'flex flex-col items-center w-11/12 md:flex-row md:items-start'}>

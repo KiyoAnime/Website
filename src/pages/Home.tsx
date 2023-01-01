@@ -43,7 +43,7 @@ const Home: Component = () => {
 	});
 
 	return (
-		<PageBlock title={'Home'}>
+		<PageBlock title={'Home - Kiyo'}>
 			<section>
 				<Swiper
 					spaceBetween={25}
