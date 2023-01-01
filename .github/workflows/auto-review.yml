@@ -5,7 +5,7 @@ on:
     
 jobs:
   auto-request-review:
-  name: Auto Request Review
+    name: Auto Request Review
     runs-on: ubuntu-latest
     steps:
       - name: Automatically assign reviewers to pull requests.
