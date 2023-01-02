@@ -19,11 +19,9 @@ const Watch: Component = () => {
 	const [episode, setEpisode] = createSignal<number | undefined>();
 	const [range, setRange] = createStore({ start: 0, end: 0, perPage: 60 });
 	const [data, setData] = createStore<{ total: number; episodes?: Episode[]; }>({ total: 0 });
-	const defaultOptions = {
-		controls: [ 'play-large', 'restart', 'rewind', 'play', 'fast-forward', 'progress', 'current-time', 'duration', 'mute', 'volume', 'captions', 'settings', 'pip', 'airplay', 'download', 'fullscreen' ],
-	};
+	const plyrOptions = { controls: [ 'play-large', 'restart', 'rewind', 'play', 'fast-forward', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'pip', 'airplay', 'fullscreen' ] };
+	new Plyr('#player', plyrOptions);
 
-	new Plyr('#player', { controls: defaultOptions.controls });
 	onMount(async () => {
 		await getInfo(parseInt(sId)).then((res) => {
 			setInfo(res.data);
