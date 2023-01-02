@@ -27,8 +27,7 @@ const Navigation: Component = () => {
 				<Match when={!store.user} keyed={false}>
 					<Bar>
 						<Brand/>
-						<div class={'inline-flex items-center'}>
-							<Search/>
+						<div class={'flex inline-flex items-center gap-2 sm:gap-6'}>
 							<Btn.Text onClick={() => setLogin(!login())}>
 								Login
 							</Btn.Text>
@@ -38,9 +37,11 @@ const Navigation: Component = () => {
 				<Match when={!!store.user} keyed={false}>
 					<Bar>
 						<Brand/>
-						<Search/>
-						<div>
-							{store.user?.name}
+						<div class={'flex inline-flex items-center gap-2 sm:gap-6'}>
+							<Search/>
+							<div>
+								{store.user?.name}
+							</div>
 						</div>
 					</Bar>
 				</Match>
