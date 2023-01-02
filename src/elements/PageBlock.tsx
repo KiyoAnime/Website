@@ -1,10 +1,12 @@
-import {Component, onMount, ParentProps} from "solid-js";
+import {Component, onMount, ParentProps, Show} from "solid-js";
 import Navigation from "@/elements/Navigation";
 import Container from "@/components/Container";
+import Loader from "@/components/Loader";
 
 interface Props {
 	title?: string;
 	bgColor?: string;
+	loading?: boolean;
 	bgGradient?: Gradient;
 }
 
@@ -20,9 +22,11 @@ const PageBlock: Component<ParentProps<Props>> = (props) => {
 	return (
 		<div class={'h-screen'} style={{ "background-image": props.bgGradient ? `linear-gradient(${props.bgGradient.position}, ${props.bgGradient.color1}, ${props.bgGradient.color2})` : 'none' }}>
 			<Navigation/>
-			<Container>
-				{props.children}
-			</Container>
+			<Show when={!props.loading} keyed={false} fallback={<Loader/>}>
+				<Container>
+					{props.children}
+				</Container>
+			</Show>
 		</div>
 	)
 };

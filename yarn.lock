@@ -2567,6 +2567,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"solid-heroicons@npm:^3.1.1":
+  version: 3.1.1
+  resolution: "solid-heroicons@npm:3.1.1"
+  dependencies:
+    solid-js: ^1.6.2
+  peerDependencies:
+    solid-js: "*"
+  checksum: 87a305e9618694fd96fed42db94377bd5d04b0c9a3cce97e1d99d18b5877278cbb1b578a3ae929f18216b8cc0905df78ee2e12ca01346bc9c8ac460527f8dc53
+  languageName: node
+  linkType: hard
+
 "solid-icons@npm:^1.0.4":
   version: 1.0.4
   resolution: "solid-icons@npm:1.0.4"
@@ -2576,7 +2587,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"solid-js@npm:^1.6.6":
+"solid-js@npm:^1.6.2, solid-js@npm:^1.6.6":
   version: 1.6.6
   resolution: "solid-js@npm:1.6.6"
   dependencies:
@@ -2911,6 +2922,7 @@ __metadata:
     hls.js: ^1.2.9
     plyr: ^3.7.3
     postcss: ^8.4.20
+    solid-heroicons: ^3.1.1
     solid-icons: ^1.0.4
     solid-js: ^1.6.6
     swiper: ^8.4.5

@@ -58,9 +58,9 @@ const Home: Component = () => {
 			</section>
 			<section>
 				<h3 class={'my-4'}>Recent Releases</h3>
-				<div class={'flex flex-wrap justify-around gap-x-2 gap-y-10 sm:justify-between'}>
+				<div class={'card-grid'}>
 					<For each={recent()} fallback={<h3>Loading...</h3>}>
-						{(s) => <Card id={s.id} title={s.title} thumbnail={s.thumbnail}/>}
+						{(s) => <Card {...s}/>}
 					</For>
 				</div>
 			</section>
