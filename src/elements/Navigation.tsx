@@ -28,6 +28,7 @@ const Navigation: Component = () => {
 					<Bar>
 						<Brand/>
 						<div class={'flex inline-flex items-center gap-2 sm:gap-6'}>
+							<Search/>
 							<Btn.Text onClick={() => setLogin(!login())}>
 								Login
 							</Btn.Text>
