@@ -4,6 +4,7 @@ module.exports = {
 	theme: {
 		extend: {
 			lineClamp: { 7: '7' },
+			zIndex: { 1: '1', 2: '2', 3: '3' },
 			colors: {
 				primary: 'var(--primary-color)',
 				secondary: 'var(--secondary-color)',
