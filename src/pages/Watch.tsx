@@ -19,8 +19,16 @@ const Watch: Component = () => {
 	const [episode, setEpisode] = createSignal<number | undefined>();
 	const [range, setRange] = createStore({ start: 0, end: 0, perPage: 60 });
 	const [data, setData] = createStore<{ total: number; episodes?: Episode[]; }>({ total: 0 });
-	const plyrOptions = { controls: [ 'play-large', 'restart', 'rewind', 'play', 'fast-forward', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'pip', 'airplay', 'fullscreen' ] };
-	new Plyr('#player', plyrOptions);
+	const [windowHls, setWindowHls] = createSignal<Hls | undefined>();
+	const defaultOptions = {
+		controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'pip', 'airplay', 'fullscreen'],
+		quality: {
+			default: 720,
+			options: [144, 240, 360, 480, 720, 1080],
+			forced: true,
+			onChange: (e: any) => { }
+		}
+	};
 
 	onMount(async () => {
 		await getInfo(parseInt(sId)).then((res) => {
@@ -44,25 +52,46 @@ const Watch: Component = () => {
 		hls.userConfig.maxBufferSize = 5 * 1024 * 1024;
 		hls.userConfig.maxBufferLength = 30;
 		setEpisode(ep);
-		const player = document.getElementById('player') as HTMLMediaElement;
+		const player = document.getElementById('player');
+		if (!player) return;
+		const source = player.getElementsByTagName('source')[0];
 		if (!data.episodes) return;
 		await getUrl(data.episodes[ep - 1].source).then(async (res) => {
-			console.log(res.data);
-			player.src = res.data;
-			await hls.loadSource(res.data);
-			await hls.attachMedia(player);
-			console.log('attached');
-			hls.on(Hls.Events.MANIFEST_PARSED, () => {
-				if (!first) player.currentTime = 0; player.play();
+			source.setAttribute('src', res.data);
+			await hls.loadSource(source.src);
+			hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
+				const availableQualities = hls.levels.map((level) => level.height).reverse();
+				defaultOptions.quality = {
+					default: availableQualities[3],
+					options: availableQualities,
+					forced: true,
+					onChange: (e) => { updateQuality(e) }
+				}
+				const player = new Plyr('#player', defaultOptions);
 			});
+			hls.attachMedia(player as HTMLMediaElement);
+			setWindowHls(hls);
 		});
+
+		const updateQuality = (newQuality: string | number) => {
+			const hls = windowHls();
+			if (!hls) return;
+			hls.levels.forEach((level, levelIndex) => {
+				if (level.height === newQuality) {
+					console.log('Setting quality to ' + newQuality);
+					hls.currentLevel = levelIndex;
+				}
+			});
+		}
 	};
 
 	return (
 		<PageBlock title={'Kiyo'} loading={loading()}>
 			<div class={'flex flex-row justify-between mt-4'}>
 				<div class={'flex flex-col h-full w-full max-w-6xl'}>
-					<video id={'player'} class={'w-full max-w-6xl'} preload={'none'} controls/>
+					<video id={'player'} class={'w-full max-w-6xl'} preload={'none'} controls>
+						<source src='' type="application/x-mpegURL" />
+					</video>
 					<Show when={data.episodes} keyed={false}>
 						<div class={'flex flex-col w-full max-w-6xl bg-secondary'}>
 							<div class={'flex h-8 justify-between bg-primary'}>
