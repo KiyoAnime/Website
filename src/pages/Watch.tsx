@@ -21,12 +21,15 @@ const Watch: Component = () => {
 	const [data, setData] = createStore<{ total: number; episodes?: Episode[]; }>({ total: 0 });
 	const [windowHls, setWindowHls] = createSignal<Hls | undefined>();
 	const defaultOptions = {
-		controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'pip', 'airplay', 'fullscreen'],
+		controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'pip', 'airplay', 'fullscreen', 'download'],
 		quality: {
 			default: 720,
 			options: [144, 240, 360, 480, 720, 1080],
 			forced: true,
 			onChange: (e: any) => { }
+		},
+		urls: {
+			download: ``
 		}
 	};
 
@@ -67,6 +70,7 @@ const Watch: Component = () => {
 					forced: true,
 					onChange: (e) => { updateQuality(e) }
 				}
+				defaultOptions.urls.download = source.src;
 				const player = new Plyr('#player', defaultOptions);
 			});
 			hls.attachMedia(player as HTMLMediaElement);
