@@ -40,6 +40,9 @@ const Watch: Component = () => {
 
 	const setEp = async (ep: number, first?: boolean): Promise<void> => {
 		const hls = new Hls();
+		hls.userConfig.maxMaxBufferLength = 30;
+		hls.userConfig.maxBufferSize = 5 * 1024 * 1024;
+		hls.userConfig.maxBufferLength = 30;
 		setEpisode(ep);
 		const player = document.getElementById('player') as HTMLMediaElement;
 		if (!data.episodes) return;
