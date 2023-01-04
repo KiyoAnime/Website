@@ -90,7 +90,7 @@ const Watch: Component = () => {
 			<div class={'flex flex-row justify-between mt-4'}>
 				<div class={'flex flex-col h-full w-full max-w-6xl'}>
 					<video id={'player'} class={'w-full max-w-6xl'} preload={'none'} controls>
-						<source src='' type="application/x-mpegURL" />
+						<source src='' type="application/x-mpegURL" class={'w-full max-w-6xl'} />
 					</video>
 					<Show when={data.episodes} keyed={false}>
 						<div class={'flex flex-col w-full max-w-6xl bg-secondary'}>
