@@ -10,7 +10,7 @@ const Search: Component<{ mobile?: boolean }> = (props) => {
     onMount(() => {
         const input = document.getElementById('search');
         if (!input) return;
-        input.addEventListener('keypress', (event) => {
+        input.addEventListener('keyup', (event) => {
             event.preventDefault();
             if (event.code !== 'Enter') return;
             submit();
