@@ -6,7 +6,7 @@ import Hls from "hls.js";
 import getInfo, { Anime } from "@/api/info";
 import getEpisodes, { Episode } from "@/api/info/episodes";
 import { createStore } from "solid-js/store";
-import getStreams from "@/api/streams";
+import getUrl from "@/api/watch";
 import {Icon} from "solid-heroicons";
 import {chevronRight, chevronLeft, square_3Stack_3d, calendar} from "solid-heroicons/outline";
 import {backward, forward} from "solid-heroicons/solid";
@@ -43,11 +43,10 @@ const Watch: Component = () => {
 		setEpisode(ep);
 		const player = document.getElementById('player') as HTMLMediaElement;
 		if (!data.episodes) return;
-		await getStreams(data.episodes[ep - 1].id).then(async (res) => {
-			const stream = res.data.filter((s) => s.quality === '1080p' || s.quality === '720p' || s.quality == 'default')[0].url;
-			console.log(stream);
-			player.src = stream;
-			await hls.loadSource(stream);
+		await getUrl(data.episodes[ep - 1].source).then(async (res) => {
+			console.log(res.data);
+			player.src = res.data;
+			await hls.loadSource(res.data);
 			await hls.attachMedia(player);
 			console.log('attached');
 			hls.on(Hls.Events.MANIFEST_PARSED, () => {
