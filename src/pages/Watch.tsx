@@ -20,7 +20,10 @@ const Watch: Component = () => {
 	const [range, setRange] = createStore({ start: 0, end: 0, perPage: 60 });
 	const [data, setData] = createStore<{ total: number; episodes?: Episode[]; }>({ total: 0 });
 	const [windowHls, setWindowHls] = createSignal<Hls | undefined>();
-
+	const defaultOptions = {
+		controls: ['play-large', 'play', 'volume', 'progress', 'current-time', 'mute', 'settings', 'pip', 'airplay', 'fullscreen'],
+		quality: { default: 720, options: [ 1080, 720, 480, ], forced: true, onChange: (e: any) => changeQuality(e) }
+	};
 	onMount(async () => {
 		await getInfo(parseInt(sId)).then((res) => {
 			setInfo(res.data);
@@ -39,23 +42,21 @@ const Watch: Component = () => {
 
 	const setEp = async (ep: number, first?: boolean): Promise<void> => {
 		const hls = new Hls({ maxBufferLength: 30, maxBufferSize: 5242880, maxMaxBufferLength: 30 });
+		setEpisode(ep);
 		const player = document.getElementById('player') as HTMLVideoElement;
 		if (!player) return;
 		const source = player.getElementsByTagName('source')[0];
 		if (!data.episodes) return;
 		await getUrl(data.episodes[ep - 1].source).then(async (res) => {
-			setEpisode(ep);
-			const availableQualities = hls.levels.map((level) => level.height).reverse().filter((q) => q === 480 || q === 720 || q === 1080);
-			new Plyr('#player', {
-				controls: ['play-large', 'play', 'volume', 'progress', 'current-time', 'mute', 'settings', 'pip', 'airplay', 'fullscreen'],
-				quality: { default: 720, options: availableQualities, forced: true, onChange: (e) => changeQuality(e) }
-			});
 			source.setAttribute('src', res.data);
-			hls.loadSource(res.data);
-			hls.attachMedia(player);
+			await hls.loadSource(res.data);
+			const availableQualities = hls.levels.map((level) => level.height).reverse().filter((q) => q === 480 || q === 720 || q === 1080);
+			console.log(availableQualities);
 			hls.on(Hls.Events.MANIFEST_PARSED, () => {
+				const player = new Plyr('#player', defaultOptions);
 				player.play();
 			});
+			hls.attachMedia(player as HTMLMediaElement);
 			setWindowHls(hls);
 		});
 	};
