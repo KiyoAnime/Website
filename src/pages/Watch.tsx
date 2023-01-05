@@ -20,18 +20,6 @@ const Watch: Component = () => {
 	const [range, setRange] = createStore({ start: 0, end: 0, perPage: 60 });
 	const [data, setData] = createStore<{ total: number; episodes?: Episode[]; }>({ total: 0 });
 	const [windowHls, setWindowHls] = createSignal<Hls | undefined>();
-	const defaultOptions = {
-		controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'pip', 'airplay', 'fullscreen', 'download'],
-		quality: {
-			default: 720,
-			options: [144, 240, 360, 480, 720, 1080],
-			forced: true,
-			onChange: (e: any) => { }
-		},
-		urls: {
-			download: ``
-		}
-	};
 
 	onMount(async () => {
 		await getInfo(parseInt(sId)).then((res) => {
@@ -50,51 +38,44 @@ const Watch: Component = () => {
 	});
 
 	const setEp = async (ep: number, first?: boolean): Promise<void> => {
-		const hls = new Hls();
-		hls.userConfig.maxMaxBufferLength = 30;
-		hls.userConfig.maxBufferSize = 5 * 1024 * 1024;
-		hls.userConfig.maxBufferLength = 30;
-		setEpisode(ep);
-		const player = document.getElementById('player');
+		const hls = new Hls({ maxBufferLength: 30, maxBufferSize: 5242880, maxMaxBufferLength: 30 });
+		const player = document.getElementById('player') as HTMLVideoElement;
 		if (!player) return;
 		const source = player.getElementsByTagName('source')[0];
 		if (!data.episodes) return;
 		await getUrl(data.episodes[ep - 1].source).then(async (res) => {
-			source.setAttribute('src', res.data);
-			await hls.loadSource(source.src);
-			hls.on(Hls.Events.MANIFEST_PARSED, function (event, data) {
-				const availableQualities = hls.levels.map((level) => level.height).reverse();
-				defaultOptions.quality = {
-					default: availableQualities[3],
-					options: availableQualities,
-					forced: true,
-					onChange: (e) => { updateQuality(e) }
-				}
-				defaultOptions.urls.download = source.src;
-				const player = new Plyr('#player', defaultOptions);
+			setEpisode(ep);
+			const availableQualities = hls.levels.map((level) => level.height).reverse().filter((q) => q === 480 || q === 720 || q === 1080);
+			new Plyr('#player', {
+				controls: ['play-large', 'play', 'volume', 'progress', 'current-time', 'mute', 'settings', 'pip', 'airplay', 'fullscreen'],
+				quality: { default: 720, options: availableQualities, forced: true, onChange: (e) => changeQuality(e) }
 			});
-			hls.attachMedia(player as HTMLMediaElement);
+			source.setAttribute('src', res.data);
+			hls.loadSource(res.data);
+			hls.attachMedia(player);
+			hls.on(Hls.Events.MANIFEST_PARSED, () => {
+				player.play();
+			});
 			setWindowHls(hls);
 		});
+	};
 
-		const updateQuality = (newQuality: string | number) => {
-			const hls = windowHls();
-			if (!hls) return;
-			hls.levels.forEach((level, levelIndex) => {
-				if (level.height === newQuality) {
-					console.log('Setting quality to ' + newQuality);
-					hls.currentLevel = levelIndex;
-				}
-			});
-		}
+	const changeQuality = (quality: number) => {
+		const hls = windowHls();
+		if (!hls) return;
+		hls.levels.forEach((level, index) => {
+			if (level.height === quality) {
+				hls.currentLevel = index;
+			}
+		});
 	};
 
 	return (
 		<PageBlock title={'Kiyo'} loading={loading()}>
 			<div class={'flex flex-row justify-between mt-4'}>
 				<div class={'flex flex-col h-full w-full max-w-6xl'}>
-					<video id={'player'} class={'w-full max-w-6xl'} preload={'none'} controls>
-						<source src='' type="application/x-mpegURL" class={'w-full max-w-6xl'} />
+					<video id={'player'} preload={'none'} poster={'https://media.tenor.com/64BYBgDG41QAAAAC/loading.gif'}>
+						<source src={''} type={'application/x-mpegURL'}/>
 					</video>
 					<Show when={data.episodes} keyed={false}>
 						<div class={'flex flex-col w-full max-w-6xl bg-secondary'}>

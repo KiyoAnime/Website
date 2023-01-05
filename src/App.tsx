@@ -19,6 +19,11 @@ const App: Component = () => {
 	const [loaded, setLoaded] = createSignal(false);
 	const RR: Component<ParentProps> = ({ children }) => (<RestrictedRoute loaded={loaded()}>{children}</RestrictedRoute>);
 
+	const onloadCallback = () => {
+		alert("grecaptcha is ready!");
+	};
+
+
 	getUser().then(async (res) => {
 		if (!res) return setLoaded(true);
 		const { data, error } = await supabase.from('users').select();

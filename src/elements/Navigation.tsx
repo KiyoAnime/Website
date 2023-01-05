@@ -3,11 +3,13 @@ import Container from "@/components/Container";
 import store from "@/store";
 import Btn from "@/components/Button";
 import Login from "@/modals/Login";
-import {A, useLocation} from "@solidjs/router";
+import {A, Navigate, useLocation} from "@solidjs/router";
 import Search from "@/elements/Search";
 import {Icon} from "solid-heroicons";
 import {bars_3} from "solid-heroicons/outline";
 import {userPlus, user} from "solid-heroicons/solid";
+import Register from "@/modals/Register";
+import Auth from "@/modals/Auth";
 
 interface ItemProps {
 	href: string;
@@ -68,17 +70,21 @@ const Bar: Component<ParentProps> = (props) => {
 const Navigation: Component = () => {
 	const location = useLocation();
 	const [login, setLogin] = createSignal(false);
+	const [register, setRegister] = createSignal(false);
+	const [auth, setAuth] = createSignal(false);
 
 	return (
 		<Container>
 			<Login open={login()}/>
+			<Register open={register()}/>
+			<Auth open={auth()}/>
 			<Switch>
 				<Match when={!store.user} keyed={false}>
 					<Bar>
 						<Brand/>
 						<div class={'hidden items-center sm:inline-flex'}>
 							<Search/>
-							<Btn.Text onClick={() => setLogin(!login())}>
+							<Btn.Text onClick={() => setAuth(!auth())}>
 								Login
 							</Btn.Text>
 						</div>
