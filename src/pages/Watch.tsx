@@ -3,8 +3,7 @@ import PageBlock from "@/elements/PageBlock";
 import { useParams } from "@solidjs/router";
 import Plyr from 'plyr';
 import Hls from "hls.js";
-import getInfo, { Anime } from "@/api/info";
-import getEpisodes, { Episode } from "@/api/info/episodes";
+import getInfo, { Anime } from "@/api/info/info";
 import { createStore } from "solid-js/store";
 import getUrl from "@/api/watch";
 import {Icon} from "solid-heroicons";
@@ -12,73 +11,77 @@ import {chevronRight, chevronLeft, square_3Stack_3d, calendar} from "solid-heroi
 import {backward, forward} from "solid-heroicons/solid";
 import classNames from "classnames";
 
+interface Embedded {
+	url: string;
+	enabled: boolean;
+}
+
 const Watch: Component = () => {
 	const { sId } = useParams();
 	const [loading, setLoading] = createSignal(true);
 	const [info, setInfo] = createSignal<Anime | undefined>();
 	const [episode, setEpisode] = createSignal<number | undefined>();
+	const [embedded, setEmbedded] = createSignal<Embedded|undefined>();
 	const [range, setRange] = createStore({ start: 0, end: 0, perPage: 60 });
-	const [data, setData] = createStore<{ total: number; episodes?: Episode[]; }>({ total: 0 });
-	const [windowHls, setWindowHls] = createSignal<Hls | undefined>();
-	const defaultOptions = {
-		controls: ['play-large', 'play', 'volume', 'progress', 'current-time', 'mute', 'settings', 'pip', 'airplay', 'fullscreen'],
-		quality: { default: 720, options: [ 1080, 720, 480, ], forced: true, onChange: (e: any) => changeQuality(e) }
-	};
+
 	onMount(async () => {
-		await getInfo(parseInt(sId)).then((res) => {
+		await getInfo(parseInt(sId), true).then((res) => {
 			setInfo(res.data);
 			document.title = `Watching: ${res.data.title} • Kiyo`;
-		});
-		await getEpisodes(parseInt(sId)).then((res) => {
-			setData({ total: res.data.total, episodes: res.data.episodes });
-			setRange({ start: res.data.episodes[0].number, end: range.perPage });
+			setRange({ start: res.data.episodes![0].number, end: range.perPage });
 		});
 		setLoading(false);
-		const player = document.getElementById('player') as HTMLMediaElement;
-		if (!player) return;
-		if (!data.episodes) return;
-		await setEp(1, true);
+		//await setEp(1, true);
 	});
 
 	const setEp = async (ep: number, first?: boolean): Promise<void> => {
-		const hls = new Hls({ maxBufferLength: 30, maxBufferSize: 5242880, maxMaxBufferLength: 30 });
-		setEpisode(ep);
 		const player = document.getElementById('player') as HTMLVideoElement;
 		if (!player) return;
 		const source = player.getElementsByTagName('source')[0];
-		if (!data.episodes) return;
-		await getUrl(data.episodes[ep - 1].source).then(async (res) => {
-			source.setAttribute('src', res.data);
-			await hls.loadSource(res.data);
-			const availableQualities = hls.levels.map((level) => level.height).reverse().filter((q) => q === 480 || q === 720 || q === 1080);
-			console.log(availableQualities);
-			hls.on(Hls.Events.MANIFEST_PARSED, () => {
-				const player = new Plyr('#player', defaultOptions);
-				player.play();
-			});
-			hls.attachMedia(player as HTMLMediaElement);
-			setWindowHls(hls);
+		if (!info()?.episodes) return;
+		await getUrl(info()?.episodes![ep - 1].id!).then(async (res) => {
+			setEpisode(ep);
+			if (res.data.url) {
+				const hls = new Hls({ maxBufferLength: 30, maxBufferSize: 5242880, maxMaxBufferLength: 30 });
+				const plyr = new Plyr('#player', { controls: ['play-large', 'play', 'volume', 'progress', 'current-time', 'mute', 'settings', 'pip', 'airplay', 'fullscreen'] });
+				console.log('m3u8')
+				source.setAttribute('src', res.data.url);
+				await hls.loadSource(res.data.url);
+				hls.on(Hls.Events.MANIFEST_PARSED, () => {
+					plyr.play();
+				});
+				hls.attachMedia(player);
+			} else {
+				startEmbedded(res.data.embedded);
+			}
 		});
 	};
 
-	const changeQuality = (quality: number) => {
-		const hls = windowHls();
-		if (!hls) return;
-		hls.levels.forEach((level, index) => {
-			if (level.height === quality) {
-				hls.currentLevel = index;
-			}
-		});
+	const startEmbedded = (url: string) => {
+		setEmbedded({ url: url, enabled: true });
+		const player = document.getElementById('embedded-player') as HTMLIFrameElement;
+		if (!player) return;
+		console.log('setting height');
+		//player.height = player.contentWindow!.document.body.scrollHeight.toString();
 	};
 
 	return (
 		<PageBlock title={'Kiyo'} loading={loading()}>
 			<div class={'flex flex-row justify-between mt-4'}>
 				<div class={'flex flex-col h-full w-full max-w-6xl'}>
-					<video id={'player'} preload={'none'} poster={'https://media.tenor.com/64BYBgDG41QAAAAC/loading.gif'}>
-						<source src={''} type={'application/x-mpegURL'}/>
-					</video>
-					<Show when={data.episodes} keyed={false}>
+					{/*<Switch>*/}
+						{/*<Match when={embedded()?.enabled} keyed={false}>*/}
+					<iframe src="https://dood.wf/e/4b9yn3qhkrjr">
+
+					</iframe>
+						{/*</Match>*/}
+						{/*<Match when={!embedded()?.enabled} keyed={false}>*/}
+						{/*	<video id={'player'} preload={'none'} poster={'https://media.tenor.com/64BYBgDG41QAAAAC/loading.gif'}>*/}
+						{/*		<source src={''} type={'application/x-mpegURL'}/>*/}
+						{/*	</video>*/}
+						{/*</Match>*/}
+					{/*</Switch>*/}
+					<Show when={info()?.episodes} keyed={false}>
 						<div class={'flex flex-col w-full max-w-6xl bg-secondary'}>
 							<div class={'flex h-8 justify-between bg-primary'}>
 								<span/>
@@ -99,7 +102,7 @@ const Watch: Component = () => {
 									</Switch>
 								</div>
 								<div class={'flex flex-wrap justify-between gap-[4px] md:justify-start'}>
-									<For each={data.episodes}>
+									<For each={info()?.episodes}>
 										{(e) => (
 											<Show when={e.number >= range.start && e.number <= range.end} keyed={false}>
 												<button class={classNames('w-12 h-8 bg-cyan-700 text-gray-100 rounded', e.number === episode() && 'bg-accent-pink')} onClick={() => setEp(e.number)}>{e.number}</button>
@@ -109,11 +112,11 @@ const Watch: Component = () => {
 								</div>
 								<div class={'md:w-1/12'}>
 									<Switch>
-										<Match when={range.end >= data.episodes!.length+1} keyed={false}>
+										<Match when={range.end >= info()!.episodes!.length+1} keyed={false}>
 											<Icon path={chevronRight} class={'h-14 w-14 text-gray-500 cursor-not-allowed'}/>
 										</Match>
-										<Match when={range.end < data.episodes!.length+1} keyed={false}>
-											<Icon path={chevronRight} class={'h-14 w-14 cursor-pointer'} onClick={() => setRange({ ...data, start: range.start + range.perPage, end: range.end + range.perPage })}/>
+										<Match when={range.end < info()!.episodes!.length+1} keyed={false}>
+											<Icon path={chevronRight} class={'h-14 w-14 cursor-pointer'} onClick={() => setRange({ ...range, start: range.start + range.perPage, end: range.end + range.perPage })}/>
 										</Match>
 									</Switch>
 								</div>

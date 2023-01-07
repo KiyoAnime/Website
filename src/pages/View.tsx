@@ -1,7 +1,7 @@
 import {Component, createEffect, createSignal, onMount, Show} from "solid-js";
 import PageBlock from "@/elements/PageBlock";
 import {useParams} from "@solidjs/router";
-import getInfo, {Anime} from "@/api/info";
+import getInfo, {Anime} from "@/api/info/info";
 import Btn from "@/components/Button";
 import {HiOutlineCalendar, HiOutlineChartBar, HiOutlineClock, HiOutlinePlay} from "solid-icons/hi";
 import {OcStack2} from "solid-icons/oc";
@@ -13,7 +13,7 @@ const View: Component = () => {
 	const [popularity, setPopularity] = createSignal<string|undefined>();
 
 	onMount(() => {
-		getInfo(parseInt(id)).then((res) => {
+		getInfo(parseInt(id), false).then((res) => {
 			setAnime(res.data);
 			setPopularity(Intl.NumberFormat('en', { notation: 'compact' }).format(res.data.popularity));
 			document.title = `${res.data.title} • Kiyo`;
@@ -36,7 +36,7 @@ const View: Component = () => {
 								</Btn.Blue>
 							</div>
 							<div class={'flex items-center mt-4'}>
-								<OcStack2/>&nbsp;<span class={stats}>Episodes:&nbsp;</span>{anime()?.episodes}&nbsp;|&nbsp;
+								<OcStack2/>&nbsp;<span class={stats}>Episodes:&nbsp;</span>{anime()?.episodeCount}&nbsp;|&nbsp;
 								<HiOutlineClock/>&nbsp;<span class={stats}>Duration:&nbsp;</span>{anime()?.duration}m&nbsp;|&nbsp;
 								<HiOutlineCalendar/>&nbsp;<span class={stats}>Year:&nbsp;</span>{anime()?.released}&nbsp;|&nbsp;
 								<HiOutlineChartBar/>&nbsp;<span class={stats}>Popularity:&nbsp;</span>{popularity()}

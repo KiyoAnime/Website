@@ -10,7 +10,6 @@ interface Response extends ApiRes {
 export interface Episode {
 	id: string;
 	number: number;
-	source: string;
 }
 
 const getEpisodes = (series: number): Promise<Response> => {
