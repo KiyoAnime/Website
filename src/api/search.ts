@@ -13,10 +13,8 @@ export interface SearchResults {
 	type: 'TV'|'OVA'|'MOVIE'|'SPECIAL';
 }
 
-const search = (query: string): Promise<Response> => {
+export default (query: string): Promise<Response> => {
 	return new Promise((resolve, reject) => {
 		http.get(`/search?query=${query}`).then((res) => resolve(res.data)).catch(reject);
 	});
 };
-
-export default search;
