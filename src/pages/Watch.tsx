@@ -31,7 +31,7 @@ const Watch: Component = () => {
 			setRange({ start: res.data.episodes![0].number, end: range.perPage });
 		});
 		setLoading(false);
-		//await setEp(1, true);
+		await setEp(1, true);
 	});
 
 	const setEp = async (ep: number, first?: boolean): Promise<void> => {
@@ -59,28 +59,27 @@ const Watch: Component = () => {
 
 	const startEmbedded = (url: string) => {
 		setEmbedded({ url: url, enabled: true });
+		console.log(embedded()?.url)
 		const player = document.getElementById('embedded-player') as HTMLIFrameElement;
 		if (!player) return;
 		console.log('setting height');
-		//player.height = player.contentWindow!.document.body.scrollHeight.toString();
+		player.height = player.contentWindow?.document.body.scrollHeight.toString() || '648';
 	};
 
 	return (
 		<PageBlock title={'Kiyo'} loading={loading()}>
 			<div class={'flex flex-row justify-between mt-4'}>
 				<div class={'flex flex-col h-full w-full max-w-6xl'}>
-					{/*<Switch>*/}
-						{/*<Match when={embedded()?.enabled} keyed={false}>*/}
-					<iframe src="https://dood.wf/e/4b9yn3qhkrjr">
-
-					</iframe>
-						{/*</Match>*/}
-						{/*<Match when={!embedded()?.enabled} keyed={false}>*/}
-						{/*	<video id={'player'} preload={'none'} poster={'https://media.tenor.com/64BYBgDG41QAAAAC/loading.gif'}>*/}
-						{/*		<source src={''} type={'application/x-mpegURL'}/>*/}
-						{/*	</video>*/}
-						{/*</Match>*/}
-					{/*</Switch>*/}
+					<Switch>
+						<Match when={embedded()?.enabled} keyed={false}>
+							<iframe id={'embedded-player'} src={embedded()?.url} style={'overflow: hidden;'} height={'648'} width={'1152'} />
+						</Match>
+						<Match when={!embedded()?.enabled} keyed={false}>
+							<video id={'player'} preload={'none'} poster={'https://media.tenor.com/64BYBgDG41QAAAAC/loading.gif'}>
+								<source src={''} type={'application/x-mpegURL'}/>
+							</video>
+						</Match>
+					</Switch>
 					<Show when={info()?.episodes} keyed={false}>
 						<div class={'flex flex-col w-full max-w-6xl bg-secondary'}>
 							<div class={'flex h-8 justify-between bg-primary'}>
