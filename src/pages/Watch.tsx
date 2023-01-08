@@ -20,7 +20,6 @@ interface Embedded {
 const Watch: Component = () => {
 	const { sId } = useParams();
 	const [loading, setLoading] = createSignal(true);
-	const [eLoading, setELoading] = createSignal(true);
 	const [info, setInfo] = createSignal<Anime | undefined>();
 	const [episode, setEpisode] = createSignal<number | undefined>();
 	const [embedded, setEmbedded] = createSignal<Embedded|undefined>();
