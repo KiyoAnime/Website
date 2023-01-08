@@ -5,6 +5,8 @@ import {clearFlash, setFlash} from "@/components/Flash";
 import Input from "@/components/Input";
 import register from "@/api/auth/register";
 import {httpToHuman} from "@/helpers";
+import login from "@/api/auth/login";
+import cookie from 'js-cookie';
 
 interface UserInfo {
 	email?: string;
@@ -64,10 +66,16 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 			return setLoading(false);
 		}
 		clearFlash();
+		login(info()?.email!, info()?.password!).then((res) => {
+			cookie.set(res.data.key, res.data.value);
+			return window.location.reload();
+		}).catch((err) => {
+			setFlash({ type: 'warn', message: httpToHuman(err) });
+			return setLoading(false);
+		})
 	};
 
 	const registerFn = () => {
-		console.log('test');
 		if (!info()?.username) {
 			inputError('username');
 			return setLoading(false);
@@ -84,8 +92,9 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 			setFlash({ type: 'warn', message: 'Passwords do not match.' });
 			return setLoading(false);
 		}
+		clearFlash();
 		register(info()?.email!, info()?.username!, info()?.password!).then((res) => {
-			if (!res.data) window.location.reload();
+			if (!res.error) window.location.reload();
 		}).catch((res) => {
 			setFlash({ type: 'error', message: httpToHuman(res) });
 			setLoading(false);

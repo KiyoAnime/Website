@@ -1,19 +1,17 @@
 import {createStore} from "solid-js/store";
-import {User} from "@supabase/supabase-js";
 
 interface Store {
-	user: UserStore|null;
+	user?: UserStore;
 }
 
-interface UserStore {
-	id: string;
-	name: string;
+export interface UserStore {
+	_id: number;
 	email: string;
-	avatar: string;
+	username: string;
 }
 
-const [store, setStore] = createStore<Store>({ user: null });
+const [store, setStore] = createStore<Store>({ user: undefined });
 
 export default store;
-export const clearStoreData = () => setStore({ user: null });
+export const clearStoreData = () => setStore({ user: undefined });
 export const setStoreData = (data: UserStore) => setStore({ user: data });

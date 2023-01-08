@@ -2,7 +2,6 @@ import {Component, createSignal, JSXElement, Match, ParentProps, Show, Switch} f
 import Container from "@/components/Container";
 import store from "@/store";
 import Btn from "@/components/Button";
-import Login from "@/modals/Login";
 import {A, Navigate, useLocation} from "@solidjs/router";
 import Search from "@/elements/Search";
 import {Icon} from "solid-heroicons";
@@ -75,7 +74,6 @@ const Navigation: Component = () => {
 
 	return (
 		<Container>
-			<Login open={login()}/>
 			<Register open={register()}/>
 			<Auth open={auth()}/>
 			<Switch>
@@ -95,7 +93,7 @@ const Navigation: Component = () => {
 						<Brand/>
 						<div class={'hidden items-center sm:inline-flex'}>
 							<Search/>
-							<span class={'ml-4'}>{store.user?.name}</span>
+							<span class={'ml-4'}>{store.user?.username}</span>
 						</div>
 					</Bar>
 				</Match>

@@ -1,4 +1,5 @@
 import axios from "axios";
+import cookie from "js-cookie";
 
 export interface ApiRes {
 	code: string;
@@ -6,7 +7,8 @@ export interface ApiRes {
 }
 
 const http = axios.create({
-	baseURL: 'https://kiyoapi.up.railway.app'
+	baseURL: 'https://kiyoapi.up.railway.app',
+	headers: { Authorization: `Bearer ${cookie.get('token')}` }
 });
 
 export default http;
