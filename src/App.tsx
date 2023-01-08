@@ -7,6 +7,8 @@ import {setStoreData} from "@/store";
 import View from "@/pages/View";
 import Search from "@/pages/Search";
 import Watch from "@/pages/Watch";
+import dayjs from "dayjs";
+import advancedFormat from 'dayjs/plugin/advancedFormat';
 
 export const supabase = createClient('https://uoolamthpyzpiqrbchee.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvb2xhbXRocHl6cGlxcmJjaGVlIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NzIxNDE4NzUsImV4cCI6MTk4NzcxNzg3NX0.Q_hoRdaysvhUI4n5BcMyOOB6qzzENoBP9gZ0pVht3rk');
 
@@ -19,6 +21,7 @@ const App: Component = () => {
 	const [loaded, setLoaded] = createSignal(false);
 	const RR: Component<ParentProps> = ({ children }) => (<RestrictedRoute loaded={loaded()}>{children}</RestrictedRoute>);
 
+	dayjs.extend(advancedFormat);
 	getUser().then(async (res) => {
 		if (!res) return setLoaded(true);
 		const { data, error } = await supabase.from('users').select();

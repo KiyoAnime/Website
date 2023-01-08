@@ -10,7 +10,6 @@ import {Icon} from "solid-heroicons";
 import {chevronRight, chevronLeft, square_3Stack_3d, calendar} from "solid-heroicons/outline";
 import {backward, forward} from "solid-heroicons/solid";
 import classNames from "classnames";
-import Loader from "@/components/Loader";
 
 interface Embedded {
 	url: string;
