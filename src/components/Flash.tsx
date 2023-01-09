@@ -32,17 +32,17 @@ interface FlashProps {
 }
 
 const BaseFlash: Component<FlashProps> = (props) => (
-	<div class={classNames('inline-flex items-center h-full w-full my-3 px-2 border-l-8 rounded', props.class, props.style)}>
+	<div class={classNames('inline-flex items-center h-full w-full px-2 border-l-8 rounded', props.class, props.style)}>
 		<Icon path={props.icon} class={'h-6 w-6'}/>
 		<span class={'ml-1.5 text-gray-100'}>{props.message}</span>
 	</div>
 );
 
-const Flash: Component<{ class?: string }> = (props) => {
+const Flash: Component<{ class?: string, containerClass?: string }> = (props) => {
 	const msg = () => flashStore.message as string;
 
 	return (
-		<div class={'h-8 w-full mb-2'}>
+		<div class={classNames('h-10 w-full mb-2', props.containerClass)}>
 			<Show when={flashStore.message} keyed={false}>
 				<Switch>
 					<Match keyed={false} when={flashStore.type === 'info'}>

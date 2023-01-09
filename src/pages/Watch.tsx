@@ -10,6 +10,8 @@ import {Icon} from "solid-heroicons";
 import {chevronRight, chevronLeft, square_3Stack_3d, calendar} from "solid-heroicons/outline";
 import {backward, forward} from "solid-heroicons/solid";
 import classNames from "classnames";
+import store from "@/store";
+import Flash, {setFlash} from "@/components/Flash";
 
 interface Embedded {
 	url: string;
@@ -31,6 +33,7 @@ const Watch: Component = () => {
 			setRange({ start: res.data.episodes![0].number, end: range.perPage });
 		});
 		setLoading(false);
+		if (!store.user) return setFlash({ type: 'info', message: 'You must sign up or login to Kiyo to use our services.' });
 		await setEp(1);
 	});
 
@@ -64,6 +67,7 @@ const Watch: Component = () => {
 
 	return (
 		<PageBlock title={'Kiyo'} loading={loading()}>
+			<Flash containerClass={'mt-1 mb-5'}/>
 			<div class={'flex flex-row justify-between mt-4'}>
 				<div class={'flex flex-col w-full max-w-6xl'}>
 					<Switch>

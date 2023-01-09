@@ -24,16 +24,13 @@ const Item: Component<ParentProps<ItemProps>> = (props) => (
 		</div>
 	</A>
 );
+
 const Mobile: Component = () => (
 	<div class={'flex flex-col w-full px-4 py-2 z-3 gap-y-1 bg-primary rounded-b-xl sm:hidden'}>
-		<div class={'inline-flex justify-evenly mb-3'}>
+		<div class={'inline-flex justify-center mb-3'}>
 			<span class={'flex flex-col items-center'}>
 				<Icon path={user} class={'h-10 w-10 text-accent-blue'}/>
 				Login
-			</span>
-			<span class={'flex flex-col items-center'}>
-				<Icon path={userPlus} class={'h-10 w-10 text-accent-pink'}/>
-				Sign Up
 			</span>
 		</div>
 		<div class={'mb-2'}>
