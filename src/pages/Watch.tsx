@@ -1,6 +1,6 @@
 import {Component, createSignal, For, Match, onMount, Show, Switch} from "solid-js";
 import PageBlock from "@/elements/PageBlock";
-import { useParams } from "@solidjs/router";
+import {Link, useParams} from "@solidjs/router";
 import Plyr from 'plyr';
 import Hls from "hls.js";
 import getInfo, { Anime } from "@/api/info/info";
@@ -37,6 +37,10 @@ const Watch: Component = () => {
 		if (!store.user) return setFlash({ type: 'info', key: 'watch', message: 'You must sign up or login to Kiyo to use our services.' });
 		await setEp(1);
 	});
+
+	const changeUrl = (id: string) => {
+		window.location.href = `/watch/${id}`;
+	}
 
 	const setEp = async (ep: number): Promise<void> => {
 		if (!info()?.episodes) return;
@@ -148,6 +152,14 @@ const Watch: Component = () => {
 						<Icon path={calendar} class={'h-4 w-4'}/>&nbsp;{info()?.released}&nbsp;
 						<Icon path={square_3Stack_3d} class={'h-4 w-4'}/>&nbsp;Episode: {episode()}
 					</span>
+					<label class={'my-2'}>Watch Order</label>
+					<select class={'flex flex-col w-full 2xl:w-2/3 gap-2 bg-primary text-gray-200'} onChange={(e) => changeUrl(e.currentTarget.value)}>
+						<For each={info()?.watchOrder}>
+							{(e) => (
+								<option value={e.id}>{e.name}</option>
+							)}
+						</For>
+					</select>
 				</div>
 			</div>
 		</PageBlock>

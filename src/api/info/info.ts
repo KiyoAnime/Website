@@ -9,6 +9,14 @@ interface Episode {
 	number: number;
 }
 
+interface WatchOrder {
+	index: number;
+	name: string;
+	id: number;
+	info: string;
+	url: string;
+}
+
 export interface Anime {
 	id: number;
 	mal: number;
@@ -26,6 +34,7 @@ export interface Anime {
 	description: string;
 	episodeCount: number;
 	episodes: Episode[]|undefined;
+	watchOrder: WatchOrder[]|undefined;
 	end: { month: number; year: number; day: number; };
 	start: { month: number; year: number; day: number; };
 }
