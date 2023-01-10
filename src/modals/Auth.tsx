@@ -42,7 +42,7 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 			return setLoading(false);
 		}
 		if (!info()?.email?.match(validRegex)) {
-			setFlash({ type: 'warn', message: 'Invalid email specified.' });
+			setFlash({ type: 'warn', key: 'auth', message: 'Invalid email specified.' });
 			return setLoading(false);
 		}
 		clearFlash();
@@ -70,7 +70,7 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 			cookie.set(res.data.key, res.data.value);
 			return window.location.reload();
 		}).catch((err) => {
-			setFlash({ type: 'warn', message: httpToHuman(err) });
+			setFlash({ type: 'warn', key: 'auth', message: httpToHuman(err) });
 			return setLoading(false);
 		})
 	};
@@ -89,14 +89,14 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 			return setLoading(false);
 		}
 		if (info()!.password !== info()!.passwordConf) {
-			setFlash({ type: 'warn', message: 'Passwords do not match.' });
+			setFlash({ type: 'warn', key: 'auth', message: 'Passwords do not match.' });
 			return setLoading(false);
 		}
 		clearFlash();
 		register(info()?.email!, info()?.username!, info()?.password!).then((res) => {
 			if (!res.error) window.location.reload();
 		}).catch((res) => {
-			setFlash({ type: 'error', message: httpToHuman(res) });
+			setFlash({ type: 'error', key: 'auth', message: httpToHuman(res) });
 			setLoading(false);
 		});
 	};
@@ -121,7 +121,7 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 	};
 
 	return (
-		<Modal open={props.open} title={title()} style={`${style()} w-80 bg-primary`} btnText={text()} btnLoading={loading()} btnSubmit={submit}>
+		<Modal key={'auth'} open={props.open} title={title()} style={`${style()} w-80 bg-primary`} btnText={text()} btnLoading={loading()} btnSubmit={submit}>
 			<div class={'flex flex-col justify-center mt-6'}>
 				<Show when={typeof exists() !== 'boolean' && !exists()} keyed={false}>
 					<Input type={'text'} eId={'email'} title={'Email'} onChange={({ currentTarget: { value } }) => setInfo({ email: value })}/>

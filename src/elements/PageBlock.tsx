@@ -2,12 +2,14 @@ import {Component, onMount, ParentProps, Show} from "solid-js";
 import Navigation from "@/elements/Navigation";
 import Container from "@/components/Container";
 import Loader from "@/components/Loader";
+import Flash from "@/components/Flash";
 
 interface Props {
 	title?: string;
 	bgColor?: string;
 	loading?: boolean;
 	bgGradient?: Gradient;
+	flash?: { key: string; type: 'flex'|'static'; };
 }
 
 interface Gradient {
@@ -24,6 +26,9 @@ const PageBlock: Component<ParentProps<Props>> = (props) => {
 			<Navigation/>
 			<Show when={!props.loading} keyed={false} fallback={<Loader/>}>
 				<Container>
+					<Show when={props.flash} keyed={false}>
+						<Flash key={props.flash!.key} type={props.flash!.type}/>
+					</Show>
 					{props.children}
 				</Container>
 			</Show>

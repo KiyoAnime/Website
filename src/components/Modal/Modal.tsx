@@ -5,6 +5,7 @@ import Flash from "@/components/Flash";
 import styles from './style.module.css';
 
 interface Props {
+	key: string;
 	open: boolean;
 	title: string;
 	style: string;
@@ -18,7 +19,7 @@ const Modal: Component<ParentProps<Props>> = (props) => {
 		<Show when={props.open} keyed={false}>
 			<div class={classNames(styles.modal, props.style)}>
 				<h2 class={'text-center'}>{props.title}</h2>
-				<Flash/>
+				<Flash key={props.key} type={'flex'} class={'h-9'} iconClass={'h-7 w-7'}/>
 				{props.children}
 				<div class={'absolute right-4 bottom-4'} onClick={props.btnSubmit}>
 					<Btn.Blue loading={props.btnLoading}>{props.btnText}</Btn.Blue>
