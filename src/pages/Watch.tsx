@@ -25,7 +25,8 @@ const Watch: Component = () => {
 	const [episode, setEpisode] = createSignal<number | undefined>();
 	const [embedded, setEmbedded] = createSignal<Embedded|undefined>();
 	const [range, setRange] = createStore({ start: 0, end: 0, perPage: 60 });
-
+	const [windowHls, setWindowHls] = createSignal<Hls | undefined>();
+	const defaultOptions = { controls: ['play-large', 'play', 'volume', 'progress', 'current-time', 'mute', 'settings', 'pip', 'airplay', 'fullscreen'], quality: { default: 720, options: [ 480, 720, 1080 ], forced: true, onChange: (e: any) => { } }}
 	onMount(async () => {
 		await getInfo(parseInt(sId), true).then((res) => {
 			setInfo(res.data);
@@ -45,17 +46,34 @@ const Watch: Component = () => {
 				const player = document.getElementById('player') as HTMLVideoElement;
 				if (!player) return;
 				const hls = new Hls({ maxBufferLength: 30, maxBufferSize: 5242880, maxMaxBufferLength: 30 });
-				const plyr = new Plyr('#player', { controls: ['play-large', 'play', 'volume', 'progress', 'current-time', 'mute', 'settings', 'pip', 'airplay', 'fullscreen'] });
 				player.src = res.data.url;
 				await hls.loadSource(res.data.url);
 				hls.on(Hls.Events.MANIFEST_PARSED, () => {
+					const availableQualities = hls.levels.map((level) => level.height).reverse();
+					defaultOptions.quality = {
+						default: availableQualities[4],
+						options: availableQualities,
+						forced: true,
+						onChange: (e) => { updateQuality(e) }
+					}
+					const plyr = new Plyr('#player', defaultOptions);
 					plyr.play();
 				});
+				setWindowHls(hls);
 				hls.attachMedia(player);
 			} else {
 				startEmbedded(res.data.embedded);
 			}
 		});
+		const updateQuality = (newQuality: number) => {
+			const hls = windowHls();
+			if (!hls) return;
+			hls.levels.forEach((level, levelIndex) => {
+				if (level.height === newQuality) {
+					hls.currentLevel = levelIndex;
+				}
+			});
+		}
 	};
 
 	const startEmbedded = (url: string) => {
