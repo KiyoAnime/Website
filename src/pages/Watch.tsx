@@ -152,14 +152,25 @@ const Watch: Component = () => {
 						<Icon path={calendar} class={'h-4 w-4'}/>&nbsp;{info()?.released}&nbsp;
 						<Icon path={square_3Stack_3d} class={'h-4 w-4'}/>&nbsp;Episode: {episode()}
 					</span>
-					<label class={'my-2'}>Watch Order</label>
-					<select class={'flex flex-col w-full 2xl:w-2/3 gap-2 bg-primary text-gray-200'} onChange={({ currentTarget: { value } }) => changeUrl(value)}>
-						<For each={info()?.watchOrder}>
-							{(e) => (
-								<option value={e.id}>{e.name}</option>
-							)}
-						</For>
-					</select>
+					<div class="flex justify-center">
+						<label class={'my-2 ml-4'}>Watch Order &nbsp;&nbsp;</label>
+						<div class="flex flex-col w-full 2xl:w-2/3 gap-2 bg-primary text-gray-200">
+							<select class="form-select appearance-none block w-full px-3 py-1.5 text-base font-normal text-gray-200 bg-secondary bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-primary focus:border-blue-600 focus:outline-none" onChange={(e) => changeUrl(e.currentTarget.value)}>
+								<For each={info()?.watchOrder}>
+									{(e, i) => (
+										<Switch>
+											<Match when={e.id === parseInt(sId)} keyed={false}>
+												<option value={e.id} selected>{e.name}</option>
+											</Match>
+											<Match when={e.id !== parseInt(sId)} keyed={false}>
+												<option value={e.id}>{e.name}</option>
+											</Match>
+										</Switch>
+									)}
+								</For>
+							</select>
+						</div>
+					</div>
 				</div>
 			</div>
 		</PageBlock>
