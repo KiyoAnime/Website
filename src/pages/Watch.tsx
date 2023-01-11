@@ -1,6 +1,6 @@
 import {Component, createSignal, For, Match, onMount, Show, Switch} from "solid-js";
 import PageBlock from "@/elements/PageBlock";
-import {Link, useParams} from "@solidjs/router";
+import {A, Link, useParams} from "@solidjs/router";
 import Plyr from 'plyr';
 import Hls from "hls.js";
 import getInfo, { Anime } from "@/api/info/info";
@@ -11,7 +11,7 @@ import {chevronRight, chevronLeft, square_3Stack_3d, calendar} from "solid-heroi
 import {backward, forward} from "solid-heroicons/solid";
 import classNames from "classnames";
 import store from "@/store";
-import Flash, {setFlash} from "@/components/Flash";
+import {setFlash} from "@/components/Flash";
 
 interface Embedded {
 	url: string;
@@ -25,8 +25,7 @@ const Watch: Component = () => {
 	const [episode, setEpisode] = createSignal<number | undefined>();
 	const [embedded, setEmbedded] = createSignal<Embedded|undefined>();
 	const [range, setRange] = createStore({ start: 0, end: 0, perPage: 60 });
-	const [windowHls, setWindowHls] = createSignal<Hls | undefined>();
-	const defaultOptions = { controls: ['play-large', 'play', 'volume', 'progress', 'current-time', 'mute', 'settings', 'pip', 'airplay', 'fullscreen'], quality: { default: 720, options: [ 480, 720, 1080 ], forced: true, onChange: (e: any) => { } }}
+
 	onMount(async () => {
 		await getInfo(parseInt(sId), true).then((res) => {
 			setInfo(res.data);
@@ -34,43 +33,40 @@ const Watch: Component = () => {
 			setRange({ start: res.data.episodes![0].number, end: range.perPage });
 		});
 		setLoading(false);
-		if (!store.user) return setFlash({ type: 'info', key: 'watch', message: 'You must sign up or login to Kiyo to use our services.' });
 		await setEp(1);
 	});
 
-	const changeUrl = (id: string) => {
-		window.location.href = `/watch/${id}`;
-	}
-
 	const setEp = async (ep: number): Promise<void> => {
+		if (!store.user) return setFlash({ type: 'info', key: 'watch', message: 'You must sign up or login to Kiyo to use our services.' });
 		if (!info()?.episodes) return;
+		const hls = new Hls({ maxBufferLength: 30, maxBufferSize: 5242880, maxMaxBufferLength: 30 });
 		await getUrl(info()?.episodes![ep - 1].id!).then(async (res) => {
 			setEpisode(ep);
 			if (res.data.url) {
 				const player = document.getElementById('player') as HTMLVideoElement;
 				if (!player) return;
-				const hls = new Hls({ maxBufferLength: 30, maxBufferSize: 5242880, maxMaxBufferLength: 30 });
 				player.src = res.data.url;
 				await hls.loadSource(res.data.url);
 				hls.on(Hls.Events.MANIFEST_PARSED, () => {
 					const availableQualities = hls.levels.map((level) => level.height).reverse();
-					defaultOptions.quality = {
-						default: availableQualities[4],
-						options: availableQualities,
-						forced: true,
-						onChange: (e) => { updateQuality(e) }
-					}
-					const plyr = new Plyr('#player', defaultOptions);
+					const plyr = new Plyr('#player', {
+						controls: ['play-large', 'play', 'volume', 'progress', 'current-time', 'mute', 'settings', 'pip', 'airplay', 'fullscreen'],
+						quality: {
+							forced: true,
+							options: availableQualities,
+							onChange: (e) => updateQuality(e),
+							default: availableQualities.filter((q) => q === 1080 || q === 720)[0]
+						}
+					});
 					plyr.play();
 				});
-				setWindowHls(hls);
 				hls.attachMedia(player);
 			} else {
 				startEmbedded(res.data.embedded);
 			}
 		});
+
 		const updateQuality = (newQuality: number) => {
-			const hls = windowHls();
 			if (!hls) return;
 			hls.levels.forEach((level, levelIndex) => {
 				if (level.height === newQuality) {
@@ -85,6 +81,10 @@ const Watch: Component = () => {
 		const player = document.getElementById('embedded-player') as HTMLIFrameElement;
 		if (!player) return;
 		player.src = url;
+	};
+
+	const changeUrl = (id: string) => {
+		window.location.href = `/watch/${id}`;
 	};
 
 	return (
@@ -145,15 +145,15 @@ const Watch: Component = () => {
 						</div>
 					</Show>
 				</div>
-				<div class={'flex flex-col hidden items-end ml-4 2xl:flex'}>
+				<div class={'hidden flex-col w-1/3 items-end ml-4 2xl:flex'}>
 					<img src={info()?.thumbnail} alt={info()?.title} class={'h-80 rounded-lg'}/>
-					<h3 class={'mt-2'}>{info()?.title}</h3>
+					<h3 class={'mt-2 text-right line-clamp-1'}>{info()?.title}</h3>
 					<span class={'inline-flex items-center'}>
 						<Icon path={calendar} class={'h-4 w-4'}/>&nbsp;{info()?.released}&nbsp;
 						<Icon path={square_3Stack_3d} class={'h-4 w-4'}/>&nbsp;Episode: {episode()}
 					</span>
 					<label class={'my-2'}>Watch Order</label>
-					<select class={'flex flex-col w-full 2xl:w-2/3 gap-2 bg-primary text-gray-200'} onChange={(e) => changeUrl(e.currentTarget.value)}>
+					<select class={'flex flex-col w-full 2xl:w-2/3 gap-2 bg-primary text-gray-200'} onChange={({ currentTarget: { value } }) => changeUrl(value)}>
 						<For each={info()?.watchOrder}>
 							{(e) => (
 								<option value={e.id}>{e.name}</option>

@@ -41,7 +41,7 @@ const View: Component = () => {
 						</span>
 					</div>
 					<div class={'flex flex-col items-center md:items-start md:ml-4'}>
-						<span class={'h-14 mt-2 text-5xl text-gray-200 line-clamp-1 md:mt-0'}>{anime()?.title}</span>
+						<span class={'h-[3.25rem] mt-2 text-5xl text-gray-200 overflow-hidden line-clamp-1 md:mt-0'}>{anime()?.title}</span>
 						<div class={'inline-flex items-center mt-0.5 gap-2'}>
 							<Badge>{anime()?.type}</Badge>
 							<Badge>{anime()?.subOrDub.replace('sub', 'SUB').replace('dub', 'DUB')}</Badge>
@@ -57,18 +57,18 @@ const View: Component = () => {
 								</Btn.Blue>
 							</A>
 						</div>
-						<span class={'mt-3'}>Genres: {anime()?.genres.join(', ')}</span>
-						<div class={'inline-flex items-center mt-1'}>
-							<Icon path={square_3Stack_3d} class={icon}/><span class={stats}>Episodes:&nbsp;</span>{anime()?.episodeCount}&nbsp;|&nbsp;
-							<Icon path={clock} class={icon}/><span class={stats}>Duration:&nbsp;</span>{anime()?.duration}m&nbsp;|&nbsp;
-							<Icon path={chartBar} class={icon}/><span class={stats}>Popularity:&nbsp;</span>{popularity()}
-						</div>
-						<span class={'mt-1.5'}>
+						<span class={'mt-3 text-gray-100'}>Genres: {anime()?.genres.join(', ')}</span>
+						<span class={'mt-1 text-gray-100'}>
 							Aired: {aired()?.start}
 							<Show when={aired()?.end} keyed={false}>
 								&nbsp;to {aired()?.end}
 							</Show>
 						</span>
+						<div class={'inline-flex items-center mt-1 text-gray-100'}>
+							<Icon path={square_3Stack_3d} class={icon}/><span class={stats}>Episodes:&nbsp;</span>{anime()?.episodeCount}&nbsp;|&nbsp;
+							<Icon path={clock} class={icon}/><span class={stats}>Duration:&nbsp;</span>{anime()?.duration}m&nbsp;|&nbsp;
+							<Icon path={chartBar} class={icon}/><span class={stats}>Popularity:&nbsp;</span>{popularity()}
+						</div>
 						<span innerHTML={anime()?.description} class={'mt-4'}/>
 					</div>
 				</div>
