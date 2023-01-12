@@ -11,7 +11,7 @@ import Home from "@/pages/Home";
 import View from "@/pages/View";
 import Watch from "@/pages/Watch";
 import Search from "@/pages/Search";
-const Account = lazy(() => import('@/pages/Account'));
+const Account = lazy(() => import('@/pages/User/Account'));
 
 const App: Component = () => {
 	const [loading, setLoading] = createSignal(true);
@@ -35,7 +35,7 @@ const App: Component = () => {
 			<Route path={'/search/:query'} component={Search}/>
 			<Route path={'/watch/:sId'} component={Watch}/>
 
-			<Route path={'/'} element={<RR><Account/></RR>}/>
+			<Route path={'/user/account'} element={<RR><Account/></RR>}/>
 		</Routes>
 	);
 };

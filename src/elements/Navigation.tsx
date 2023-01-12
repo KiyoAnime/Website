@@ -8,10 +8,11 @@ import {Icon} from "solid-heroicons";
 import {bars_3} from "solid-heroicons/outline";
 import {userPlus, user} from "solid-heroicons/solid";
 import Auth from "@/modals/Auth";
+import { IconI } from '@/types';
 
 interface ItemProps {
+	icon: IconI;
 	href: string;
-	icon: { mini?: boolean; path: JSXElement; outline?: boolean; };
 }
 
 const Brand: Component = () => <A href={'/'} class={'inline-flex items-center'}><img src={'https://cdn.discordapp.com/attachments/1056117951415193621/1057926704896679946/Template_logo_w_kiyo-chan_2.png'} alt={'Kiyo'} height={64} width={64} class={'-ml-3.5 mr-1.5'}/><h1>Kiyo</h1></A>;
