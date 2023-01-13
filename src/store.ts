@@ -7,7 +7,9 @@ interface Store {
 export interface UserStore {
 	_id: number;
 	email: string;
+	avatar?: string;
 	username: string;
+	profileName?: string;
 }
 
 const [store, setStore] = createStore<Store>({ user: undefined });

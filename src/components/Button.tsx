@@ -3,6 +3,7 @@ import classNames from "classnames";
 
 interface Props {
 	url?: string;
+	type?: 'submit'|'button';
 	loading?: boolean;
 	onClick?: () => void;
 }
@@ -13,7 +14,7 @@ interface BtnProps extends Props {
 
 const Btn: Component<ParentProps<BtnProps>> = (props) => (
 	<a href={props.url} onClick={props.onClick}>
-		<button class={classNames('inline-flex items-center justify-center px-5 h-10 text-center whitespace-nowrap text-white no-underline rounded-md', props.className, props.loading && 'cursor-not-allowed')} disabled={props.loading}>
+		<button class={classNames('inline-flex items-center justify-center px-5 h-10 text-center whitespace-nowrap text-white no-underline rounded-md', props.className, props.loading && 'cursor-not-allowed')} disabled={props.loading} type={props.type}>
 			<Switch>
 				<Match keyed={false} when={props.loading}>
 					<svg class={'animate-spin text-slate-500 fill-white h-4 w-4 mr-1.5'} viewBox={'0 0 100 101'}>
