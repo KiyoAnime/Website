@@ -35,6 +35,10 @@
         @apply text-lg;
     }
 
+    code {
+        @apply inline-flex items-center py-1 px-2 bg-primary rounded;
+    }
+
     input {
         @apply h-10 p-2 bg-primary rounded-md focus:outline-none focus:border-none;
     }

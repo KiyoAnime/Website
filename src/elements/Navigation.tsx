@@ -6,7 +6,7 @@ import {A} from "@solidjs/router";
 import Search from "@/elements/Search";
 import {Icon} from "solid-heroicons";
 import {bars_3} from "solid-heroicons/outline";
-import {userPlus, user} from "solid-heroicons/solid";
+import {user} from "solid-heroicons/solid";
 import Auth from "@/modals/Auth";
 import { IconI } from '@/types';
 
@@ -26,19 +26,9 @@ const Item: Component<ParentProps<ItemProps>> = (props) => (
 	</A>
 );
 
-const Mobile: Component = () => (
-	<div class={'flex flex-col w-full px-4 py-2 z-3 gap-y-1 bg-primary rounded-b-xl sm:hidden'}>
-		<div class={'inline-flex justify-center mb-3'}>
-			<span class={'flex flex-col items-center'}>
-				<Icon path={user} class={'h-10 w-10 text-accent-blue'}/>
-				Login
-			</span>
-		</div>
-		<div class={'mb-2'}>
-			<Search mobile/>
-		</div>
-		<Item href={'/'} icon={user}>Login</Item>
-		<Item href={'/'} icon={user}>Login 2</Item>
+const Dropdown: Component = () => (
+	<div class={'absolute top-12 right-0 h-auto w-32 bg-secondary rounded-md'}>
+		test
 	</div>
 );
 
@@ -63,8 +53,35 @@ const Bar: Component<ParentProps> = (props) => {
 	);
 };
 
+const Mobile: Component = () => (
+	<div class={'flex flex-col w-full px-4 py-2 z-3 gap-y-1 bg-primary rounded-b-xl sm:hidden'}>
+		<div class={'inline-flex justify-center items-center mb-3'}>
+			<Switch>
+				<Match when={!store.user} keyed={false}>
+					<span class={'flex flex-col items-center'}>
+						<Icon path={user} class={'h-10 w-10 text-accent-blue'}/>
+						Login
+					</span>
+				</Match>
+				<Match when={!!store.user} keyed={false}>
+					<div class={'flex justify-center items-center h-16 w-16 ml-4 p-[0.15rem] bg-gradient-to-br from-accent-pink to-accent-blue rounded-full'}>
+						<img class={'h-9.5 w-9.5 rounded-full'} src={store.user?.avatar} alt={store.user?.username}/>
+					</div>
+					<h3 class={'ml-4'}>{store.user?.profileName}</h3>
+				</Match>
+			</Switch>
+		</div>
+		<div class={'mb-2'}>
+			<Search mobile/>
+		</div>
+		<Item href={'/user/account'} icon={user}>Account</Item>
+		<Item href={'/'} icon={user}>Login 2</Item>
+	</div>
+);
+
 const Navigation: Component = () => {
 	const [auth, setAuth] = createSignal(false);
+	const [dropdown, setDropdown] = createSignal(false);
 
 	return (
 		<Container>
@@ -84,9 +101,14 @@ const Navigation: Component = () => {
 				<Match when={!!store.user} keyed={false}>
 					<Bar>
 						<Brand/>
-						<div class={'hidden items-center sm:inline-flex'}>
+						<div class={'relative hidden items-center sm:inline-flex'}>
 							<Search/>
-							<span class={'ml-4'}>{store.user?.username}</span>
+							<div class={'flex justify-center items-center h-11 w-11 ml-4 p-[0.15rem] bg-gradient-to-br from-accent-pink to-accent-blue rounded-full'} onClick={() => setDropdown(!dropdown())}>
+								<img class={'h-9.5 w-9.5 rounded-full'} src={store.user?.avatar} alt={store.user?.username}/>
+							</div>
+							<Show when={dropdown()} keyed={false}>
+								<Dropdown/>
+							</Show>
 						</div>
 					</Bar>
 				</Match>
