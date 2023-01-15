@@ -5,7 +5,8 @@
 @layer base {
     :root {
         --primary-color: rgb(22, 22, 22);
-        --secondary-color: rgb(32, 32, 32);
+        --secondary-color: rgb(35, 35, 35);
+        --tertiary-color: rgb(46, 46, 46);
         --background-color: rgb(12, 12, 12);
         --accent-color-blue: rgb(0, 173, 217);
         --accent-color-pink: rgb(230, 80, 178);

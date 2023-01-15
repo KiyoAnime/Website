@@ -1,34 +1,44 @@
-import {Component, createSignal, JSXElement, Match, ParentProps, Show, Switch} from "solid-js";
+import {Component, createSignal, JSX, Match, ParentProps, Show, Switch} from "solid-js";
 import Container from "@/components/Container";
 import store from "@/store";
 import Btn from "@/components/Button";
 import {A} from "@solidjs/router";
 import Search from "@/elements/Search";
 import {Icon} from "solid-heroicons";
-import {bars_3} from "solid-heroicons/outline";
+import {arrowRightOnRectangle, bars_3, cog_8Tooth, userCircle} from "solid-heroicons/outline";
 import {user} from "solid-heroicons/solid";
 import Auth from "@/modals/Auth";
 import { IconI } from '@/types';
+import banner from '@/assets/banner.png';
 
 interface ItemProps {
 	icon: IconI;
 	href: string;
+	onClick?: JSX.EventHandlerUnion<HTMLAnchorElement, MouseEvent>;
 }
 
-const Brand: Component = () => <A href={'/'} class={'inline-flex items-center'}><img src={'https://cdn.discordapp.com/attachments/1056117951415193621/1057926704896679946/Template_logo_w_kiyo-chan_2.png'} alt={'Kiyo'} height={64} width={64} class={'-ml-3.5 mr-1.5'}/><h1>Kiyo</h1></A>;
+const Brand: Component = () => <A href={'/'} class={'inline-flex items-center'}><img src={banner} alt={'Kiyo'} class={'h-16 -ml-3.5 mr-1.5'}/></A>;
 
 const Item: Component<ParentProps<ItemProps>> = (props) => (
-	<A href={props.href}>
-		<div class={'inline-flex h-8 w-full py-3 items-center bg-secondary rounded'}>
-			<Icon path={props.icon} class={'h-6 w-6 mr-2'}/>
-			<span class={'text-lg'}>{props.children}</span>
+	<A href={props.href} onClick={props.onClick}>
+		<div class={'inline-flex h-8 w-full py-1 items-center rounded md:h-9 hover:bg-tertiary hover:text-accent-blue'}>
+			<Icon path={props.icon} class={'h-6 w-6 mr-2 md:h-7 md:w-7'}/>
+			<span class={'text-lg md:text-xl'}>{props.children}</span>
 		</div>
 	</A>
 );
 
 const Dropdown: Component = () => (
-	<div class={'absolute top-12 right-0 h-auto w-32 bg-secondary rounded-md'}>
-		test
+	<div class={'absolute flex flex-col top-12 right-0 h-auto w-80 py-1 px-2 z-2 bg-secondary rounded-md'}>
+		<div class={'mb-1 p-1'}>
+			<h3 class={'text-accent-pink'}>{store.user?.profileName}</h3>
+			<span class={'truncate'}>{store.user?.email}</span>
+		</div>
+		<div class={'flex flex-col gap-y-1'}>
+			<Item icon={cog_8Tooth} href={'/user/account'}>Account</Item>
+			<Item icon={userCircle} href={'/user/profile'}>Profile</Item>
+			<Item icon={arrowRightOnRectangle} href={'/logout'}>Logout</Item>
+		</div>
 	</div>
 );
 
@@ -103,7 +113,7 @@ const Navigation: Component = () => {
 						<Brand/>
 						<div class={'relative hidden items-center sm:inline-flex'}>
 							<Search/>
-							<div class={'flex justify-center items-center h-11 w-11 ml-4 p-[0.15rem] bg-gradient-to-br from-accent-pink to-accent-blue rounded-full'} onClick={() => setDropdown(!dropdown())}>
+							<div class={'flex justify-center items-center h-11 w-11 ml-4 p-[0.15rem] cursor-pointer bg-gradient-to-br from-accent-pink to-accent-blue rounded-full'} onClick={() => setDropdown(!dropdown())}>
 								<img class={'h-9.5 w-9.5 rounded-full'} src={store.user?.avatar} alt={store.user?.username}/>
 							</div>
 							<Show when={dropdown()} keyed={false}>
