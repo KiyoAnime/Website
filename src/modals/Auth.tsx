@@ -64,7 +64,13 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 	};
 
 	const loginSubmit = (values: Value) => {
-
+		login(values.email, values.password).then((res) => {
+			cookie.set(res.data.key, res.data.value);
+			return window.location.reload();
+		}).catch((err) => {
+			setFlash({ type: 'warn', key: 'auth', message: httpToHuman(err) });
+			return setLoading(false);
+		});
 	};
 
 	const registerSubmit = (values: Value) => {
