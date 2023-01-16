@@ -45,7 +45,6 @@ const Watch: Component = () => {
 			if (res.data.url) {
 				const player = document.getElementById('player') as HTMLVideoElement;
 				if (!player) return;
-				player.src = res.data.url;
 				await hls.loadSource(res.data.url);
 				hls.on(Hls.Events.MANIFEST_PARSED, () => {
 					const availableQualities = hls.levels.map((level) => level.height).reverse();
@@ -60,6 +59,7 @@ const Watch: Component = () => {
 					});
 					plyr.play();
 				});
+				player.src = res.data.url;
 				hls.attachMedia(player);
 			} else {
 				startEmbedded(res.data.embedded);
