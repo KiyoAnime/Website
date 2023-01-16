@@ -1,4 +1,4 @@
-import {Component, For, Match, ParentProps, Switch} from "solid-js";
+import {Component, For, Match, ParentProps, Show, Switch} from "solid-js";
 import {FormEvent} from "@/types";
 import FormInput from "@/components/Form/FormInput";
 import Btn from "@/components/Button";
@@ -9,6 +9,7 @@ export interface Value { [id: string]: string; }
 
 interface Props {
 	items: Item[];
+	color?: string;
 	submitting: boolean;
 	validation?: () => void;
 	onSubmit: (values: Value) => void;
@@ -36,13 +37,18 @@ const Form: Component<ParentProps<Props>> = (props) => {
 	};
 
 	return (
-		<form onSubmit={submit} class={'flex flex-col py-3 px-2 gap-y-8'}>
-			<For each={props.items}>
-				{(item) => (
-					<FormInput {...item} title={item.label}/>
-				)}
-			</For>
-			<div class={'flex justify-end'}>
+		<form onSubmit={submit} class={'flex flex-col py-3 px-2'}>
+			<div class={'flex flex-col gap-y-6'}>
+				<For each={props.items}>
+					{(item) => (
+						<FormInput {...item} title={item.label} color={props.color}/>
+					)}
+				</For>
+			</div>
+			<Show when={props.children} keyed={false}>
+				{props.children}
+			</Show>
+			<div class={'flex justify-end mt-8'}>
 				<Switch>
 					<Match when={props.button.color === 'red'} keyed={false}>
 						<Btn.Red type={'submit'} loading={props.submitting}>{props.button.label}</Btn.Red>

@@ -10,12 +10,22 @@ import {user} from "solid-heroicons/solid";
 import Auth from "@/modals/Auth";
 import { IconI } from '@/types';
 import banner from '@/assets/banner.png';
+import cookie from "js-cookie";
 
 interface ItemProps {
 	icon: IconI;
 	href: string;
 	onClick?: JSX.EventHandlerUnion<HTMLAnchorElement, MouseEvent>;
 }
+
+const [auth, setAuth] = createSignal(false);
+const [mobile, setMobile] = createSignal(false);
+const [dropdown, setDropdown] = createSignal(false);
+
+const toggle = () => {
+	setAuth(false);
+	setAuth(true);
+};
 
 const Brand: Component = () => <A href={'/'} class={'inline-flex items-center'}><img src={banner} alt={'Kiyo'} class={'h-16 -ml-3.5 mr-1.5'}/></A>;
 
@@ -28,34 +38,38 @@ const Item: Component<ParentProps<ItemProps>> = (props) => (
 	</A>
 );
 
-const Dropdown: Component = () => (
-	<div class={'absolute flex flex-col top-12 right-0 h-auto w-80 py-1 px-2 z-2 bg-secondary rounded-md'}>
-		<div class={'mb-1 p-1'}>
-			<h3 class={'text-accent-pink'}>{store.user?.profileName}</h3>
-			<span class={'truncate'}>{store.user?.email}</span>
+const Dropdown: Component = () => {
+	const logout = () => {
+		cookie.remove('token');
+		window.location.reload();
+	};
+
+	return (
+		<div class={'absolute flex flex-col top-12 right-0 h-auto w-80 py-1 px-2 z-2 bg-secondary rounded-md'}>
+			<div class={'mb-1 p-1'}>
+				<h3 class={'text-accent-pink'}>{store.user?.profileName}</h3>
+				<span class={'truncate'}>{store.user?.email}</span>
+			</div>
+			<div class={'flex flex-col gap-y-1'}>
+				<Item icon={cog_8Tooth} href={'/user/account'}>Account</Item>
+				<Item icon={arrowRightOnRectangle} href={'#'} onClick={logout}>Logout</Item>
+			</div>
 		</div>
-		<div class={'flex flex-col gap-y-1'}>
-			<Item icon={cog_8Tooth} href={'/user/account'}>Account</Item>
-			<Item icon={userCircle} href={'/user/profile'}>Profile</Item>
-			<Item icon={arrowRightOnRectangle} href={'/logout'}>Logout</Item>
-		</div>
-	</div>
-);
+	);
+};
 
 const Bar: Component<ParentProps> = (props) => {
-	const [menu, setMenu] = createSignal(false);
-
 	return (
 		<div class={'py-4'}>
 			<div class={'hidden p-4 h-20 justify-between items-center z-2 bg-primary rounded-xl sm:flex'}>
 				{props.children}
 			</div>
 			<div class={'flex flex-col h-20 z-2 bg-primary rounded-t-xl sm:hidden'}>
-				<div class={'inline-flex px-4 py-3 justify-between items-center'}>
+				<div class={'inline-flex px-4 py-2 justify-between items-center sm:py-3'}>
 					<Brand/>
-					<Icon path={bars_3} class={'h-8 w-8 cursor-pointer'} onClick={() => setMenu(!menu())}/>
+					<Icon path={bars_3} class={'h-8 w-8 cursor-pointer'} onClick={() => setMobile(!mobile())}/>
 				</div>
-				<Show when={menu()} keyed={false}>
+				<Show when={mobile()} keyed={false}>
 					<Mobile/>
 				</Show>
 			</div>
@@ -68,7 +82,7 @@ const Mobile: Component = () => (
 		<div class={'inline-flex justify-center items-center mb-3'}>
 			<Switch>
 				<Match when={!store.user} keyed={false}>
-					<span class={'flex flex-col items-center'}>
+					<span class={'flex flex-col items-center'} onClick={() => { setMobile(false); toggle(); }}>
 						<Icon path={user} class={'h-10 w-10 text-accent-blue'}/>
 						Login
 					</span>
@@ -90,9 +104,6 @@ const Mobile: Component = () => (
 );
 
 const Navigation: Component = () => {
-	const [auth, setAuth] = createSignal(false);
-	const [dropdown, setDropdown] = createSignal(false);
-
 	return (
 		<Container>
 			<Auth open={auth()}/>
@@ -102,7 +113,7 @@ const Navigation: Component = () => {
 						<Brand/>
 						<div class={'hidden items-center sm:inline-flex'}>
 							<Search/>
-							<Btn.Text onClick={() => setAuth(!auth())}>
+							<Btn.Text onClick={toggle}>
 								Login
 							</Btn.Text>
 						</div>

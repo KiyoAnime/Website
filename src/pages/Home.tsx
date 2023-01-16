@@ -18,7 +18,7 @@ const Banner: Component<TrendingSeries> = (props) => {
 			<div class={'h-60 sm:h-80 md:h-96 lg:h-[28rem]'}>
 				<img src={props.banner} alt={props.title} class={'h-full w-full object-cover brightness-50 rounded-2xl'}/>
 				<div class={'absolute top-6 left-7 sm:w-1/2'}>
-					<h2>{props.title}</h2>
+					<h2 class={'line-clamp-2'}>{props.title}</h2>
 					<span class={'inline-flex items-center my-4 text-gray-200'}>
 						<Icon path={calendar} class={'h-5 w-5 mr-1'}/>{props.released}&nbsp;|&nbsp;
 						<Icon path={square_3Stack_3d} class={'h-5 w-5 mr-1'}/>{props.episodes}&nbsp;Ep&nbsp;|&nbsp;

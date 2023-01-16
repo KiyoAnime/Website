@@ -524,6 +524,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hcaptcha/types@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "@hcaptcha/types@npm:1.0.3"
+  checksum: 9ee5a528532dc25b3e82d7d78c9afd9df5a7f9aed747ba149880b28b8529422c313850cc7120e65dd1b4c0946f362fef9babe23fe15af7345ef67aa473753ade
+  languageName: node
+  linkType: hard
+
 "@jridgewell/gen-mapping@npm:^0.1.0":
   version: 0.1.1
   resolution: "@jridgewell/gen-mapping@npm:0.1.1"
@@ -620,6 +627,15 @@ __metadata:
     mkdirp: ^1.0.4
     rimraf: ^3.0.2
   checksum: 52dc02259d98da517fae4cb3a0a3850227bdae4939dda1980b788a7670636ca2b4a01b58df03dd5f65c1e3cb70c50fa8ce5762b582b3f499ec30ee5ce1fd9380
+  languageName: node
+  linkType: hard
+
+"@solid-primitives/script-loader@npm:^1.1.2":
+  version: 1.1.2
+  resolution: "@solid-primitives/script-loader@npm:1.1.2"
+  peerDependencies:
+    solid-js: ^1.5.0
+  checksum: 4c2da041d15ffa47207755b3caa59c2ed60ff78c3ee875df64f75a36bb8121f5aed3faf0a69c198a136b04fd0b18ff4ab2726a105cca3556e97a28577f08ab64
   languageName: node
   linkType: hard
 
@@ -2396,6 +2412,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"solid-hcaptcha@npm:^0.2.6":
+  version: 0.2.6
+  resolution: "solid-hcaptcha@npm:0.2.6"
+  dependencies:
+    "@hcaptcha/types": ^1.0.3
+    "@solid-primitives/script-loader": ^1.1.2
+  peerDependencies:
+    solid-js: ^1.6.5
+  checksum: 90e23c85a50997e42beecad68f20bcd514b2f3853af6cec871e9e719a94fffad110e9f90b24d6fcba21d20cada0b67c386ae6afe8484728b28308f28970b61a0
+  languageName: node
+  linkType: hard
+
 "solid-heroicons@npm:^3.1.1":
   version: 3.1.1
   resolution: "solid-heroicons@npm:3.1.1"
@@ -2713,6 +2741,7 @@ __metadata:
     js-cookie: ^3.0.1
     plyr: ^3.7.3
     postcss: ^8.4.20
+    solid-hcaptcha: ^0.2.6
     solid-heroicons: ^3.1.1
     solid-js: ^1.6.6
     swiper: ^8.4.5

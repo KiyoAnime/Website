@@ -38,7 +38,7 @@ const Account: Component = () => {
 	return (
 		<PageBlock title={'Account • Kiyo'} loading={loading()}>
 			<TabNavigation base={'user'} tabs={[
-				{ key: 'account', title: 'Account', icon: userCircle },
+				{ key: 'account', title: 'Account', icon: cog_8Tooth },
 				{ key: 'profile', title: 'Profile', icon: userCircle }
 			]}/>
 			<Header icon={userCircle} title={'Account'} description={'View or change your account information and settings.'} class={'mt-4'}/>

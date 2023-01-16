@@ -9,6 +9,7 @@ export interface Props {
 	value?: string;
 	class?: string;
 	labelBg?: string;
+	readonly?: boolean;
 	placeholder?: string;
 	onChange?: JSX.EventHandlerUnion<HTMLInputElement, Event>;
 }
