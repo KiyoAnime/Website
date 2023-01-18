@@ -11,6 +11,7 @@ import Home from "@/pages/Home";
 import View from "@/pages/View";
 import Watch from "@/pages/Watch";
 import Search from "@/pages/Search";
+import Profile from "@/pages/Profile";
 const Account = lazy(() => import('@/pages/User/Account'));
 
 const App: Component = () => {
@@ -36,6 +37,7 @@ const App: Component = () => {
 			<Route path={'/watch/:sId'} component={Watch}/>
 
 			<Route path={'/user/account'} element={<RR><Account/></RR>}/>
+			<Route path={'/profile/:username'} element={<Profile/>}/>
 		</Routes>
 	);
 };
