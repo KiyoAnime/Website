@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import advancedFormat from 'dayjs/plugin/advancedFormat';
 import cookie from "js-cookie";
 import user from "@/api/user/user";
+import Hls from "hls.js";
 
 import Home from "@/pages/Home";
 import View from "@/pages/View";
@@ -13,6 +14,10 @@ import Watch from "@/pages/Watch";
 import Search from "@/pages/Search";
 import Profile from "@/pages/Profile";
 const Account = lazy(() => import('@/pages/User/Account'));
+
+declare global {
+	interface Window { hls: Hls }
+}
 
 const App: Component = () => {
 	const [loading, setLoading] = createSignal(true);
@@ -33,11 +38,12 @@ const App: Component = () => {
 		<Routes>
 			<Route path={'/'} component={Home}/>
 			<Route path={'/view/:id'} component={View}/>
+			<Route path={'/watch/:id'} component={Watch}/>
 			<Route path={'/search/:query'} component={Search}/>
-			<Route path={'/watch/:sId'} component={Watch}/>
+
+			<Route path={'/profile/:user'} element={<Profile/>}/>
 
 			<Route path={'/user/account'} element={<RR><Account/></RR>}/>
-			<Route path={'/profile/:username'} element={<Profile/>}/>
 		</Routes>
 	);
 };

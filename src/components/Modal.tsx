@@ -2,7 +2,7 @@ import {Component, createEffect, createSignal, ParentProps, Show} from "solid-js
 import classNames from "classnames";
 import Btn from "@/components/Button";
 import Flash from "@/components/Flash";
-import styles from './style.module.css';
+import styles from '@/styles/modal.module.css';
 import {Icon} from "solid-heroicons";
 import {xMark} from "solid-heroicons/outline";
 
