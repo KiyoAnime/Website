@@ -1,15 +1,16 @@
 :root {
+    --plyr-menu-radius: 0.375rem;
+    --modal-color: rgb(229 231 235);
+    --plyr-menu-arrow-size: 0.525rem;
+    --plyr-tooltip-arrow-size: 0.425rem;
+    --plyr-range-thumb-height: 0.925rem;
+    --plyr-menu-color: var(--modal-color);
+    --plyr-tooltip-color: var(--modal-color);
     --plyr-color-main: var(--accent-color-blue);
     --plyr-video-control-color: rgb(243 244 246);
-    --plyr-video-control-color-hover: var(--plyr-color-main);
-    --plyr-video-control-background-hover: transparent;
     --plyr-menu-background: var(--secondary-color);
-    --plyr-menu-color: rgb(229 231 235);
-    --plyr-menu-radius: 0.375rem;
-    --plyr-menu-arrow-size: 0.5rem;
-    --plyr-range-thumb-height: 0.875rem;
-    --plyr-range-thumb-background: rgb(229 231 235);
     --plyr-tooltip-background: var(--secondary-color);
-    --plyr-tooltip-color: rgb(229 231 235);
-    --plyr-tooltip-arrow-size: 0.375rem;
+    --plyr-range-thumb-background: var(--modal-color);
+    --plyr-video-control-background-hover: transparent;
+    --plyr-video-control-color-hover: var(--plyr-color-main);
 }

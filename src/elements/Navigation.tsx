@@ -9,8 +9,8 @@ import {arrowRightOnRectangle, bars_3, cog_8Tooth, userCircle} from "solid-heroi
 import {user} from "solid-heroicons/solid";
 import Auth from "@/modals/Auth";
 import { IconI } from '@/types';
-import banner from '@/assets/banner.png';
 import cookie from "js-cookie";
+import banner from '@/assets/banner.png';
 
 interface ItemProps {
 	icon: IconI;
@@ -27,7 +27,7 @@ const toggle = () => {
 	setAuth(true);
 };
 
-const Brand: Component = () => <A href={'/'} class={'inline-flex items-center'}><img src={banner} alt={'Kiyo'} class={'h-16 -ml-3.5 mr-1.5'}/></A>;
+const Brand: Component = () => <A href={'/'} class={'inline-flex items-center'}><img src={banner} alt={'Kiyo'} class={'h-[4.5rem] mt-0.5 -ml-4 mr-1.5'}/></A>;
 
 const Item: Component<ParentProps<ItemProps>> = (props) => (
 	<A href={props.href} onClick={props.onClick}>

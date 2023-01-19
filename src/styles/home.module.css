@@ -1,0 +1,4 @@
+.swiper-pagination-bullet {
+    @apply bg-white;
+    background-color: rgb(38, 215, 255) !important;
+}

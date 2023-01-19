@@ -1,12 +1,13 @@
+import 'swiper/css';
+import 'swiper/css/autoplay';
+import 'swiper/css/pagination';
+import '@/styles/home.module.css';
 import {Component, createSignal, For, onMount} from "solid-js";
 import PageBlock from "@/elements/PageBlock";
 import Card from "@/components/Card";
 import getRecent, {RecentSeries} from "@/api/info/recent";
 import {Swiper, SwiperSlide} from "swiper/solid";
 import { Autoplay, Pagination } from "swiper";
-import 'swiper/css';
-import 'swiper/css/autoplay';
-import 'swiper/css/pagination';
 import getTrending, {TrendingSeries} from "@/api/info/trending";
 import { A } from '@solidjs/router'
 import {Icon} from "solid-heroicons";

@@ -7,7 +7,7 @@ const Profile: Component = () => {
 
     }
     return (
-        <PageBlock title={`Kiyo • ${user}`}>
+        <PageBlock title={`${user} • Kiyo •`}>
             <div class={'flex justify-center mt-12 md:justify-start sm:mt-10 md:mt-10'}>
                 <div class={'flex flex flex-col items-center md:items-start'}>
                     <div class={'relative'}>

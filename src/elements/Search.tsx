@@ -22,7 +22,7 @@ const Search: Component<{ mobile?: boolean }> = (props) => {
     };
 
     return (
-        <div class={classNames('inline-flex items-center p-0.5 w-full rounded-xl bg-gradient-to-br from-accent-pink to-accent-blue sm:w-64 lg:w-96')}>
+        <div class={classNames('inline-flex items-center p-[0.15rem] w-full rounded-xl bg-gradient-to-br from-accent-pink to-accent-blue sm:w-64 lg:w-96')}>
             <input id={'search'} type={'text'} class={'w-full rounded-xl'} placeholder={'Search...'} onChange={({ currentTarget: { value } }) => setQuery(value)} onSubmit={submit}/>
             <Show when={props.mobile} keyed={false}>
                 <Icon path={magnifyingGlass} class={'h-7 w-7 mx-2 cursor-pointer text-white'} onClick={submit}/>
