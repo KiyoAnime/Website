@@ -35,7 +35,7 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 	};
 
 	const checkSubmit = (values: Value) => {
-		setCheckSubmitting(true)
+		setCheckSubmitting(true);
 		if (!values.email.match(emailRegex)) {
 			setFlash({ type: 'warn', key: 'auth', message: 'Invalid email specified.' });
 			return setCheckSubmitting(false);

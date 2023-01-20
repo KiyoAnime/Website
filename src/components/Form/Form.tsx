@@ -34,16 +34,16 @@ const Form: Component<ParentProps<Props>> = (props) => {
 			const input = document.getElementById(item.id) as HTMLInputElement;
 			if (!input) return;
 			switch (item.type) {
-				case 'text':
-					values[item.id] = input.value;
-					break;
-
 				case 'checkbox':
 					values[item.id] = input.checked;
 					break;
 
 				case 'textarea':
 					values[item.id] = new Converter().makeHtml(input.value);
+					break;
+
+				default:
+					values[item.id] = input.value;
 					break;
 			}
 		}
