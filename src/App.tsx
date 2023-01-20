@@ -13,7 +13,8 @@ import View from "@/pages/View";
 import Watch from "@/pages/Watch";
 import Search from "@/pages/Search";
 import Profile from "@/pages/Profile";
-const Account = lazy(() => import('@/pages/User/Account'));
+
+const Settings = lazy(() => import('@/pages/User/Settings'));
 
 declare global {
 	interface Window { hls: Hls }
@@ -43,7 +44,7 @@ const App: Component = () => {
 
 			<Route path={'/profile/:user'} element={<Profile/>}/>
 
-			<Route path={'/user/account'} element={<RR><Account/></RR>}/>
+			<Route path={'/user/account'} element={<RR><Settings/></RR>}/>
 		</Routes>
 	);
 };

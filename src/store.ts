@@ -10,6 +10,15 @@ export interface UserStore {
 	avatar?: string;
 	username: string;
 	profileName?: string;
+	config: {
+		publicEmail: boolean;
+		publicProfile: boolean;
+	};
+	profile: {
+		bio?: string;
+		badges?: number[];
+		gradient: { start: string; end: string; };
+	};
 }
 
 const [store, setStore] = createStore<Store>({ user: undefined });

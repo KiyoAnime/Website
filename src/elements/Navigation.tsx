@@ -51,7 +51,7 @@ const Dropdown: Component = () => {
 				<span class={'truncate'}>{store.user?.email}</span>
 			</div>
 			<div class={'flex flex-col gap-y-1'}>
-				<Item icon={cog_8Tooth} href={'/user/account'}>Account</Item>
+				<Item icon={cog_8Tooth} href={'/user/account'} onClick={() => setDropdown(false)}>Account</Item>
 				<Item icon={arrowRightOnRectangle} href={'#'} onClick={logout}>Logout</Item>
 			</div>
 		</div>

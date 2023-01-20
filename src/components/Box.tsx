@@ -12,7 +12,7 @@ interface Props {
 const Box: Component<ParentProps<Props>> = (props) => (
 	<div class={classNames('flex flex-col mt-4 h-auto bg-secondary rounded-md', props.class)}>
 		<span class={'inline-flex items-center h-11 p-2 bg-primary rounded-t-md'}>
-			<Icon path={props.icon} class={'h-7 w-7 mr-1'}/>
+			<Icon path={props.icon} class={'h-7 w-7 mr-1.5'}/>
 			<h5>{props.title}</h5>
 		</span>
 		<div class={'py-1 px-2'}>

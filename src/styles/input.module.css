@@ -1,0 +1,14 @@
+.toggle {
+    transition: background-color 300ms;
+    @apply checked:bg-accent-blue;
+    @apply relative h-[1.875rem] w-[3.125rem] appearance-none cursor-pointer bg-gray-500 outline-none rounded-full;
+}
+
+.toggle::after {
+    transition: left 300ms;
+    @apply absolute content-[''] top-1/2 left-[30%] h-[1.375rem] w-[1.375rem] -translate-y-1/2 -translate-x-1/2 bg-white rounded-full;
+}
+
+.toggle:checked::after {
+    @apply left-[70%];
+}

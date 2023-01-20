@@ -678,6 +678,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/showdown@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@types/showdown@npm:2.0.0"
+  checksum: 90ae870146b3d3f2ca75732b5ee9b85cd2b10719f1aea8021af97e0bb6828acd7715093a1f715dcc18244636e1a983650556a051b1aa51a06018302b1d7c8722
+  languageName: node
+  linkType: hard
+
 "abbrev@npm:^1.0.0":
   version: 1.1.1
   resolution: "abbrev@npm:1.1.1"
@@ -1038,6 +1045,13 @@ __metadata:
   dependencies:
     delayed-stream: ~1.0.0
   checksum: 49fa4aeb4916567e33ea81d088f6584749fc90c7abec76fd516bf1c5aa5c79f3584b5ba3de6b86d26ddd64bae5329c4c7479343250cfe71c75bb366eae53bb7c
+  languageName: node
+  linkType: hard
+
+"commander@npm:^9.0.0":
+  version: 9.5.0
+  resolution: "commander@npm:9.5.0"
+  checksum: c7a3e27aa59e913b54a1bafd366b88650bc41d6651f0cbe258d4ff09d43d6a7394232a4dadd0bf518b3e696fdf595db1028a0d82c785b88bd61f8a440cecfade
   languageName: node
   linkType: hard
 
@@ -2377,6 +2391,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"showdown@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "showdown@npm:2.1.0"
+  dependencies:
+    commander: ^9.0.0
+  bin:
+    showdown: bin/showdown.js
+  checksum: 9e33607612c4465f9ef39de356e2cee512e248eb71d4725e1d4353cf3ab4bbe89a94601ce6bfbd8245000633693c8b90e7d85a9613dfeba7704a7422cee78282
+  languageName: node
+  linkType: hard
+
 "signal-exit@npm:^3.0.7":
   version: 3.0.7
   resolution: "signal-exit@npm:3.0.7"
@@ -2733,6 +2758,7 @@ __metadata:
     "@tailwindcss/line-clamp": ^0.4.2
     "@types/js-cookie": ^3.0.2
     "@types/node": ^18.11.18
+    "@types/showdown": ^2.0.0
     autoprefixer: ^10.4.13
     axios: ^1.2.1
     classnames: ^2.3.2
@@ -2741,6 +2767,7 @@ __metadata:
     js-cookie: ^3.0.1
     plyr: ^3.7.3
     postcss: ^8.4.20
+    showdown: ^2.1.0
     solid-hcaptcha: ^0.2.6
     solid-heroicons: ^3.1.1
     solid-js: ^1.6.6
