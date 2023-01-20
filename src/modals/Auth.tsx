@@ -25,20 +25,20 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 	const [style, setStyle] = createSignal('h-80');
 	const [title, setTitle] = createSignal('Welcome Back');
 	const [loading, setLoading] = createSignal(false);
-	const [exists, setExists] = createSignal<boolean|undefined>();
+	const [checkSubmitting, setCheckSubmitting] = createSignal(false);
+	const [loginSubmitting, setLoginSubmitting] = createSignal(false);
+	const [registerSubmitting, setRegisterSubmitting] = createSignal(false);
 
 	const reset = () => {
 		clearFlash();
 		setView('check');
-		setExists(undefined);
 	};
 
 	const checkSubmit = (values: Value) => {
-		console.log('activated check');
-		console.log(values.email);
+		setCheckSubmitting(true)
 		if (!values.email.match(emailRegex)) {
 			setFlash({ type: 'warn', key: 'auth', message: 'Invalid email specified.' });
-			return setLoading(false);
+			return setCheckSubmitting(false);
 		}
 		clearFlash();
 		setEmail(values.email);
@@ -51,51 +51,34 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 				setStyle('h-[34.5rem]');
 				setTitle('Create an Settings');
 			}
-			return setLoading(false);
+			return setCheckSubmitting(false);
 		});
 	};
 
 	const loginSubmit = (values: Value) => {
+		setLoginSubmitting(true);
 		login(values.email, values.password).then((res) => {
 			cookie.set(res.data.key, res.data.value);
 			return window.location.reload();
 		}).catch((err) => {
 			setFlash({ type: 'warn', key: 'auth', message: httpToHuman(err) });
-			return setLoading(false);
+			return setLoginSubmitting(false);
 		});
 	};
 
 	const registerSubmit = (values: Value) => {
-		if (info()!.password !== info()!.passwordConf) {
+		setRegisterSubmitting(true);
+		if (values.password !== values.passwordConf) {
 			setFlash({ type: 'warn', key: 'auth', message: 'Passwords do not match.' });
-			return setLoading(false);
+			return setRegisterSubmitting(false);
 		}
 		clearFlash();
-		register(info()?.email!, info()?.username!, info()?.password!).then((res) => {
+		register(values.email, values.username, values.password).then((res) => {
 			if (!res.error) window.location.reload();
 		}).catch((res) => {
 			setFlash({ type: 'error', key: 'auth', message: httpToHuman(res) });
-			setLoading(false);
+			setRegisterSubmitting(false);
 		});
-	};
-
-	const inputUpdate = (id: string) => (event: Event): void => {
-		event.preventDefault();
-		const value = (event.currentTarget as HTMLInputElement).value;
-		setInfo({ ...info(), [id]: value });
-		if (value) {
-			const target = (event.currentTarget as HTMLInputElement);
-			target.classList.add('border-accent-blue');
-			target.classList.remove('border-red-600', 'focus:border-red-400');
-		}
-	};
-
-	const inputError = (id: string): void => {
-		const element = document.getElementById(id);
-		console.log(element);
-		if (!element) return;
-		element.classList.add('border-red-600', 'focus:border-red-400');
-		element.classList.remove('border-accent-blue');
 	};
 
 	return (
@@ -103,13 +86,13 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 			<div class={'flex flex-col justify-center mt-6'}>
 				<Switch>
 					<Match when={view() === 'check'} keyed={false}>
-						<Form items={[{ id: 'email', type: 'email', label: 'Email' }]} color={'bg-primary'} submitting={false} onSubmit={checkSubmit} button={{ label: 'Next', color: 'blue' }}/>
+						<Form items={[{ id: 'email', type: 'email', label: 'Email' }]} color={'bg-primary'} submitting={checkSubmitting()} onSubmit={checkSubmit} button={{ label: 'Next', color: 'blue' }}/>
 					</Match>
 					<Match when={view() === 'login'} keyed={false}>
 						<Form items={[
 							{ id: 'email', type: 'email', label: 'Email', value: email() },
 							{ id: 'password', type: 'password', label: 'Password' }
-						]} color={'bg-primary'} submitting={false} onSubmit={loginSubmit} button={{ label: 'Login', color: 'blue' }}>
+						]} color={'bg-primary'} submitting={loginSubmitting()} onSubmit={loginSubmit} button={{ label: 'Login', color: 'blue' }}>
 							<span class={'flex justify-end mt-1'}>
 								<span class={'cursor-pointer hover:text-accent-blue'}>Forgot Password?</span>
 							</span>
@@ -124,7 +107,7 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 							{ id: 'username', type: 'text', label: 'Username' },
 							{ id: 'password', type: 'password', label: 'Password' },
 							{ id: 'passwordConf', type: 'password', label: 'Confirm Password' }
-						]} color={'bg-primary'} submitting={false} onSubmit={registerSubmit} button={{ color: 'blue', label: 'Create' }}>
+						]} color={'bg-primary'} submitting={registerSubmitting()} onSubmit={registerSubmit} button={{ color: 'blue', label: 'Create' }}>
 							<div class={'mt-5'}>
 								<HCaptcha sitekey={'cc87a83a-6974-4b66-93ba-08c9b0e1c1ac'} theme={'dark'}/>
 							</div>
