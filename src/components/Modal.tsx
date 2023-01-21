@@ -36,7 +36,7 @@ const Modal: Component<ParentProps<Props>> = (props) => {
 
 	return (
 		<Show when={open()} keyed={false}>
-			<div class={'absolute top-0 left-0 h-screen w-screen z-2 bg-black opacity-50'}/>
+			<div class={'absolute top-0 left-0 h-screen w-screen z-5 bg-black opacity-50'}/>
 			<div class={classNames(styles.modal, props.style)}>
 				<div class={'flex justify-center items-center'}>
 					<div class={'flex flex-col justify-center items-center'}>
