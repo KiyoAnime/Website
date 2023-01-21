@@ -18,14 +18,18 @@ import Flash, {clearFlash, setFlash} from "@/components/Flash";
 import {httpToHuman} from "@/helpers";
 import Btn from "@/components/Button";
 import config from "@/api/user/profile/config";
-import box from "@/components/Box";
+import bio from "@/api/user/profile/bio";
+import design from "@/api/user/profile/design";
+import {Converter} from "showdown";
 
 const Settings: Component = () => {
-	const boxStyles = 'h-[22rem]';
+	const boxStyles = 'h-[21.5rem]';
 	const [loading, setLoading] = createSignal(true);
 	const infoOpt = 'flex justify-between items-center';
+	const [bioSubmitting, setBioSubmitting] = createSignal(false);
 	const [infoSubmitting, setInfoSubmitting] = createSignal(false);
 	const [passSubmitting, setPassSubmitting] = createSignal(false);
+	const [designSubmitting, setDesignSubmitting] = createSignal(false);
 	const [configSubmitting, setConfigSubmitting] = createSignal(false);
 	setLoading(false);
 
@@ -43,18 +47,46 @@ const Settings: Component = () => {
 		});
 	};
 
+	const settingsSubmit = (values: Value) => {
+
+	};
+
 	const passSubmit = (values: Value) => {
 
 	};
 
-	const profileSubmit = (values: Value) => {
+	const bioSubmit = (values: Value) => {
+		setBioSubmitting(true);
+		bio({ bio: values.bio }).then((res) => {
+			if (!res.error) setFlash({ key: 'account', type: 'success', message: 'Successfully updated profile bio.' });
+			setBioSubmitting(false);
+			setTimeout(() => {
+				clearFlash();
+			}, 5000);
+		}).catch((err) => {
+			setFlash({ key: 'account', type: 'warn', message: httpToHuman(err) });
+			setBioSubmitting(false);
+		});
+	};
 
+	const designSubmit = (values: Value) => {
+		setDesignSubmitting(true);
+		design({ gradient: { end: values.end, start: values.start } }).then((res) => {
+			if (!res.error) setFlash({ key: 'account', type: 'success', message: 'Successfully updated profile design.' });
+			setDesignSubmitting(false);
+			setTimeout(() => {
+				clearFlash();
+			}, 5000);
+		}).catch((err) => {
+			setFlash({ key: 'account', type: 'warn', message: httpToHuman(err) });
+			setDesignSubmitting(false);
+		});
 	};
 
 	const configSubmit = (values: Value) => {
 		setConfigSubmitting(true);
 		config({ publicEmail: values.publicEmail, publicProfile: values.publicProfile }).then((res) => {
-			if (!res.error) setFlash({ key: 'account', type: 'success', message: 'Successfully updated profile information.' });
+			if (!res.error) setFlash({ key: 'account', type: 'success', message: 'Successfully updated profile config.' });
 			setConfigSubmitting(false);
 			setTimeout(() => {
 				clearFlash();
@@ -72,9 +104,9 @@ const Settings: Component = () => {
 			<div class={'grid grid-cols-1 gap-x-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'}>
 				<Box icon={informationCircle} title={'User Information'} class={boxStyles}>
 					<Form onSubmit={infoSubmit} submitting={infoSubmitting()} button={{ color: 'blue', label: 'Update' }} items={[
-						{ id: 'profileName', type: 'text', label: 'Profile Name', value: store.user?.profileName },
-						{ id: 'avatar', type: 'text', label: 'Avatar URL', value: store.user?.avatar },
-						{ id: 'email', type: 'text', label: 'Email', value: store.user?.email }
+						{ id: 'profileName', type: 'text', label: 'Profile Name', value: store.user?.profileName, validation: { type: 'string', message: 'You must specify a profile name.' } },
+						{ id: 'avatar', type: 'text', label: 'Avatar URL', value: store.user?.avatar, validation: { type: 'string', message: 'You must specify an avatar url.' } },
+						{ id: 'email', type: 'text', label: 'Email', value: store.user?.email, validation: { type: 'string', message: 'You must specify an email.' } }
 					]}/>
 				</Box>
 				<Box icon={cog_8Tooth} title={'Settings'} class={boxStyles}>
@@ -94,18 +126,24 @@ const Settings: Component = () => {
 						<span class={infoOpt}>User ID:<code>{store.user?._id}</code></span>
 					</div>
 				</Box>
-				<Box icon={pencilSquare} title={'Profile Bio'} class={`${boxStyles} md:col-span-2`}>
+				<Box icon={pencilSquare} title={'Profile Bio'} class={`${boxStyles} relative md:col-span-2`}>
 					<Form items={[
-						{ id: 'bio', type: 'textarea', label: 'Text' }
-					]} submitting={false} onSubmit={() => {}} button={{ color: 'blue', label: 'Update' }}/>
+						{ id: 'bio', type: 'textarea', label: 'Text', value: new Converter().makeMarkdown(store.user?.profile.bio || '<strong>Make something cool...</strong>') }
+					]} submitting={bioSubmitting()} onSubmit={bioSubmit}>
+						<div class={'absolute bottom-4 right-4'}>
+							<Btn.Blue type={'submit'} loading={bioSubmitting()}>Update</Btn.Blue>
+						</div>
+					</Form>
 				</Box>
-				<Box icon={paintBrush} title={'Profile Design'} class={boxStyles}>
+				<Box icon={paintBrush} title={'Profile Design'} class={`${boxStyles} relative`}>
 					<h4 class={'pt-1 px-1.5'}>Gradient:</h4>
 					<Form items={[
 						{ id: 'start', type: 'color', label: 'Start', value: store.user?.profile.gradient.start },
 						{ id: 'end', type: 'color', label: 'End', value: store.user?.profile.gradient.end }
-					]} class={'grid grid-cols-2 gap-4'} submitting={false} onSubmit={() => {}}>
-
+					]} class={'grid grid-cols-2 gap-4'} submitting={designSubmitting()} onSubmit={designSubmit}>
+						<div class={'absolute bottom-4 right-4'}>
+							<Btn.Blue type={'submit'} loading={designSubmitting()}>Update</Btn.Blue>
+						</div>
 					</Form>
 				</Box>
 				<Box icon={adjustmentsHorizontal} title={'Profile Config'} class={`${boxStyles} relative`}>

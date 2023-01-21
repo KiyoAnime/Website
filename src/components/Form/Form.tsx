@@ -86,7 +86,8 @@ const Form: Component<ParentProps<Props>> = (props) => {
 		const item = props.items.find((i) => i.id === event.currentTarget.id);
 		if (!item) return;
 		const { id, value } = event.currentTarget;
-		if (item.validation?.type instanceof RegExp) {
+		if (!item.validation) return;
+		if (item.validation.type instanceof RegExp) {
 			if (item.validation.type.test(value)) return clearError(id); else return inputError({ id, items: props.items });
 		} else {
 			if (item.validation?.type === 'string' && value.length > 1) return clearError(id); else return inputError({ id, items: props.items });
@@ -106,7 +107,7 @@ const Form: Component<ParentProps<Props>> = (props) => {
 				{props.children}
 			</Show>
 			<Show when={props.button} keyed={false}>
-				<div class={'flex justify-end mt-4'}>
+				<div class={'flex justify-end mt-1.5'}>
 					<Switch>
 						<Match when={props.button?.color === 'red'} keyed={false}>
 							<Btn.Red type={'submit'} loading={props.submitting}>{props.button?.label}</Btn.Red>

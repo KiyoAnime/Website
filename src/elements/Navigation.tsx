@@ -51,7 +51,7 @@ const Dropdown: Component = () => {
 				<span class={'truncate'}>{store.user?.email}</span>
 			</div>
 			<div class={'flex flex-col gap-y-1'}>
-				<Item icon={cog_8Tooth} href={'/user/account'} onClick={() => setDropdown(false)}>Account</Item>
+				<Item icon={cog_8Tooth} href={'/user/settings'} onClick={() => setDropdown(false)}>Account</Item>
 				<Item icon={arrowRightOnRectangle} href={'#'} onClick={logout}>Logout</Item>
 			</div>
 		</div>
@@ -98,8 +98,8 @@ const Mobile: Component = () => (
 		<div class={'mb-2'}>
 			<Search mobile/>
 		</div>
-		<Item href={'/user/account'} icon={user}>Account</Item>
-		<Item href={'/'} icon={user}>Login 2</Item>
+		<Item href={'/user/settings'} icon={user}>Account</Item>
+		{/*<Item href={'/'} icon={user}>Login 2</Item>*/}
 	</div>
 );
 

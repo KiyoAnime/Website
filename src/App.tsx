@@ -44,7 +44,7 @@ const App: Component = () => {
 
 			<Route path={'/profile/:user'} element={<Profile/>}/>
 
-			<Route path={'/user/account'} element={<RR><Settings/></RR>}/>
+			<Route path={'/user/settings'} element={<RR><Settings/></RR>}/>
 		</Routes>
 	);
 };
