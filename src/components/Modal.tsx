@@ -12,6 +12,7 @@ interface Props {
 	title: string;
 	style: string;
 	resetFn?: () => void;
+	image?: { src: string; alt: string; class: string; };
 	button?: { label: string; loading: boolean; submit: () => void; };
 }
 
@@ -38,7 +39,12 @@ const Modal: Component<ParentProps<Props>> = (props) => {
 			<div class={'absolute top-0 left-0 h-screen w-screen z-2 bg-black opacity-50'}/>
 			<div class={classNames(styles.modal, props.style)}>
 				<div class={'flex justify-center items-center'}>
-					<h2 class={'ml-2 mt-0.5 mb-4'}>{props.title}</h2>
+					<div class={'flex flex-col justify-center items-center'}>
+						<Show when={props.image} keyed={false}>
+							<img src={props.image?.src} alt={props.image?.alt} class={props.image?.class}/>
+						</Show>
+						<h2 class={classNames('mb-4', props.image ? 'mt-5' : 'mt-0.5')}>{props.title}</h2>
+					</div>
 					<Icon
 						path={xMark}
 						onClick={() => toggle(false)}

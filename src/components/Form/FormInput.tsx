@@ -1,4 +1,4 @@
-import {Component} from "solid-js";
+import {Component, Show} from "solid-js";
 import Input, {Props} from "@/components/Input";
 
 interface FormInputProps extends Props {

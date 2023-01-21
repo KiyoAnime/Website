@@ -40,8 +40,16 @@
         @apply inline-flex items-center py-1 px-2 bg-primary rounded;
     }
 
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover,
+    input:-webkit-autofill:focus,
+    input:-webkit-autofill:active{
+        -webkit-text-fill-color: rgb(209 213 219);
+        -webkit-box-shadow: 0 0 0 10rem var(--primary-color) inset;
+    }
+
     input {
-        @apply h-10 p-2 bg-primary rounded-md focus:outline-none focus:border-none;
+        @apply h-10 p-2 bg-primary rounded-md focus:outline-none focus:border-none autofill:bg-primary;
     }
 }
 

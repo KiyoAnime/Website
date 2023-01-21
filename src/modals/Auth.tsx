@@ -9,22 +9,14 @@ import cookie from 'js-cookie';
 import HCaptcha from "solid-hcaptcha";
 import Form, {Value} from "@/components/Form";
 import classNames from "classnames";
-
-interface UserInfo {
-	email?: string;
-	username?: string;
-	password?: string;
-	passwordConf?: string;
-}
+import banner from '@/assets/banner.png';
+import {inputError} from "@/components/Form/Form";
 
 const Auth: Component<{ open: boolean }> = (props)=> {
-	const [view, setView] = createSignal('check');
 	const [email, setEmail] = createSignal('');
-	const [info, setInfo] = createSignal<UserInfo>();
-	const [text, setText] = createSignal('Next');
-	const [style, setStyle] = createSignal('h-80');
+	const [view, setView] = createSignal('check');
+	const [style, setStyle] = createSignal('h-[21rem]');
 	const [title, setTitle] = createSignal('Welcome Back');
-	const [loading, setLoading] = createSignal(false);
 	const [checkSubmitting, setCheckSubmitting] = createSignal(false);
 	const [loginSubmitting, setLoginSubmitting] = createSignal(false);
 	const [registerSubmitting, setRegisterSubmitting] = createSignal(false);
@@ -48,7 +40,7 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 				setView('login');
 			} else {
 				setView('register');
-				setStyle('h-[34.5rem]');
+				setStyle('h-[36.5rem]');
 				setTitle('Create an Settings');
 			}
 			return setCheckSubmitting(false);
@@ -60,8 +52,8 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 		login(values.email, values.password).then((res) => {
 			cookie.set(res.data.key, res.data.value);
 			return window.location.reload();
-		}).catch((err) => {
-			setFlash({ type: 'warn', key: 'auth', message: httpToHuman(err) });
+		}).catch(() => {
+			inputError({ id: 'password', message: 'Incorrect password provided.' });
 			return setLoginSubmitting(false);
 		});
 	};
@@ -69,7 +61,7 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 	const registerSubmit = (values: Value) => {
 		setRegisterSubmitting(true);
 		if (values.password !== values.passwordConf) {
-			setFlash({ type: 'warn', key: 'auth', message: 'Passwords do not match.' });
+			inputError({ id: 'passwordConf', message: 'Passwords do not match.' });
 			return setRegisterSubmitting(false);
 		}
 		clearFlash();
@@ -82,31 +74,31 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 	};
 
 	return (
-		<Modal key={'auth'} open={props.open} title={title()} style={classNames(style(), 'w-80 sm:w-[22rem] bg-primary')} resetFn={reset}>
+		<Modal key={'auth'} open={props.open} title={title()} style={classNames(style(), 'w-80 sm:w-[22rem] bg-primary')} resetFn={reset} image={view() === 'check' ? { src: banner, alt: 'Kiyo', class: 'w-1/2 mt-2' } : undefined}>
 			<div class={'flex flex-col justify-center mt-6'}>
 				<Switch>
 					<Match when={view() === 'check'} keyed={false}>
-						<Form items={[{ id: 'email', type: 'email', label: 'Email' }]} color={'bg-primary'} submitting={checkSubmitting()} onSubmit={checkSubmit} button={{ label: 'Next', color: 'blue' }}/>
+						<Form items={[{ id: 'email', type: 'email', label: 'Email', validation: { type: emailRegex, message: 'Please specify a valid email.' } }]} color={'bg-primary'} submitting={checkSubmitting()} onSubmit={checkSubmit} button={{ label: 'Next', color: 'blue' }}/>
 					</Match>
 					<Match when={view() === 'login'} keyed={false}>
 						<Form items={[
-							{ id: 'email', type: 'email', label: 'Email', value: email() },
-							{ id: 'password', type: 'password', label: 'Password' }
+							{ id: 'email', type: 'email', label: 'Email', value: email(), readonly: true },
+							{ id: 'password', type: 'password', label: 'Password', validation: { type: 'string', message: 'You must specify a password.' } }
 						]} color={'bg-primary'} submitting={loginSubmitting()} onSubmit={loginSubmit} button={{ label: 'Login', color: 'blue' }}>
-							<span class={'flex justify-end mt-1'}>
+							<span class={'flex justify-end'}>
 								<span class={'cursor-pointer hover:text-accent-blue'}>Forgot Password?</span>
 							</span>
-							<div class={'mt-4'}>
+							<div class={'mt-3'}>
 								<HCaptcha id={'captcha'} sitekey={'cc87a83a-6974-4b66-93ba-08c9b0e1c1ac'} theme={'dark'}/>
 							</div>
 						</Form>
 					</Match>
 					<Match when={view() === 'register'} keyed={false}>
 						<Form items={[
-							{ id: 'email', type: 'email', label: 'Email', value: email() },
-							{ id: 'username', type: 'text', label: 'Username' },
-							{ id: 'password', type: 'password', label: 'Password' },
-							{ id: 'passwordConf', type: 'password', label: 'Confirm Password' }
+							{ id: 'email', type: 'email', label: 'Email', value: email(), readonly: true },
+							{ id: 'username', type: 'text', label: 'Username', validation: { type: 'string', message: 'You must provide a username.' } },
+							{ id: 'password', type: 'password', label: 'Password', validation: { type: 'string', message: 'You must provide a password' } },
+							{ id: 'passwordConf', type: 'password', label: 'Confirm Password', validation: { type: 'string', message: 'You must confirm your password.' } }
 						]} color={'bg-primary'} submitting={registerSubmitting()} onSubmit={registerSubmit} button={{ color: 'blue', label: 'Create' }}>
 							<div class={'mt-5'}>
 								<HCaptcha sitekey={'cc87a83a-6974-4b66-93ba-08c9b0e1c1ac'} theme={'dark'}/>
