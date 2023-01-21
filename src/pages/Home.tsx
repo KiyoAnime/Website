@@ -1,7 +1,6 @@
 import 'swiper/css';
 import 'swiper/css/autoplay';
 import 'swiper/css/pagination';
-import '@/styles/home.module.css';
 import {Component, createSignal, For, onMount} from "solid-js";
 import PageBlock from "@/elements/PageBlock";
 import Card from "@/components/Card";
