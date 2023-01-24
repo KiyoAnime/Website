@@ -3,7 +3,7 @@ import Modal from "@/components/Modal";
 import check from "@/api/auth/check";
 import {clearFlash, setFlash} from "@/components/Flash";
 import register from "@/api/auth/register";
-import {emailRegex, httpToHuman} from "@/helpers";
+import {emailRegex} from "@/helpers";
 import login from "@/api/auth/login";
 import cookie from 'js-cookie';
 import HCaptcha from "solid-hcaptcha";
@@ -68,7 +68,9 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 		register(values.email, values.username, values.password).then((res) => {
 			if (!res.error) window.location.reload();
 		}).catch((res) => {
-			setFlash({ type: 'error', key: 'auth', message: httpToHuman(res) });
+			if (res.response.data.code !== 'ERR.DUPLICATE_ACCOUNT') return;
+			if (res.response.data.data.includes('Email')) inputError({ id: 'email', message: 'Email is already taken.' });
+			if (res.response.data.data.includes('Username')) inputError({ id: 'username', message: 'Username is already taken.' });
 			setRegisterSubmitting(false);
 		});
 	};

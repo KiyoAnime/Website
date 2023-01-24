@@ -39,11 +39,11 @@ const Watch: Component = () => {
 		await getUrl(info()?.episodes![ep - 1].id!).then(async (res) => {
 			setEpisode(ep);
 			setEmbedded(res.data.embedded);
-			if (!res.data.url) return startEmbedded();
+			if (!res.data.url) return setPlayerMode('embedded');
 			const player = document.getElementById('player') as HTMLVideoElement;
 			if (!player) return;
 			if (player.canPlayType('application/vnd.apple.mpegurl')) return player.src = res.data.url;
-			if (!Hls.isSupported()) return startEmbedded();
+			if (!Hls.isSupported()) return setPlayerMode('embedded');
 			window.hls = new Hls({maxBufferLength: 30, maxBufferSize: 5242880, maxMaxBufferLength: 30});
 			window.hls.loadSource(res.data.url);
 			window.hls.on(Hls.Events.MANIFEST_PARSED, () => {
@@ -65,12 +65,6 @@ const Watch: Component = () => {
 
 	const changeUrl = (id: string) => {
 		window.location.href = `/watch/${id}`;
-	};
-
-	const startEmbedded = () => {
-		const player = document.getElementById('embedded-player') as HTMLIFrameElement;
-		if (!player) return;
-		player.src = embedded();
 	};
 
 	const updateQuality = (quality: number) => {

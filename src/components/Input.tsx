@@ -23,7 +23,7 @@ const Input: Component<Props> = (props) => {
 			<div class={'flex flex-col'}>
 				<div id={local.eId ? local.eId : `${others.id}-parent`} class={classNames('relative h-11 border-2 border-accent-blue rounded-md', local.class)}>
 					<label class={classNames('absolute -top-3 left-3 px-0.5', local.labelBg ? local.labelBg : 'bg-primary')}>{local.label}</label>
-					<input {...others} value={local.value as string} class={'h-full w-full bg-transparent'}/>
+					<input {...others} value={local.value as string} class={'h-full w-full bg-transparent'} autocomplete={'off'}/>
 				</div>
 				<span id={`${props.id}-error`} class={'inline-block text-sm text-red-500'}>&nbsp;</span>
 			</div>

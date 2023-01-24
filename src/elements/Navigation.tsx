@@ -5,27 +5,23 @@ import Btn from "@/components/Button";
 import {A} from "@solidjs/router";
 import Search from "@/elements/Search";
 import {Icon} from "solid-heroicons";
-import {arrowRightOnRectangle, bars_3, cog_8Tooth, userCircle} from "solid-heroicons/outline";
+import {arrowRightOnRectangle, bars_3, cog_8Tooth} from "solid-heroicons/outline";
 import {user} from "solid-heroicons/solid";
 import Auth from "@/modals/Auth";
 import { IconI } from '@/types';
 import cookie from "js-cookie";
 import banner from '@/assets/banner.png';
 
+interface MobileProps {
+	setAuth: (open: boolean) => void;
+	setMobile: (open: boolean) => void;
+}
+
 interface ItemProps {
 	icon: IconI;
 	href: string;
 	onClick?: JSX.EventHandlerUnion<HTMLAnchorElement, MouseEvent>;
 }
-
-const [auth, setAuth] = createSignal(false);
-const [mobile, setMobile] = createSignal(false);
-const [dropdown, setDropdown] = createSignal(false);
-
-const toggle = () => {
-	setAuth(false);
-	setAuth(true);
-};
 
 const Brand: Component = () => <A href={'/'} class={'inline-flex items-center'}><img src={banner} alt={'Kiyo'} class={'h-[4.5rem] mt-0.5 -ml-4 mr-1.5'}/></A>;
 
@@ -38,8 +34,9 @@ const Item: Component<ParentProps<ItemProps>> = (props) => (
 	</A>
 );
 
-const Dropdown: Component = () => {
+const Dropdown: Component<{ setDropdown: (open: boolean) => void }> = (props) => {
 	const logout = () => {
+		props.setDropdown(false);
 		cookie.remove('token');
 		window.location.reload();
 	};
@@ -51,38 +48,19 @@ const Dropdown: Component = () => {
 				<span class={'truncate'}>{store.user?.email}</span>
 			</div>
 			<div class={'flex flex-col gap-y-1'}>
-				<Item icon={cog_8Tooth} href={'/user/settings'} onClick={() => setDropdown(false)}>Account</Item>
+				<Item icon={cog_8Tooth} href={'/user/settings'} onClick={() => props.setDropdown(false)}>Account</Item>
 				<Item icon={arrowRightOnRectangle} href={'#'} onClick={logout}>Logout</Item>
 			</div>
 		</div>
 	);
 };
 
-const Bar: Component<ParentProps> = (props) => {
-	return (
-		<div class={'py-4'}>
-			<div class={'hidden p-4 h-20 justify-between items-center z-2 bg-primary rounded-xl sm:flex'}>
-				{props.children}
-			</div>
-			<div class={'flex flex-col h-20 z-2 bg-primary rounded-t-xl sm:hidden'}>
-				<div class={'inline-flex px-4 py-2 justify-between items-center sm:py-3'}>
-					<Brand/>
-					<Icon path={bars_3} class={'h-8 w-8 cursor-pointer'} onClick={() => setMobile(!mobile())}/>
-				</div>
-				<Show when={mobile()} keyed={false}>
-					<Mobile/>
-				</Show>
-			</div>
-		</div>
-	);
-};
-
-const Mobile: Component = () => (
+const Mobile: Component<MobileProps> = (props) => (
 	<div class={'flex flex-col w-full px-4 py-2 z-3 gap-y-1 bg-primary rounded-b-xl sm:hidden'}>
 		<div class={'inline-flex justify-center items-center mb-3'}>
 			<Switch>
 				<Match when={!store.user} keyed={false}>
-					<span class={'flex flex-col items-center'} onClick={() => { setMobile(false); toggle(); }}>
+					<span class={'flex flex-col items-center'} onClick={() => { props.setMobile(false); props.setAuth(true); }}>
 						<Icon path={user} class={'h-10 w-10 text-accent-blue'}/>
 						Login
 					</span>
@@ -98,42 +76,53 @@ const Mobile: Component = () => (
 		<div class={'mb-2'}>
 			<Search mobile/>
 		</div>
-		<Item href={'/user/settings'} icon={user}>Account</Item>
-		{/*<Item href={'/'} icon={user}>Login 2</Item>*/}
+		<Item href={'/user/settings'} icon={user} onClick={() => props.setMobile(false)}>Account</Item>
 	</div>
 );
 
 const Navigation: Component = () => {
+	const [auth, setAuth] = createSignal(false);
+	const [mobile, setMobile] = createSignal(false);
+	const [dropdown, setDropdown] = createSignal(false);
+
+	const toggle = () => {
+		setAuth(false);
+		setAuth(true);
+	};
+
 	return (
 		<Container>
 			<Auth open={auth()}/>
-			<Switch>
-				<Match when={!store.user} keyed={false}>
-					<Bar>
+			<div class={'py-4'}>
+				<div class={'hidden p-4 h-20 justify-between items-center z-2 bg-primary rounded-xl sm:flex'}>
+					<Brand/>
+					<div class={'relative hidden items-center sm:inline-flex'}>
+						<Search/>
+						<Switch>
+							<Match when={!store.user} keyed={false}>
+								<Btn.Text onClick={toggle}>Login</Btn.Text>
+							</Match>
+							<Match when={!!store.user} keyed={false}>
+								<div class={'flex justify-center items-center h-11 w-11 ml-4 p-[0.15rem] cursor-pointer bg-gradient-to-br from-accent-pink to-accent-blue rounded-full'} onClick={() => setDropdown(!dropdown())}>
+									<img class={'h-9.5 w-9.5 rounded-full'} src={store.user?.avatar} alt={store.user?.username}/>
+								</div>
+								<Show when={dropdown()} keyed={false}>
+									<Dropdown setDropdown={setDropdown}/>
+								</Show>
+							</Match>
+						</Switch>
+					</div>
+				</div>
+				<div class={'flex flex-col h-20 z-2 bg-primary rounded-t-xl sm:hidden'}>
+					<div class={'inline-flex px-4 py-[0.175rem] justify-between items-center sm:py-3'}>
 						<Brand/>
-						<div class={'hidden items-center sm:inline-flex'}>
-							<Search/>
-							<Btn.Text onClick={toggle}>
-								Login
-							</Btn.Text>
-						</div>
-					</Bar>
-				</Match>
-				<Match when={!!store.user} keyed={false}>
-					<Bar>
-						<Brand/>
-						<div class={'relative hidden items-center sm:inline-flex'}>
-							<Search/>
-							<div class={'flex justify-center items-center h-11 w-11 ml-4 p-[0.15rem] cursor-pointer bg-gradient-to-br from-accent-pink to-accent-blue rounded-full'} onClick={() => setDropdown(!dropdown())}>
-								<img class={'h-9.5 w-9.5 rounded-full'} src={store.user?.avatar} alt={store.user?.username}/>
-							</div>
-							<Show when={dropdown()} keyed={false}>
-								<Dropdown/>
-							</Show>
-						</div>
-					</Bar>
-				</Match>
-			</Switch>
+						<Icon path={bars_3} class={'h-8 w-8 cursor-pointer'} onClick={() => setMobile(!mobile())}/>
+					</div>
+					<Show when={mobile()} keyed={false}>
+						<Mobile setMobile={setMobile} setAuth={setAuth}/>
+					</Show>
+				</div>
+			</div>
 		</Container>
 	);
 };
