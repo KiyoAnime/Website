@@ -11,11 +11,12 @@ import Form, {Value} from "@/components/Form";
 import classNames from "classnames";
 import banner from '@/assets/banner.png';
 import {inputError} from "@/components/Form/Form";
+import Btn from "@/components/Button";
 
 const Auth: Component<{ open: boolean }> = (props)=> {
 	const [email, setEmail] = createSignal('');
 	const [view, setView] = createSignal('check');
-	const [style, setStyle] = createSignal('h-[21rem]');
+	const [style, setStyle] = createSignal('h-80');
 	const [title, setTitle] = createSignal('Welcome Back');
 	const [checkSubmitting, setCheckSubmitting] = createSignal(false);
 	const [loginSubmitting, setLoginSubmitting] = createSignal(false);
@@ -23,6 +24,7 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 
 	const reset = () => {
 		clearFlash();
+		setStyle('h-80')
 		setView('check');
 	};
 
@@ -80,18 +82,25 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 			<div class={'flex flex-col justify-center mt-6'}>
 				<Switch>
 					<Match when={view() === 'check'} keyed={false}>
-						<Form items={[{ id: 'email', type: 'email', label: 'Email', validation: { type: emailRegex, message: 'Please specify a valid email.' } }]} color={'bg-primary'} submitting={checkSubmitting()} onSubmit={checkSubmit} button={{ label: 'Next', color: 'blue' }}/>
+						<Form items={[{ id: 'email', type: 'email', label: 'Email', validation: { type: emailRegex, message: 'Please specify a valid email.' } }]} color={'bg-primary'} submitting={checkSubmitting()} onSubmit={checkSubmit}>
+							<div class={'absolute bottom-6 right-6'}>
+								<Btn.Blue type={'submit'} loading={checkSubmitting()}>Next</Btn.Blue>
+							</div>
+						</Form>
 					</Match>
 					<Match when={view() === 'login'} keyed={false}>
 						<Form items={[
 							{ id: 'email', type: 'email', label: 'Email', value: email(), readonly: true },
 							{ id: 'password', type: 'password', label: 'Password', validation: { type: 'string', message: 'You must specify a password.' } }
-						]} color={'bg-primary'} submitting={loginSubmitting()} onSubmit={loginSubmit} button={{ label: 'Login', color: 'blue' }}>
+						]} color={'bg-primary'} submitting={loginSubmitting()} onSubmit={loginSubmit}>
 							<span class={'flex justify-end'}>
 								<span class={'cursor-pointer hover:text-accent-blue'}>Forgot Password?</span>
 							</span>
 							<div class={'mt-3'}>
 								<HCaptcha id={'captcha'} sitekey={'cc87a83a-6974-4b66-93ba-08c9b0e1c1ac'} theme={'dark'}/>
+							</div>
+							<div class={'absolute bottom-6 right-6'}>
+								<Btn.Blue type={'submit'} loading={loginSubmitting()}>Login</Btn.Blue>
 							</div>
 						</Form>
 					</Match>
@@ -101,9 +110,12 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 							{ id: 'username', type: 'text', label: 'Username', validation: { type: 'string', message: 'You must provide a username.' } },
 							{ id: 'password', type: 'password', label: 'Password', validation: { type: 'string', message: 'You must provide a password' } },
 							{ id: 'passwordConf', type: 'password', label: 'Confirm Password', validation: { type: 'string', message: 'You must confirm your password.' } }
-						]} color={'bg-primary'} submitting={registerSubmitting()} onSubmit={registerSubmit} button={{ color: 'blue', label: 'Create' }}>
+						]} color={'bg-primary'} submitting={registerSubmitting()} onSubmit={registerSubmit}>
 							<div class={'mt-5'}>
 								<HCaptcha sitekey={'cc87a83a-6974-4b66-93ba-08c9b0e1c1ac'} theme={'dark'}/>
+							</div>
+							<div class={'absolute bottom-6 right-6'}>
+								<Btn.Blue type={'submit'} loading={registerSubmitting()}>Register</Btn.Blue>
 							</div>
 						</Form>
 					</Match>
