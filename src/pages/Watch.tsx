@@ -7,7 +7,7 @@ import getInfo, { Anime } from "@/api/info/info";
 import { createStore } from "solid-js/store";
 import getUrl from "@/api/watch";
 import {Icon} from "solid-heroicons";
-import {chevronRight, chevronLeft, square_3Stack_3d, calendar} from "solid-heroicons/outline";
+import {chevronRight, chevronLeft, folderOpen} from "solid-heroicons/outline";
 import {backward, forward} from "solid-heroicons/solid";
 import classNames from "classnames";
 import store from "@/store";
@@ -21,7 +21,7 @@ const Watch: Component = () => {
 	const [playerMode, setPlayerMode] = createSignal('kiyo');
 	const [info, setInfo] = createSignal<Anime | undefined>();
 	const [episode, setEpisode] = createSignal<number | undefined>();
-	const [range, setRange] = createStore({ start: 0, end: 0, perPage: 60 });
+	const [range, setRange] = createStore({ start: 0, end: 0, perPage: 88 });
 
 	onMount(async () => {
 		await getInfo(parseInt(id), true).then((res) => {
@@ -70,64 +70,73 @@ const Watch: Component = () => {
 				window.hls.currentLevel = index;
 			}
 		});
-	}
+	};
 
 	return (
 		<PageBlock title={'Kiyo'} loading={loading()} flash={{ type: 'flex', key: 'watch' }}>
-			<div class={'flex flex-col w-full mt-4 max-w-6xl'}>
-				<Switch>
-					<Match when={playerMode() === 'kiyo'} keyed={false}>
-						<video id={'player'} autoplay controls poster={'https://media.tenor.com/64BYBgDG41QAAAAC/loading.gif'}/>
-					</Match>
-					<Match when={playerMode() === 'embedded'} keyed={false}>
-						<div class={'h-[40.5rem]'}>
-							{/* @ts-ignore: deprecated but solves problem. */}
-							<iframe id={'embedded-player'} scrolling={'no'} allowfullscreen class={'h-full w-full overflow-hidden outline-none'}/>
-						</div>
-					</Match>
-				</Switch>
-				<Show when={info()?.episodes} keyed={false}>
-					<div class={'flex flex-col w-full bg-secondary'}>
-						<div class={'flex h-8 justify-between bg-primary'}>
-							<span/>
-							<div class={'inline-flex items-center mx-3'}>
-								<Icon path={backward} class={'h-7 w-7 cursor-pointer'} onClick={() => setEp(episode()! - 1)}/>&nbsp;
-								<Icon path={forward} class={'h-7 w-7 cursor-pointer'} onClick={() => setEp(episode()! + 1)}/>
+			<div class={'flex justify-center'}>
+				<div class={'flex flex-col w-full mt-4 max-w-7xl'}>
+					<Switch>
+						<Match when={playerMode() === 'kiyo'} keyed={false}>
+							<video id={'player'} autoplay controls poster={'https://media.tenor.com/64BYBgDG41QAAAAC/loading.gif'}/>
+						</Match>
+						<Match when={playerMode() === 'embedded'} keyed={false}>
+							<div class={'h-[40.5rem]'}>
+								{/* @ts-ignore: deprecated but solves problem. */}
+								<iframe id={'embedded-player'} scrolling={'no'} allowfullscreen class={'h-full w-full overflow-hidden outline-none'}/>
+							</div>
+						</Match>
+					</Switch>
+					<Show when={info()?.episodes} keyed={false}>
+						<div class={'flex flex-col w-full'}>
+							<div class={'flex h-8 justify-between bg-primary'}>
+								<span/>
+								<div class={'inline-flex items-center mx-3'}>
+									<Icon path={backward} class={'h-7 w-7 cursor-pointer'} onClick={() => setEp(episode()! - 1)}/>&nbsp;
+									<Icon path={forward} class={'h-7 w-7 cursor-pointer'} onClick={() => setEp(episode()! + 1)}/>
+								</div>
+							</div>
+							<div class={'flex flex-col py-3 bg-secondary'}>
+								<span class={'inline-flex items-center ml-4'}>
+									<Icon path={folderOpen} class={'h-7 w-7'}/>
+									<h3 class={'ml-2'}>{info()?.title} - EP: {episode()}</h3>
+								</span>
+								<span class={'ml-4 text-sm'}>Genres: {info()?.genres.join(', ')}</span>
+								<div class={'inline-flex justify-between items-center mt-4'}>
+									<div class={'w-14'}>
+										<Switch>
+											<Match when={range.end < range.perPage * 2} keyed={false}>
+												<Icon path={chevronLeft} class={'h-14 w-14 text-gray-500 cursor-not-allowed'}/>
+											</Match>
+											<Match when={range.end >= range.perPage * 2} keyed={false}>
+												<Icon path={chevronLeft} class={'h-14 w-14 cursor-pointer'} onClick={() => setRange({ start: range.start - range.perPage, end: range.end - range.perPage })}/>
+											</Match>
+										</Switch>
+									</div>
+									<div class={'flex flex-wrap w-full justify-center gap-[0.25rem]'}>
+										<For each={info()?.episodes}>
+											{(e) => (
+												<Show when={e.number >= range.start && e.number <= range.end} keyed={false}>
+													<button class={classNames('flex-[0_0_3rem] h-8 bg-cyan-700 text-gray-100 rounded', e.number === episode() && 'bg-accent-pink')} onClick={() => setEp(e.number)}>{e.number}</button>
+												</Show>
+											)}
+										</For>
+									</div>
+									<div class={'w-14'}>
+										<Switch>
+											<Match when={range.end >= info()!.episodes!.length+1} keyed={false}>
+												<Icon path={chevronRight} class={'h-14 w-14 text-gray-500 cursor-not-allowed'}/>
+											</Match>
+											<Match when={range.end < info()!.episodes!.length+1} keyed={false}>
+												<Icon path={chevronRight} class={'h-14 w-14 cursor-pointer'} onClick={() => setRange({ ...range, start: range.start + range.perPage, end: range.end + range.perPage })}/>
+											</Match>
+										</Switch>
+									</div>
+								</div>
 							</div>
 						</div>
-						<div class={'inline-flex justify-between items-center w-full py-4'}>
-							<div class={'md:w-1/12'}>
-								<Switch>
-									<Match when={range.end < range.perPage * 2} keyed={false}>
-										<Icon path={chevronLeft} class={'h-14 w-14 text-gray-500 cursor-not-allowed'}/>
-									</Match>
-									<Match when={range.end >= range.perPage * 2} keyed={false}>
-										<Icon path={chevronLeft} class={'h-14 w-14 cursor-pointer'} onClick={() => setRange({ start: range.start - range.perPage, end: range.end - range.perPage })}/>
-									</Match>
-								</Switch>
-							</div>
-							<div class={'flex flex-wrap justify-between gap-[4px] md:justify-start'}>
-								<For each={info()?.episodes}>
-									{(e) => (
-										<Show when={e.number >= range.start && e.number <= range.end} keyed={false}>
-											<button class={classNames('w-12 h-8 bg-cyan-700 text-gray-100 rounded', e.number === episode() && 'bg-accent-pink')} onClick={() => setEp(e.number)}>{e.number}</button>
-										</Show>
-									)}
-								</For>
-							</div>
-							<div class={'md:w-1/12'}>
-								<Switch>
-									<Match when={range.end >= info()!.episodes!.length+1} keyed={false}>
-										<Icon path={chevronRight} class={'h-14 w-14 text-gray-500 cursor-not-allowed'}/>
-									</Match>
-									<Match when={range.end < info()!.episodes!.length+1} keyed={false}>
-										<Icon path={chevronRight} class={'h-14 w-14 cursor-pointer'} onClick={() => setRange({ ...range, start: range.start + range.perPage, end: range.end + range.perPage })}/>
-									</Match>
-								</Switch>
-							</div>
-						</div>
-					</div>
-				</Show>
+					</Show>
+				</div>
 			</div>
 		</PageBlock>
 	);

@@ -1,5 +1,5 @@
-import {Component, createSignal, lazy, ParentProps} from "solid-js";
-import {Route, Routes} from "@solidjs/router";
+import {Component, createResource, createSignal, lazy, ParentProps} from "solid-js";
+import {Route, RouteDataFunc, RouteDataFuncArgs, Routes} from "@solidjs/router";
 import RestrictedRoute from "@/components/RestrictedRoute";
 import store, {setStoreData} from "@/store";
 import dayjs from "dayjs";
@@ -9,16 +9,25 @@ import user from "@/api/user/user";
 import Hls from "hls.js";
 
 import Home from "@/pages/Home";
-import View from "@/pages/View";
 import Watch from "@/pages/Watch";
 import Search from "@/pages/Search";
 import Profile from "@/pages/Profile";
+import Description from "@/pages/View/Description";
+import getInfo, {Anime} from "@/api/info/info";
+import View from "@/pages/View/View";
 
 const Settings = lazy(() => import('@/pages/User/Settings'));
 
 declare global {
 	interface Window { hls: Hls }
 }
+
+export const animeData = ({ params }: RouteDataFuncArgs) => {
+	const [anime] = createResource(async () => {
+		return await getInfo(parseInt(params.id), false).then((res) => res.data);
+	});
+	return anime;
+};
 
 const App: Component = () => {
 	const [loading, setLoading] = createSignal(true);
@@ -38,9 +47,13 @@ const App: Component = () => {
 	return (
 		<Routes>
 			<Route path={'/'} component={Home}/>
-			<Route path={'/view/:id'} component={View}/>
 			<Route path={'/watch/:id'} component={Watch}/>
 			<Route path={'/search/:query'} component={Search}/>
+
+			<Route path={'/view/:id'} component={View} data={animeData}>
+				<Route path={'/'} component={Description}/>
+				<Route path={'/order'} element={<h1>Order</h1>}/>
+			</Route>
 
 			<Route path={'/profile/:user'} element={<Profile/>}/>
 

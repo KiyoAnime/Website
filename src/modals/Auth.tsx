@@ -43,7 +43,7 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 			} else {
 				setView('register');
 				setStyle('h-[36.5rem]');
-				setTitle('Create an Settings');
+				setTitle('Create an Account');
 			}
 			return setCheckSubmitting(false);
 		});

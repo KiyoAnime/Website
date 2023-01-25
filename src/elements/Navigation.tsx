@@ -27,7 +27,7 @@ const Brand: Component = () => <A href={'/'} class={'inline-flex items-center'}>
 
 const Item: Component<ParentProps<ItemProps>> = (props) => (
 	<A href={props.href} onClick={props.onClick}>
-		<div class={'inline-flex h-8 w-full py-1 items-center rounded md:h-9 hover:bg-tertiary hover:text-accent-blue'}>
+		<div class={'inline-flex h-8 w-full py-1 items-center rounded text-gray-300 md:h-9 hover:bg-tertiary hover:text-accent-blue'}>
 			<Icon path={props.icon} class={'h-6 w-6 mr-2 md:h-7 md:w-7'}/>
 			<span class={'text-lg md:text-xl'}>{props.children}</span>
 		</div>

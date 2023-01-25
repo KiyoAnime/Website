@@ -7,6 +7,7 @@ interface Props {
 	icon: IconI;
 	title: string;
 	class?: string;
+	cClass?: string;
 }
 
 const Box: Component<ParentProps<Props>> = (props) => (
@@ -15,7 +16,7 @@ const Box: Component<ParentProps<Props>> = (props) => (
 			<Icon path={props.icon} class={'h-7 w-7 mr-1.5'}/>
 			<h5>{props.title}</h5>
 		</span>
-		<div class={'py-1 px-2'}>
+		<div class={classNames('py-1 px-2', props.cClass)}>
 			{props.children}
 		</div>
 	</div>

@@ -10,6 +10,7 @@ module.exports = {
 				primary: 'var(--primary-color)',
 				secondary: 'var(--secondary-color)',
 				tertiary: 'var(--tertiary-color)',
+				quaternary: 'var(--quaternary-color)',
 				background: 'var(--background-color)',
 				'accent-blue': 'var(--accent-color-blue)',
 				'accent-pink': 'var(--accent-color-pink)'
