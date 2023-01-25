@@ -7,9 +7,13 @@ interface Response extends ApiRes {
 	};
 }
 
-const getUrl = (episode: string): Promise<Response> => {
+const getUrl = (episode: string, dub: boolean): Promise<Response> => {
 	return new Promise((resolve, reject) => {
-		http.get(`/watch/${episode}`).then((res) => resolve(res.data)).catch(reject);
+		let dubep = episode.replace('-episode-', '-dub-episode-')
+		if (dub)
+			http.get(`/watch/${dubep}`).then((res) => resolve(res.data)).catch(reject);
+		else
+			http.get(`/watch/${episode}`).then((res) => resolve(res.data)).catch(reject);
 	});
 };
 

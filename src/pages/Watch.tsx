@@ -38,10 +38,11 @@ const Watch: Component = () => {
 	const setEp = async (ep: number): Promise<void> => {
 		if (!store.user) return setFlash({ type: 'info', key: 'watch', message: 'You must sign up or login to Kiyo to use our services.' });
 		if (!info()?.episodes) return;
-		await getUrl(info()?.episodes![ep - 1].id!).then(async (res) => {
+		await getUrl(info()?.episodes![ep - 1].id!, dub()).then(async (res) => {
 			setEpisode(ep);
 			setEmbedded(res.data.embedded);
 			if (!res.data.url) return setPlayerMode('embedded');
+			if (dub() && res.error) return setFlash({ type: 'error', key: 'watch', message: 'This episode does not have a dub.' });
 			const player = document.getElementById('player') as HTMLVideoElement;
 			if (!player) return;
 			if (player.canPlayType('application/vnd.apple.mpegurl')) return player.src = res.data.url;
@@ -72,10 +73,6 @@ const Watch: Component = () => {
 				window.hls.currentLevel = index;
 			}
 		});
-	};
-
-	const changetoDub = async () => {
-		
 	};
 
 	return (
