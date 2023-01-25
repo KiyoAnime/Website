@@ -13,6 +13,7 @@ import classNames from "classnames";
 import store from "@/store";
 import {setFlash} from "@/components/Flash";
 import '@/styles/watch.module.css';
+import Button from "@/components/Button";
 
 const Watch: Component = () => {
 	const { id } = useParams();
@@ -22,6 +23,7 @@ const Watch: Component = () => {
 	const [info, setInfo] = createSignal<Anime | undefined>();
 	const [episode, setEpisode] = createSignal<number | undefined>();
 	const [range, setRange] = createStore({ start: 0, end: 0, perPage: 88 });
+	const [dub, setDub] = createSignal(false);
 
 	onMount(async () => {
 		await getInfo(parseInt(id), true).then((res) => {
@@ -72,6 +74,10 @@ const Watch: Component = () => {
 		});
 	};
 
+	const changetoDub = async () => {
+		
+	};
+
 	return (
 		<PageBlock title={'Kiyo'} loading={loading()} flash={{ type: 'flex', key: 'watch' }}>
 			<div class={'flex justify-center'}>
@@ -91,9 +97,10 @@ const Watch: Component = () => {
 						<div class={'flex flex-col w-full'}>
 							<div class={'flex h-8 justify-between bg-primary'}>
 								<span/>
-								<div class={'inline-flex items-center mx-3'}>
-									<Icon path={backward} class={'h-7 w-7 cursor-pointer'} onClick={() => setEp(episode()! - 1)}/>&nbsp;
-									<Icon path={forward} class={'h-7 w-7 cursor-pointer'} onClick={() => setEp(episode()! + 1)}/>
+								<div class={'inline-flex items-center mx-3 gap-1'}>
+									<button class={classNames('flex-[0_0_3rem] h-6 w-7 bg-cyan-700 text-gray-100 rounded', dub() && 'bg-accent-pink')} onClick={() => dub() ? setDub(false) : setDub(true)}>{dub() ? 'Dub' : 'Sub'}</button>
+									<Icon path={backward} class={'h-10 w-10 cursor-pointer'} onClick={() => setEp(episode()! - 1)}/>&nbsp;
+									<Icon path={forward} class={'h-10 w-10 cursor-pointer'} onClick={() => setEp(episode()! + 1)}/>
 								</div>
 							</div>
 							<div class={'flex flex-col py-3 bg-secondary'}>
