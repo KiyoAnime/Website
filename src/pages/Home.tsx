@@ -26,7 +26,7 @@ const Banner: Component<TrendingSeries> = (props) => {
 					<p innerHTML={props.description} class={'invisible text-gray-200 text-sm line-clamp-7 md:visible'}/>
 				</div>
 				<A href={`/view/${props.id}`}>
-					<button class={'absolute left-7 bottom-10 inline-flex items-center justify-center px-7 h-12 text-xl bg-blue-600 rounded-md sm:bottom-7 hover:bg-blue-500'}>
+					<button class={'absolute left-7 bottom-10 inline-flex items-center justify-center px-7 h-12 text-xl text-gray-300 bg-blue-600 rounded-md sm:bottom-7 hover:bg-blue-500'}>
 						<Icon path={informationCircle} class={'h-6 w-6 mr-1.5 -ml-1'}/>
 						<span>View</span>
 					</button>

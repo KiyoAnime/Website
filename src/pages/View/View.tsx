@@ -1,17 +1,9 @@
-import {Component, createEffect, createSignal, onMount, ParentProps, Show} from "solid-js";
+import {Component, createEffect, createSignal, ParentProps, Show} from "solid-js";
 import PageBlock from "@/elements/PageBlock";
-import {A, Outlet, useParams, useRouteData} from "@solidjs/router";
-import getInfo, {Anime} from "@/api/info/info";
+import {A, Outlet, useRouteData} from "@solidjs/router";
 import Btn from "@/components/Button";
 import {Icon} from "solid-heroicons";
-import {
-	bars_3BottomLeft,
-	chartBar,
-	clock,
-	informationCircle,
-	playCircle,
-	square_3Stack_3d, tv
-} from "solid-heroicons/outline";
+import {clock, playCircle, square_3Stack_3d, tv, chartBar} from "solid-heroicons/outline";
 import dayjs from "dayjs";
 import {animeData} from "@/App";
 
@@ -25,10 +17,8 @@ const Badge: Component<ParentProps> = (props) => (<span class={'inline-flex item
 
 const View: Component = () => {
 	const data = useRouteData<typeof animeData>();
-	const { id } = useParams();
 	const icon = 'h-5 w-5 mr-1';
 	const stats = 'hidden md:block';
-	const [anime, setAnime] = createSignal<Anime|undefined>();
 	const [popularity, setPopularity] = createSignal<string|undefined>();
 	const [aired, setAired] = createSignal<{ start: string; end: string|undefined; }|undefined>();
 
@@ -37,7 +27,7 @@ const View: Component = () => {
 		setPopularity(Intl.NumberFormat('en', { notation: 'compact' }).format(data()?.popularity!));
 		setAired({
 			start: dayjs(`${data()?.start.year}-${data()?.start.month}-${data()?.start.day}`).format('MMM Do, YYYY'),
-			end: anime()?.end.year ? dayjs(`${data()?.end.year}-${data()?.end.month}-${data()?.end.day}`).format('MMM Do, YYYY') : undefined
+			end: data()?.end.year ? dayjs(`${data()?.end.year}-${data()?.end.month}-${data()?.end.day}`).format('MMM Do, YYYY') : undefined
 		});
 	}, [data.loading]);
 
@@ -49,19 +39,19 @@ const View: Component = () => {
 						<img src={data()?.thumbnail} alt={data()?.title} class={'h-96 w-full rounded-t-xl'}/>
 						<div class={'flex flex-col py-2 px-3 bg-secondary rounded-b-xl'}>
 							<div class={'inline-flex items-center'}>
-								{/*<Icon path={square_3Stack_3d} class={icon}/>*/}
+								<Icon path={square_3Stack_3d} class={icon}/>
 								<span class={stats}>Episodes: {data()?.episodeCount}</span>
 							</div>
 							<div class={'inline-flex items-center'}>
-								{/*<Icon path={chartBar} class={icon}/>*/}
+								<Icon path={chartBar} class={icon}/>
 								<span class={stats}>Popularity: {popularity()}</span>
 							</div>
 							<div class={'inline-flex items-center'}>
-								{/*<Icon path={clock} class={icon}/>*/}
+								<Icon path={clock} class={icon}/>
 								<span class={stats}>Duration: {data()?.duration}m</span>
 							</div>
 							<div class={'inline-flex items-center'}>
-								{/*<Icon path={tv} class={icon}/>*/}
+								<Icon path={tv} class={icon}/>
 								<span class={`whitespace-normal`}>
 									Aired: {aired()?.start}&nbsp;
 									<Show when={aired()?.end} keyed={false}>

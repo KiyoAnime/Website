@@ -1,5 +1,5 @@
 import {Component, createResource, createSignal, lazy, ParentProps} from "solid-js";
-import {Route, RouteDataFunc, RouteDataFuncArgs, Routes} from "@solidjs/router";
+import {Route, RouteDataFuncArgs, Routes} from "@solidjs/router";
 import RestrictedRoute from "@/components/RestrictedRoute";
 import store, {setStoreData} from "@/store";
 import dayjs from "dayjs";
