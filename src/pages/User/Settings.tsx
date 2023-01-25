@@ -23,7 +23,7 @@ import design from "@/api/user/profile/design";
 import {Converter} from "showdown";
 
 const Settings: Component = () => {
-	const boxStyles = 'h-[21.5rem]';
+	const boxStyles = 'h-[20.7rem]';
 	const [loading, setLoading] = createSignal(true);
 	const infoOpt = 'flex justify-between items-center';
 	const [bioSubmitting, setBioSubmitting] = createSignal(false);
