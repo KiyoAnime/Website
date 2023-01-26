@@ -1,4 +1,4 @@
-import {Component, createEffect, createResource, createSignal, For, JSX, Match, onMount, ParentProps, Show, Switch} from "solid-js";
+import {Component, createEffect, createResource, createSignal, For, JSX, Match, ParentProps, Show, Switch} from "solid-js";
 import PageBlock from "@/elements/PageBlock";
 import {useParams} from "@solidjs/router";
 import Plyr from 'plyr';

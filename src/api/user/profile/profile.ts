@@ -6,10 +6,12 @@ interface Response extends ApiRes {
 
 export interface ProfileResult {
 	_id: string;
+	email?: string;
 	avatar: string;
 	username: string;
 	profileName: string
 	profile: {
+		bio: string;
 		badges: [];
 		gradient: {
 			start: string;

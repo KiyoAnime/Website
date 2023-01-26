@@ -1,10 +1,10 @@
 import 'swiper/css';
 import 'swiper/css/autoplay';
 import 'swiper/css/pagination';
-import {Component, createSignal, For, onMount} from "solid-js";
+import {Component,For,createResource} from "solid-js";
 import PageBlock from "@/elements/PageBlock";
 import Card from "@/components/Card";
-import getRecent, {RecentSeries} from "@/api/info/recent";
+import getRecent from "@/api/info/recent";
 import {Swiper, SwiperSlide} from "swiper/solid";
 import { Autoplay, Pagination } from "swiper";
 import getTrending, {TrendingSeries} from "@/api/info/trending";
@@ -37,16 +37,16 @@ const Banner: Component<TrendingSeries> = (props) => {
 };
 
 const Home: Component = () => {
-	const [recent, setRecent] = createSignal<RecentSeries[]|undefined>();
-	const [trending, setTrending] = createSignal<TrendingSeries[]|undefined>();
+	const [recent] = createResource(async () => {
+		return await getRecent().then((res) => res.data);
+	});
 
-	onMount(async () => {
-		getRecent().then((res) => setRecent(res.data));
-		getTrending().then((res) => setTrending(res.data));
+	const [trending] = createResource(async () => {
+		return await getTrending().then((res) => res.data);
 	});
 
 	return (
-		<PageBlock title={'Home • Kiyo'}>
+		<PageBlock title={'Home • Kiyo'} loading={recent.loading || trending.loading}>
 			<section>
 				<Swiper
 					spaceBetween={25}
