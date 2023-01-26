@@ -1,9 +1,9 @@
-import {Component, createSignal, For, Match, onMount, Show, Switch} from "solid-js";
+import {Component, createEffect, createResource, createSignal, For, JSX, Match, onMount, ParentProps, Show, Switch} from "solid-js";
 import PageBlock from "@/elements/PageBlock";
 import {useParams} from "@solidjs/router";
 import Plyr from 'plyr';
 import Hls from "hls.js";
-import getInfo, { Anime } from "@/api/info/info";
+import getInfo from "@/api/info/info";
 import { createStore } from "solid-js/store";
 import getUrl from "@/api/watch";
 import {Icon} from "solid-heroicons";
@@ -13,45 +13,51 @@ import classNames from "classnames";
 import store from "@/store";
 import {setFlash} from "@/components/Flash";
 import '@/styles/watch.module.css';
-import Button from "@/components/Button";
+
+const Control: Component<ParentProps<{ onClick: JSX.EventHandlerUnion<HTMLButtonElement, Event> }>> = (props) => (
+	<button class={'inline-flex items-center h-7 p-2 text-gray-200 bg-cyan-700 rounded'} onClick={props.onClick}>
+		{props.children}
+	</button>
+);
 
 const Watch: Component = () => {
 	const { id } = useParams();
-	const [loading, setLoading] = createSignal(true);
 	const [embedded, setEmbedded] = createSignal('');
 	const [playerMode, setPlayerMode] = createSignal('kiyo');
-	const [info, setInfo] = createSignal<Anime | undefined>();
 	const [episode, setEpisode] = createSignal<number | undefined>();
 	const [range, setRange] = createStore({ start: 0, end: 0, perPage: 88 });
 	const [dub, setDub] = createSignal(false);
 
-	onMount(async () => {
-		await getInfo(parseInt(id), true).then((res) => {
-			setInfo(res.data);
-			document.title = `Watching: ${res.data.title} • Kiyo`;
-			setRange({ start: res.data.episodes![0].number, end: range.perPage });
-		});
-		setLoading(false);
-		await setEp(1);
+	const [info] = createResource(async () => {
+		return getInfo(parseInt(id), true).then((res) => res.data);
 	});
 
-	const setEp = async (ep: number): Promise<void> => {
+	createEffect(async () => {
+		if (info.loading) return;
+		document.title = `${info()?.title} • Kiyo`;
+		setRange({ start: info()?.episodes![0].number, end: range.perPage });
+		await setEp(1, false);
+	}, [info.loading]);
+
+	const setEp = async (ep: number, dub: boolean): Promise<void> => {
 		if (!store.user) return setFlash({ type: 'info', key: 'watch', message: 'You must sign up or login to Kiyo to use our services.' });
 		if (!info()?.episodes) return;
-		await getUrl(info()?.episodes![ep - 1].id!, dub()).then(async (res) => {
+		await getUrl(info()?.episodes![ep - 1].id!, dub).then(async (res) => {
 			setEpisode(ep);
 			setEmbedded(res.data.embedded);
+			document.title = `Episode ${ep} • ${info()?.title} • Kiyo`;
 			if (!res.data.url) return setPlayerMode('embedded');
-			if (dub() && res.error) return setFlash({ type: 'error', key: 'watch', message: 'This episode does not have a dub.' });
+			if (dub && res.error) return setFlash({ type: 'warn', key: 'watch', message: 'This episode does not have a dub.' });
 			const player = document.getElementById('player') as HTMLVideoElement;
 			if (!player) return;
+			setDub(dub);
 			if (player.canPlayType('application/vnd.apple.mpegurl')) return player.src = res.data.url;
 			if (!Hls.isSupported()) return setPlayerMode('embedded');
 			window.hls = new Hls({maxBufferLength: 30, maxBufferSize: 5242880, maxMaxBufferLength: 30});
 			window.hls.loadSource(res.data.url);
 			window.hls.on(Hls.Events.MANIFEST_PARSED, () => {
 				const availableQualities = window.hls.levels.map((level) => level.height).reverse();
-				const plyr = new Plyr('#player', {
+				window.plyr = new Plyr('#player', {
 					controls: ['play-large', 'play', 'volume', 'progress', 'current-time', 'mute', 'settings', 'pip', 'airplay', 'fullscreen'],
 					quality: {
 						forced: true,
@@ -60,7 +66,7 @@ const Watch: Component = () => {
 						default: availableQualities.filter((q) => q === 1080 || q === 720)[0]
 					}
 				});
-				plyr.play();
+				window.plyr.play();
 			});
 			window.hls.attachMedia(player);
 		})
@@ -76,7 +82,7 @@ const Watch: Component = () => {
 	};
 
 	return (
-		<PageBlock title={'Kiyo'} loading={loading()} flash={{ type: 'flex', key: 'watch' }}>
+		<PageBlock title={'Kiyo'} loading={info.loading} flash={{ type: 'flex', key: 'watch' }}>
 			<div class={'flex justify-center'}>
 				<div class={'flex flex-col w-full mt-4 max-w-7xl'}>
 					<Switch>
@@ -84,20 +90,21 @@ const Watch: Component = () => {
 							<video id={'player'} autoplay controls poster={'https://media.tenor.com/64BYBgDG41QAAAAC/loading.gif'}/>
 						</Match>
 						<Match when={playerMode() === 'embedded'} keyed={false}>
-							<div class={'h-[40.5rem]'}>
+							<div class={'h-[45rem]'}>
 								{/* @ts-ignore: deprecated but solves problem. */}
-								<iframe id={'embedded-player'} scrolling={'no'} allowfullscreen class={'h-full w-full overflow-hidden outline-none'}/>
+								<iframe id={'embedded-player'} src={embedded()} scrolling={'no'} allowfullscreen class={'h-full w-full overflow-hidden outline-none'}/>
 							</div>
 						</Match>
 					</Switch>
 					<Show when={info()?.episodes} keyed={false}>
 						<div class={'flex flex-col w-full'}>
-							<div class={'flex h-8 justify-between bg-primary'}>
-								<span/>
-								<div class={'inline-flex items-center mx-3 gap-1'}>
-									<button class={classNames('flex-[0_0_3rem] h-6 w-7 bg-cyan-700 text-gray-100 rounded', dub() && 'bg-accent-pink')} onClick={() => dub() ? setDub(false) : setDub(true)}>{dub() ? 'Dub' : 'Sub'}</button>
-									<Icon path={backward} class={'h-10 w-10 cursor-pointer'} onClick={() => setEp(episode()! - 1)}/>&nbsp;
-									<Icon path={forward} class={'h-10 w-10 cursor-pointer'} onClick={() => setEp(episode()! + 1)}/>
+							<div class={'flex h-10 justify-between bg-primary'}>
+								<div class={'flex items-center mx-1.5 gap-2'}>
+									<Control onClick={() => setEp(episode()!, !dub())}>Sub/Dub</Control>
+								</div>
+								<div class={'flex items-center mx-3 gap-1'}>
+									<Icon path={backward} class={'h-8 w-8 cursor-pointer'} onClick={() => setEp(episode()! - 1, dub())}/>
+									<Icon path={forward} class={'h-8 w-8 cursor-pointer'} onClick={() => setEp(episode()! + 1, dub())}/>
 								</div>
 							</div>
 							<div class={'flex flex-col py-3 bg-secondary'}>
@@ -105,6 +112,7 @@ const Watch: Component = () => {
 									<Icon path={folderOpen} class={'h-7 w-7'}/>
 									<h3 class={'ml-2'}>{info()?.title} - EP: {episode()}</h3>
 								</span>
+								<span class={'ml-4 text-sm'}>Mode: {dub() ? 'Dub' : 'Sub'} | Server: {playerMode() === 'kiyo' ? 'Gogo Anime' : 'Vidstreaming'}</span>
 								<span class={'ml-4 text-sm'}>Genres: {info()?.genres.join(', ')}</span>
 								<div class={'inline-flex justify-between items-center mt-4'}>
 									<div class={'w-14'}>
@@ -121,7 +129,7 @@ const Watch: Component = () => {
 										<For each={info()?.episodes}>
 											{(e) => (
 												<Show when={e.number >= range.start && e.number <= range.end} keyed={false}>
-													<button class={classNames('flex-[0_0_3rem] h-8 bg-cyan-700 text-gray-100 rounded', e.number === episode() && 'bg-accent-pink')} onClick={() => setEp(e.number)}>{e.number}</button>
+													<button class={classNames('flex-[0_0_3rem] h-8 bg-cyan-700 text-gray-100 rounded', e.number === episode() && 'bg-accent-pink')} onClick={() => setEp(e.number, dub())}>{e.number}</button>
 												</Show>
 											)}
 										</For>

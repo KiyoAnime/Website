@@ -15,11 +15,12 @@ import Profile from "@/pages/Profile";
 import Description from "@/pages/View/Description";
 import getInfo, {Anime} from "@/api/info/info";
 import View from "@/pages/View/View";
+import Plyr from "plyr";
 
 const Settings = lazy(() => import('@/pages/User/Settings'));
 
 declare global {
-	interface Window { hls: Hls }
+	interface Window { hls: Hls, plyr: Plyr }
 }
 
 export const animeData = ({ params }: RouteDataFuncArgs) => {
