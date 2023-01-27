@@ -4,11 +4,11 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
 	mode: 'jit',
+	server: { port: 3000 },
 	plugins: [solidPlugin(), tsconfigPaths()],
-	server: {
-		port: 3000,
-	},
 	build: {
+		outDir: 'build',
 		target: 'esnext',
-	},
+		chunkSizeWarningLimit: 1000
+	}
 });

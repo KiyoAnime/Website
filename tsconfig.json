@@ -1,18 +1,18 @@
 {
 	"compilerOptions": {
 		"strict": true,
+		"noEmit": true,
+		"jsx": "preserve",
 		"target": "ESNext",
 		"module": "ESNext",
-		"moduleResolution": "node",
-		"allowSyntheticDefaultImports": true,
-		"esModuleInterop": true,
-		"jsx": "preserve",
-		"jsxImportSource": "solid-js",
-		"types": ["vite/client"],
-		"noEmit": true,
 		"isolatedModules": true,
+		"esModuleInterop": true,
+		"types": ["vite/client"],
+		"moduleResolution": "node",
+		"jsxImportSource": "solid-js",
 		"paths": {
 			"@/*": ["./src/*"]
 		}
-	}
+	},
+	"exclude": ["node_modules", ".github", ".yarn"]
 }
