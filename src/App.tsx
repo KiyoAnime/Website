@@ -11,9 +11,10 @@ import Hls from "hls.js";
 import Home from "@/pages/Home";
 import Watch from "@/pages/Watch";
 import Search from "@/pages/Search";
+import Browse from '@/pages/Browse';
 import Profile from "@/pages/Profile";
 import Description from "@/pages/View/Description";
-import getInfo, {Anime} from "@/api/info/info";
+import getInfo from "@/api/info/info";
 import View from "@/pages/View/View";
 import Plyr from "plyr";
 
@@ -48,8 +49,10 @@ const App: Component = () => {
 	return (
 		<Routes>
 			<Route path={'/'} component={Home}/>
+			<Route path={'/browse'} component={Browse}/>
 			<Route path={'/watch/:id'} component={Watch}/>
 			<Route path={'/search/:query'} component={Search}/>
+
 
 			<Route path={'/view/:id'} component={View} data={animeData}>
 				<Route path={'/'} component={Description}/>

@@ -18,6 +18,7 @@
 		"hls.js": "^1.2.9",
 		"js-cookie": "^3.0.1",
 		"plyr": "^3.7.3",
+		"query-string": "^8.1.0",
 		"showdown": "^2.1.0",
 		"solid-hcaptcha": "^0.2.6",
 		"solid-heroicons": "^3.1.1",

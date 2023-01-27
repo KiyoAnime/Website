@@ -1,10 +1,10 @@
 import http, {ApiRes} from "@/api/http";
 
 interface Response extends ApiRes {
-	data: SearchResults[];
+	data: SearchResult[];
 }
 
-export interface SearchResults {
+export interface SearchResult {
 	id: string;
 	title: string;
 	episodes: number;
@@ -13,8 +13,8 @@ export interface SearchResults {
 	type: 'TV'|'OVA'|'MOVIE'|'SPECIAL';
 }
 
-export default (query: string): Promise<Response> => {
+export default (query?: string, genres?: string): Promise<Response> => {
 	return new Promise((resolve, reject) => {
-		http.get(`/search?query=${query}`).then((res) => resolve(res.data)).catch(reject);
+		http.get(`/search${query ? `?query=${query}` : ''}${genres ? `${query ? '&' : '?'}genres=${genres}` : ''}`).then((res) => resolve(res.data)).catch(reject);
 	});
 };
