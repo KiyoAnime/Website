@@ -1,5 +1,4 @@
 import {Component, createSignal, onMount, Show} from "solid-js";
-import Btn from "@/components/Button";
 import classNames from "classnames";
 import {Icon} from "solid-heroicons";
 import {magnifyingGlass} from "solid-heroicons/outline";
@@ -18,7 +17,8 @@ const Search: Component<{ mobile?: boolean }> = (props) => {
     });
 
     const submit = () => {
-        window.location.href = `/search/${query()}`;
+        if (!query()) return;
+        window.location.href = `/browse?query=${encodeURI(query()!)}`;
     };
 
     return (

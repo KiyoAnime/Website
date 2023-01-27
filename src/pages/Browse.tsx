@@ -1,4 +1,4 @@
-import {Component, createEffect, createSignal, For, JSX, createResource} from "solid-js";
+import {Component, createSignal, For, createResource} from "solid-js";
 import PageBlock from "@/elements/PageBlock";
 import {parse} from "querystring";
 import Box from "@/components/Box";
@@ -9,20 +9,20 @@ import Card from "@/components/Card";
 import { genres } from "@/helpers";
 
 const Browse: Component = () => {
+	const [query, setQuery] = createSignal<string|undefined>();
 	const [selectedGenres, setSelectedGenres] = createSignal<string[]>([]);
 
+	if (location.search) setQuery(Object.fromEntries(new URLSearchParams(location.search)).query);
 	const [animes, { refetch }] = createResource(async () => {
-		return await search(undefined, selectedGenres().length > 0 ? `[${selectedGenres().join(',')}]` : undefined).then((res) => res.data);
+		return await search(query(), selectedGenres().length > 0 ? `[${selectedGenres().join(',')}]` : undefined).then((res) => res.data);
 	});
 
 	const toggle = (event: InputClickEvent) => {
 		const genre = event.currentTarget.name;
 		if (selectedGenres().includes(genre)) {
 			const newGenres = selectedGenres().filter((g) => g !== genre);
-			setSelectedGenres([...newGenres]);
-		} else {
-			setSelectedGenres([...selectedGenres(), genre]);
-		}
+			setSelectedGenres(newGenres);
+		} else setSelectedGenres([...selectedGenres(), genre]);
 		refetch();
 	};
 
@@ -34,7 +34,7 @@ const Browse: Component = () => {
 						{(a) => (<Card {...a}/>)}
 					</For>
 				</div>
-				<Box icon={informationCircle} title={'Genres'} class={'w-full order-1 lg:order-2 md:w-[38%] lg:w-[28%] xl:w-[20%]'} cClass={'grid grid-cols-2 py-0 px-3'}>
+				<Box icon={informationCircle} title={'Genres'} class={'w-full h-fit order-1 lg:order-2 md:w-[38%] lg:w-[28%] xl:w-[20%]'} cClass={'grid grid-cols-2 py-0 px-3'}>
 					<For each={genres}>
 						{(g) => (
 							<div class={'inline-flex items-center'}>
