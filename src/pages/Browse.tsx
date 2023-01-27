@@ -1,12 +1,11 @@
 import {Component, createSignal, For, createResource} from "solid-js";
 import PageBlock from "@/elements/PageBlock";
-import {parse} from "querystring";
 import Box from "@/components/Box";
-import {informationCircle} from "solid-heroicons/solid";
 import {InputClickEvent} from "@/types";
 import search from "@/api/search";
 import Card from "@/components/Card";
 import { genres } from "@/helpers";
+import {adjustmentsHorizontal} from "solid-heroicons/outline";
 
 const Browse: Component = () => {
 	const [query, setQuery] = createSignal<string|undefined>();
@@ -34,7 +33,7 @@ const Browse: Component = () => {
 						{(a) => (<Card {...a}/>)}
 					</For>
 				</div>
-				<Box icon={informationCircle} title={'Genres'} class={'w-full h-fit order-1 lg:order-2 md:w-[38%] lg:w-[28%] xl:w-[20%]'} cClass={'grid grid-cols-2 py-0 px-3'}>
+				<Box icon={adjustmentsHorizontal} title={'Genres'} class={'w-full h-fit order-1 lg:order-2 md:w-[38%] lg:w-[28%] xl:w-[20%]'} cClass={'grid grid-cols-2 py-0 px-3'}>
 					<For each={genres}>
 						{(g) => (
 							<div class={'inline-flex items-center'}>

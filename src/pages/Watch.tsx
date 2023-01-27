@@ -12,7 +12,6 @@ import {backward, forward} from "solid-heroicons/solid";
 import classNames from "classnames";
 import store from "@/store";
 import {setFlash} from "@/components/Flash";
-import '@/styles/watch.module.css';
 
 const Control: Component<ParentProps<{ onClick: JSX.EventHandlerUnion<HTMLButtonElement, Event> }>> = (props) => (
 	<button class={'inline-flex items-center h-7 p-2 text-gray-200 bg-cyan-700 rounded'} onClick={props.onClick}>
