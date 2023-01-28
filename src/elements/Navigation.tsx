@@ -5,12 +5,19 @@ import Btn from "@/components/Button";
 import {A} from "@solidjs/router";
 import Search from "@/elements/Search";
 import {Icon} from "solid-heroicons";
-import {arrowRightOnRectangle, bars_3, cog_8Tooth} from "solid-heroicons/outline";
+import {
+	arrowRightOnRectangle,
+	bars_3,
+	cog_8Tooth,
+	magnifyingGlass,
+	magnifyingGlassCircle
+} from "solid-heroicons/outline";
 import {user} from "solid-heroicons/solid";
 import Auth from "@/modals/Auth";
 import { IconI } from '@/types';
 import cookie from "js-cookie";
 import banner from '@/assets/banner.png';
+import classNames from "classnames";
 
 interface MobileProps {
 	setAuth: (open: boolean) => void;
@@ -23,11 +30,15 @@ interface ItemProps {
 	onClick?: JSX.EventHandlerUnion<HTMLAnchorElement, MouseEvent>;
 }
 
-const Brand: Component = () => <A href={'/'} class={'inline-flex items-center'}><img src={banner} alt={'Kiyo'} class={'h-[4.5rem] mt-0.5 -ml-4 mr-1.5'}/></A>;
+const Brand: Component<{ class?: string }> = (props) => (
+	<A href={'/'} class={classNames('inline-flex items-center -ml-4', props.class)}>
+		<img src={banner} alt={'Kiyo'} class={'h-16'}/>
+	</A>
+);
 
 const Item: Component<ParentProps<ItemProps>> = (props) => (
 	<A href={props.href} onClick={props.onClick}>
-		<div class={'inline-flex h-8 w-full py-1 items-center rounded text-gray-300 md:h-9 hover:bg-tertiary hover:text-accent-blue'}>
+		<div class={'inline-flex h-8 w-full p-1 items-center rounded text-gray-300 md:h-9 hover:bg-tertiary'}>
 			<Icon path={props.icon} class={'h-6 w-6 mr-2 md:h-7 md:w-7'}/>
 			<span class={'text-lg md:text-xl'}>{props.children}</span>
 		</div>
@@ -42,7 +53,7 @@ const Dropdown: Component<{ setDropdown: (open: boolean) => void }> = (props) =>
 	};
 
 	return (
-		<div class={'absolute flex flex-col top-12 right-0 h-auto w-80 py-1 px-2 z-2 bg-secondary rounded-md'}>
+		<div class={'absolute flex flex-col top-12 right-0 h-auto w-80 py-1.5 px-2 z-2 bg-secondary rounded-md'}>
 			<div class={'mb-1 p-1'}>
 				<h3 class={'text-accent-pink'}>{store.user?.profileName}</h3>
 				<span class={'truncate'}>{store.user?.email}</span>
@@ -76,6 +87,7 @@ const Mobile: Component<MobileProps> = (props) => (
 		<div class={'mb-2'}>
 			<Search mobile/>
 		</div>
+		<Item icon={magnifyingGlass} href={'/browse'} onClick={() => props.setMobile(false)}>Browse</Item>
 		<Item href={'/user/settings'} icon={user} onClick={() => props.setMobile(false)}>Account</Item>
 	</div>
 );
@@ -94,7 +106,7 @@ const Navigation: Component = () => {
 		<Container>
 			<Auth open={auth()}/>
 			<div class={'py-4'}>
-				<div class={'hidden p-4 h-20 justify-between items-center z-2 bg-primary rounded-xl sm:flex'}>
+				<div class={'hidden justify-between items-center h-[4.5rem] p-4 z-2 bg-primary rounded-xl sm:flex'}>
 					<div class={'inline-flex justify-start items-center gap-x-2'}>
 						<Brand/>
 						<Btn.Text url={'/browse'} nav>Browse</Btn.Text>
@@ -116,9 +128,9 @@ const Navigation: Component = () => {
 						</Switch>
 					</div>
 				</div>
-				<div class={'flex flex-col h-20 z-2 bg-primary rounded-t-xl sm:hidden'}>
-					<div class={'inline-flex px-4 py-[0.175rem] justify-between items-center sm:py-3'}>
-						<Brand/>
+				<div class={'flex flex-col h-26 z-2 bg-primary rounded-xl sm:hidden'}>
+					<div class={'inline-flex px-4 py-[0.175rem] justify-between items-center'}>
+						<Brand class={'mt-0.5'}/>
 						<Icon path={bars_3} class={'h-8 w-8 cursor-pointer'} onClick={() => setMobile(!mobile())}/>
 					</div>
 					<Show when={mobile()} keyed={false}>

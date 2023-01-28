@@ -96,7 +96,7 @@ const View: Component = () => {
 							</CopyOnClick>
 						</div>
 						<span class={'mt-3 text-gray-100'}>Genres: {info()?.genres.join(', ')}</span>
-						<div class={'inline-flex items-center h-11 mt-3 p-1 gap-x-2 bg-secondary rounded-lg'}>
+						<div class={'inline-flex items-center h-11 mt-3 p-1 gap-x-1 bg-secondary rounded-lg'}>
 							<Item id={info()?.id!} href={''}>Description</Item>
 							<Item id={info()?.id!} href={'order'}>Release Order</Item>
 							<Item id={info()?.id!} href={'trailer'}>Trailer</Item>

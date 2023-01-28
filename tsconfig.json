@@ -5,6 +5,7 @@
 		"jsx": "preserve",
 		"target": "ESNext",
 		"module": "ESNext",
+		"removeComments": true,
 		"isolatedModules": true,
 		"esModuleInterop": true,
 		"types": ["vite/client"],

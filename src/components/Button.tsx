@@ -36,7 +36,7 @@ const BaseBtn: Component<ParentProps<BtnProps>> = (props) => (
 );
 
 const Btn: Component<ParentProps<BtnProps>> = (props) => (
-	<button class={classNames('inline-flex items-center justify-center px-5 h-10 text-center whitespace-nowrap text-gray-200 no-underline rounded-md', props.className, props.loading && 'cursor-not-allowed', !!props.nav && 'h-9.5 px-2 text-lg hover:text-accent-blue hover:bg-transparent')} disabled={props.loading} type={props.type}>
+	<button class={classNames('inline-flex items-center justify-center px-5 h-10 text-center whitespace-nowrap text-gray-200 no-underline rounded-md hover:bg-tertiary', props.className, props.loading && 'cursor-not-allowed', !!props.nav && 'hidden h-11 px-[0.875rem] lg:text-xl md:inline-flex')} disabled={props.loading} type={props.type}>
 		<Switch>
 			<Match keyed={false} when={props.loading}>
 				<svg class={'animate-spin text-gray-600 fill-gray-200 h-4 w-4'} viewBox={'0 0 100 101'}>
@@ -50,10 +50,6 @@ const Btn: Component<ParentProps<BtnProps>> = (props) => (
 		</Switch>
 	</button>
 );
-
-// const NavBtn: Component<ParentProps<Props>> = (props) => (
-// 	<BaseBtn {...props} className={'h-12 px-3 text-lg hover:bg-tertiary'} nav/>
-// );
 
 const RedBtn: Component<ParentProps<Props>> = (props) => (
 	<BaseBtn {...props} className={'bg-red-600 hover:bg-red-500'}/>
