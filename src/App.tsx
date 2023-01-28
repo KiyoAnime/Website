@@ -26,7 +26,7 @@ declare global {
 
 export const animeData = ({ params }: RouteDataFuncArgs) => {
 	const [anime] = createResource(async () => {
-		return await getInfo(parseInt(params.id), false).then((res) => res.data);
+		return await getInfo(parseInt(params.id), false, true).then((res) => res.data);
 	});
 	return anime;
 };

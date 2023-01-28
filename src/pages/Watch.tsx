@@ -12,12 +12,14 @@ import {backward, forward} from "solid-heroicons/solid";
 import classNames from "classnames";
 import store from "@/store";
 import {setFlash} from "@/components/Flash";
+import Input from "@/components/Input";
+import {httpToHuman} from "@/helpers";
 
-const Control: Component<ParentProps<{ onClick: JSX.EventHandlerUnion<HTMLButtonElement, Event> }>> = (props) => (
-	<button class={'inline-flex items-center h-7 p-2 text-gray-200 bg-cyan-700 rounded'} onClick={props.onClick}>
-		{props.children}
-	</button>
-);
+// const Control: Component<ParentProps<{ onClick: JSX.EventHandlerUnion<HTMLButtonElement, Event> }>> = (props) => (
+// 	<button class={'inline-flex items-center h-7 p-2 text-gray-200 bg-cyan-700 rounded'} onClick={props.onClick}>
+// 		{props.children}
+// 	</button>
+// );
 
 const Watch: Component = () => {
 	const { id } = useParams();
@@ -28,7 +30,7 @@ const Watch: Component = () => {
 	const [dub, setDub] = createSignal(false);
 
 	const [info] = createResource(async () => {
-		return getInfo(parseInt(id), true).then((res) => res.data);
+		return getInfo(parseInt(id), true, false).then((res) => res.data);
 	});
 
 	createEffect(async () => {
@@ -46,7 +48,6 @@ const Watch: Component = () => {
 			setEmbedded(res.data.embedded);
 			document.title = `Episode ${ep} • ${info()?.title} • Kiyo`;
 			if (!res.data.url) return setPlayerMode('embedded');
-			if (dub && res.error) return setFlash({ type: 'warn', key: 'watch', message: 'This episode does not have a dub.' });
 			const player = document.getElementById('player') as HTMLVideoElement;
 			if (!player) return;
 			setDub(dub);
@@ -68,7 +69,9 @@ const Watch: Component = () => {
 				window.plyr.play();
 			});
 			window.hls.attachMedia(player);
-		})
+		}).catch((err) => {
+			return setFlash({ type: 'warn', key: 'watch', message: httpToHuman(err) });
+		});
 	};
 
 	const updateQuality = (quality: number) => {
@@ -99,7 +102,11 @@ const Watch: Component = () => {
 						<div class={'flex flex-col w-full'}>
 							<div class={'flex h-10 justify-between bg-primary'}>
 								<div class={'flex items-center mx-1.5 gap-2'}>
-									<Control onClick={() => setEp(episode()!, !dub())}>Sub/Dub</Control>
+									<div class={'inline-flex items-center'}>
+										<span class={'ml-1 mr-2'}>Sub</span>
+										<Input type={'checkbox'} label={''} onChange={() => setEp(episode()!, !dub())}/>
+										<span class={'mx-2'}>Dub</span>
+									</div>
 								</div>
 								<div class={'flex items-center mx-3 gap-1'}>
 									<Icon path={backward} class={'h-8 w-8 cursor-pointer'} onClick={() => setEp(episode()! - 1, dub())}/>

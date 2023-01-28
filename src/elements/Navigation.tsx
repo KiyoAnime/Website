@@ -95,7 +95,10 @@ const Navigation: Component = () => {
 			<Auth open={auth()}/>
 			<div class={'py-4'}>
 				<div class={'hidden p-4 h-20 justify-between items-center z-2 bg-primary rounded-xl sm:flex'}>
-					<Brand/>
+					<div class={'inline-flex justify-start items-center gap-x-2'}>
+						<Brand/>
+						<Btn.Text url={'/browse'} nav>Browse</Btn.Text>
+					</div>
 					<div class={'relative hidden items-center sm:inline-flex'}>
 						<Search/>
 						<Switch>

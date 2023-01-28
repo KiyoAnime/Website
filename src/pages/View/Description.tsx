@@ -3,11 +3,11 @@ import {useRouteData} from "@solidjs/router";
 import {animeData} from "@/App";
 
 const Description: Component = () => {
-	const data = useRouteData<typeof animeData>();
+	const info = useRouteData<typeof animeData>();
 
 	return (
-		<Show when={!data.loading} keyed={false}>
-			<p innerHTML={data()?.description}/>
+		<Show when={!info.loading} keyed={false}>
+			<p innerHTML={info()?.description}/>
 		</Show>
 	);
 };

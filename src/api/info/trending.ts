@@ -1,15 +1,14 @@
 import http, {ApiRes} from "@/api/http";
 
 interface Response extends ApiRes {
-	data: TrendingSeries[];
+	data: Trending[];
 }
 
-export interface TrendingSeries {
+export interface Trending {
 	id: number;
 	title: string;
 	banner: string;
 	episodes: number;
-	duration: number;
 	released: number;
 	description: string;
 }
