@@ -30,7 +30,7 @@ const Watch: Component = () => {
 	const [dub, setDub] = createSignal(false);
 
 	const [info] = createResource(async () => {
-		return getInfo(parseInt(id), true, false).then((res) => res.data);
+		return getInfo(parseInt(id), true).then((res) => res.data);
 	});
 
 	createEffect(async () => {

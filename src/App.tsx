@@ -7,16 +7,17 @@ import advancedFormat from 'dayjs/plugin/advancedFormat';
 import cookie from "js-cookie";
 import user from "@/api/user/user";
 import Hls from "hls.js";
+import Plyr from "plyr";
+import getInfo from "@/api/info/info";
 
 import Home from "@/pages/Home";
 import Watch from "@/pages/Watch";
 import Search from "@/pages/Search";
 import Browse from '@/pages/Browse';
 import Profile from "@/pages/Profile";
-import Description from "@/pages/View/Description";
-import getInfo from "@/api/info/info";
 import View from "@/pages/View/View";
-import Plyr from "plyr";
+import Order from "@/pages/View/Order";
+import Description from "@/pages/View/Description";
 
 const Settings = lazy(() => import('@/pages/User/Settings'));
 
@@ -26,7 +27,7 @@ declare global {
 
 export const animeData = ({ params }: RouteDataFuncArgs) => {
 	const [anime] = createResource(async () => {
-		return await getInfo(parseInt(params.id), false, true).then((res) => res.data);
+		return await getInfo(parseInt(params.id), false).then((res) => res.data);
 	});
 	return anime;
 };
@@ -56,7 +57,7 @@ const App: Component = () => {
 
 			<Route path={'/view/:id'} component={View} data={animeData}>
 				<Route path={'/'} component={Description}/>
-				<Route path={'/order'} element={<h1>Order</h1>}/>
+				<Route path={'/order'} component={Order}/>
 			</Route>
 
 			<Route path={'/profile/:user'} element={<Profile/>}/>

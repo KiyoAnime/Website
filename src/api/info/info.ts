@@ -4,17 +4,22 @@ interface Response extends ApiRes {
 	data: Anime;
 }
 
-interface Episode {
+interface OrderResponse extends ApiRes {
+	data: Order[];
+}
+
+export interface Episode {
 	id: string;
 	number: number;
 }
 
-interface WatchOrder {
-	index: number;
-	name: string;
+export interface Order {
 	id: number;
-	info: string;
-	url: string;
+	title: string;
+	index: number;
+	rating?: number;
+	released: number;
+	thumbnail: string;
 }
 
 export interface Anime {
@@ -26,21 +31,27 @@ export interface Anime {
 	title: string;
 	adult: boolean;
 	banner: string;
-	rating: number;
+	rating?: number;
 	genres: string[];
 	released: number;
 	thumbnail: string;
 	description: string;
+	episodes?: Episode[];
 	episodeCount: number;
-	episodes: Episode[]|undefined;
-	watchOrder?: WatchOrder[]|undefined;
 	end?: { day: number; month: number; year: number; };
 	start: { day: number; month: number; year: number; };
+	titles: { english?: string; romaji?: string; native?: string; };
 }
 
-const getInfo = (id: number, episodes: boolean, order: boolean): Promise<Response> => {
+const getInfo = (id: number, episodes: boolean): Promise<Response> => {
 	return new Promise((resolve, reject) => {
-		http.get(`/info/${id}?episodes=${episodes}&order=${order}`).then((res) => resolve(res.data)).catch(reject);
+		http.get(`/info/${id}?episodes=${episodes}`).then((res) => resolve(res.data)).catch(reject);
+	});
+};
+
+export const getOrder = (id: number): Promise<OrderResponse> => {
+	return new Promise((resolve, reject) => {
+		http.get(`/info/${id}/order`).then((res) => resolve(res.data)).catch(reject);
 	});
 };
 

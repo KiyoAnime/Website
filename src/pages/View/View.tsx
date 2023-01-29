@@ -33,7 +33,7 @@ const View: Component = () => {
 	return (
 		<PageBlock title={`Kiyo`} loading={info.loading}>
 			<div class={'flex justify-center mt-12 md:justify-start sm:mt-20 md:mt-28'}>
-				<div class={'flex flex-col items-center w-11/12 md:flex-row md:items-start'}>
+				<div class={'flex flex-col items-center md:flex-row md:items-start'}>
 					<div class={'flex flex-col w-64 shrink-0'}>
 						<img src={info()?.thumbnail} alt={info()?.title} class={'h-96 w-full rounded-t-xl'}/>
 						<div class={'flex flex-row justify-center py-2 px-2.5 bg-secondary rounded-b-xl md:flex-col md:justify-start'}>
@@ -42,11 +42,13 @@ const View: Component = () => {
 								<span class={stats}>Episodes:&nbsp;</span>
 								<span class={'mr-1'}>{info()?.episodeCount}</span>
 							</div>
-							<div class={'inline-flex items-center'}>
-								<Icon path={chartBar} class={icon}/>
-								<span class={stats}>Rating:&nbsp;</span>
-								<span class={'mr-1'}>{info()?.rating}%</span>
-							</div>
+							<Show when={info()?.rating} keyed={false}>
+								<div class={'inline-flex items-center'}>
+									<Icon path={chartBar} class={icon}/>
+									<span class={stats}>Rating:&nbsp;</span>
+									<span class={'mr-1'}>{info()?.rating}%</span>
+								</div>
+							</Show>
 							<div class={'hidden md:inline-flex'}>
 								<Icon path={tv} class={icon}/>
 								<span class={stats}>
