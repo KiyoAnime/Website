@@ -7,6 +7,7 @@ import {playCircle, square_3Stack_3d, tv, chartBar, share} from "solid-heroicons
 import dayjs from "dayjs";
 import {animeData} from "@/App";
 import CopyOnClick from "@/components/CopyOnClick";
+import classNames from "classnames";
 
 interface ItemProps {
 	id: number;
@@ -14,7 +15,7 @@ interface ItemProps {
 }
 
 const Item: Component<ParentProps<ItemProps>> = (props) => (<A href={`/view/${props.id}/${props.href}`} activeClass={'bg-tertiary'} class={'inline-flex items-center h-full p-2 text-gray-300 rounded hover:bg-quaternary'} end>{props.children}</A>)
-const Badge: Component<ParentProps> = (props) => (<span class={'inline-flex items-center h-6 p-1 bg-green-700 rounded'}>{props.children}</span>);
+const Badge: Component<ParentProps<{ nsfw?: boolean }>> = (props) => (<span class={classNames('inline-flex items-center h-6 p-1 bg-green-700 rounded', !!props.nsfw && 'bg-red-500')}>{props.children}</span>);
 
 const View: Component = () => {
 	const info = useRouteData<typeof animeData>();
@@ -80,7 +81,7 @@ const View: Component = () => {
 								</Match>
 							</Switch>
 							<Show when={info()?.adult!} keyed={false}>
-								<Badge>NSFW</Badge>
+								<Badge nsfw>NSFW</Badge>
 							</Show>
 						</div>
 						<div class={'inline-flex items-center mt-4 gap-x-2'}>
@@ -100,8 +101,9 @@ const View: Component = () => {
 						<span class={'mt-3 text-gray-100'}>Genres: {info()?.genres.join(', ')}</span>
 						<div class={'inline-flex items-center h-11 mt-3 p-1 gap-x-1 bg-secondary rounded-lg'}>
 							<Item id={info()?.id!} href={''}>Description</Item>
-							<Item id={info()?.id!} href={'order'}>Release Order</Item>
+							<Item id={info()?.id!} href={'order'}>Watch Order</Item>
 							<Item id={info()?.id!} href={'trailer'}>Trailer</Item>
+							<Item id={info()?.id!} href={'advanced'}>Advanced</Item>
 						</div>
 						<div class={'mt-4'}>
 							<Outlet/>

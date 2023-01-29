@@ -17,6 +17,7 @@ import Browse from '@/pages/Browse';
 import Profile from "@/pages/Profile";
 import View from "@/pages/View/View";
 import Order from "@/pages/View/Order";
+import Advanced from "@/pages/View/Advanced";
 import Description from "@/pages/View/Description";
 
 const Settings = lazy(() => import('@/pages/User/Settings'));
@@ -58,6 +59,7 @@ const App: Component = () => {
 			<Route path={'/view/:id'} component={View} data={animeData}>
 				<Route path={'/'} component={Description}/>
 				<Route path={'/order'} component={Order}/>
+				<Route path={'/advanced'} component={Advanced}/>
 			</Route>
 
 			<Route path={'/profile/:user'} element={<Profile/>}/>
