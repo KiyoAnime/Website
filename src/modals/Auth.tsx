@@ -52,8 +52,9 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 	const loginSubmit = (values: Value) => {
 		setLoginSubmitting(true);
 		login(values.email, values.password).then((res) => {
-			const exp = new Date().setDate(new Date().getDate() + 90);
-			cookie.set(res.data.key, res.data.value, { sameSite: 'Strict', secure: true, expires: exp });
+			const exp = new Date();
+			exp.setDate(exp.getDate() + 90);
+			cookie.set(res.data.key, res.data.value, { expires: exp, secure: true, sameSite: 'Strict' });
 			return window.location.reload();
 		}).catch(() => {
 			inputError({ id: 'password', message: 'Incorrect password provided.' });
