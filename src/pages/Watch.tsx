@@ -28,6 +28,7 @@ const Watch: Component = () => {
 	const [episode, setEpisode] = createSignal<number | undefined>();
 	const [range, setRange] = createStore({ start: 0, end: 0, perPage: 88 });
 	const [dub, setDub] = createSignal(false);
+	const [paused, setPaused] = createSignal(false);
 
 	const [info] = createResource(async () => {
 		return getInfo(parseInt(id), true).then((res) => res.data);
@@ -40,6 +41,22 @@ const Watch: Component = () => {
 		await setEp(1, false);
 	}, [info.loading]);
 
+	document.addEventListener('keydown', (e) => {
+		if (e.key == " " || e.code == "Space" || e.keyCode == 32) {
+			e.preventDefault();
+			if (playerMode() === 'kiyo') {
+				window.plyr?.togglePlay();
+				setPaused(!paused());
+			} else {
+				const player = document.getElementById('player') as HTMLVideoElement;
+				if (player.paused) {
+					player.play();
+				} else {
+					player.pause();
+				}
+			}
+		}
+	});
 	const setEp = async (ep: number, dub: boolean): Promise<void> => {
 		if (!store.user) return setFlash({ type: 'info', key: 'watch', message: 'You must sign up or login to Kiyo to use our services.' });
 		if (!info()?.episodes) return;
