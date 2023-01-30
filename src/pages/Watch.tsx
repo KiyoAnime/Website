@@ -95,6 +95,7 @@ const Watch: Component = () => {
 				syncAnilist();
 			});
 			window.hls.attachMedia(player);
+			syncAnilist();
 		}).catch((err) => {
 			return setFlash({ type: 'warn', key: 'watch', message: httpToHuman(err) });
 		});
