@@ -14,7 +14,8 @@ import store from "@/store";
 import {setFlash} from "@/components/Flash";
 import Input from "@/components/Input";
 import {httpToHuman} from "@/helpers";
-
+import syncAnime from "@/api/sync";
+import cookie from 'js-cookie';
 // const Control: Component<ParentProps<{ onClick: JSX.EventHandlerUnion<HTMLButtonElement, Event> }>> = (props) => (
 // 	<button class={'inline-flex items-center h-7 p-2 text-gray-200 bg-cyan-700 rounded'} onClick={props.onClick}>
 // 		{props.children}
@@ -57,6 +58,13 @@ const Watch: Component = () => {
 			}
 		}
 	});
+
+	const syncAnilist = async () => {
+		if (!episode()?.toString()) return;
+		if (episode()! !== range.end) await syncAnime(id, 'CURRENT', episode()!.toString(), cookie.get('anilistToken')!)
+		else await syncAnime(id, 'COMPLETED', episode()!.toString(), cookie.get('anilistToken')!)
+	};
+
 	const setEp = async (ep: number, dub: boolean): Promise<void> => {
 		if (!store.user) return setFlash({ type: 'info', key: 'watch', message: 'You must sign up or login to Kiyo to use our services.' });
 		if (!info()?.episodes) return;
@@ -84,6 +92,7 @@ const Watch: Component = () => {
 					}
 				});
 				window.plyr.play();
+				syncAnilist();
 			});
 			window.hls.attachMedia(player);
 		}).catch((err) => {

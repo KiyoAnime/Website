@@ -1,4 +1,4 @@
-import {Component, createSignal} from "solid-js";
+import {Component, createSignal, Match, Switch} from "solid-js";
 import PageBlock from "@/elements/PageBlock";
 import {
 	adjustmentsHorizontal,
@@ -21,6 +21,7 @@ import config from "@/api/user/profile/config";
 import bio from "@/api/user/profile/bio";
 import design from "@/api/user/profile/design";
 import {Converter} from "showdown";
+import cookie from 'js-cookie';
 
 const Settings: Component = () => {
 	const boxStyles = 'h-[20.7rem]';
@@ -29,6 +30,7 @@ const Settings: Component = () => {
 	const [bioSubmitting, setBioSubmitting] = createSignal(false);
 	const [infoSubmitting, setInfoSubmitting] = createSignal(false);
 	const [passSubmitting, setPassSubmitting] = createSignal(false);
+	const [anilistSubmitting, setAnilistSubmitting] = createSignal(false);
 	const [designSubmitting, setDesignSubmitting] = createSignal(false);
 	const [configSubmitting, setConfigSubmitting] = createSignal(false);
 	setLoading(false);
@@ -97,6 +99,13 @@ const Settings: Component = () => {
 		});
 	};
 
+	const setAnilistToken = (change: boolean) => {
+		var token = (document.getElementById('anilistToken') as HTMLInputElement).value
+		if (!token) return;
+		if (change) cookie.set('anilistToken', token, { expires: 365 });
+		else cookie.remove('anilistToken');
+	};
+
 	return (
 		<PageBlock title={'Settings • Kiyo'} loading={loading()}>
 			<Header icon={userCircle} title={'Settings'} description={'View or change your account information and settings.'} class={'mt-4'}/>
@@ -110,7 +119,11 @@ const Settings: Component = () => {
 					]}/>
 				</Box>
 				<Box icon={cog_8Tooth} title={'Settings'} class={boxStyles}>
-
+					<Btn.Blue type={'button'} url='https://anilist.co/api/v2/oauth/authorize?client_id=11081&response_type=token'>Get AniList Token</Btn.Blue>
+						<Form onSubmit={cookie.get('anilistToken') !== undefined ? () => setAnilistToken(false) : () => setAnilistToken(true)} submitting={anilistSubmitting()} button={ !cookie.get('anilistToken') ? { color: 'blue', label: 'Connect'} : { color: 'red', label: 'Disconnect' }} items={[
+							{ id: 'anilistToken', type: 'text', label: 'AniList Token', validation: { type: 'string', message: 'You must specify an AniList token.' }, value: cookie.get('anilistToken') !== undefined ? cookie.get('anilistToken') : '' }	
+						]}>
+					</Form>
 				</Box>
 				<Box icon={lockClosed} title={'Change Password'} class={boxStyles}>
 					<Form onSubmit={passSubmit} submitting={passSubmitting()} button={{ color: 'red', label: 'Change' }} items={[
