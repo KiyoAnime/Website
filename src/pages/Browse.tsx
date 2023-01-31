@@ -26,7 +26,7 @@ const Browse: Component = () => {
 	};
 
 	return (
-		<PageBlock title={'Browse • Kiyo'}>
+		<PageBlock title={'Browse'}>
 			<div class={'flex flex-col justify-center lg:flex-row lg:justify-between'}>
 				<div class={'grid grid-cols-2 justify-items-center mt-4 order-2 gap-x-4 gap-y-10 lg:order-1 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6'}>
 					<For each={animes()}>

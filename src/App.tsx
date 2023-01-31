@@ -12,7 +12,6 @@ import getInfo from "@/api/info/info";
 
 import Home from "@/pages/Home";
 import Watch from "@/pages/Watch";
-import Search from "@/pages/Search";
 import Browse from '@/pages/Browse';
 import Profile from "@/pages/Profile";
 import View from "@/pages/View/View";
@@ -20,7 +19,8 @@ import Order from "@/pages/View/Order";
 import Advanced from "@/pages/View/Advanced";
 import Description from "@/pages/View/Description";
 
-const Settings = lazy(() => import('@/pages/User/Settings'));
+const UserProfile = lazy(() => import('@/pages/User/Profile'));
+const UserSettings = lazy(() => import('@/pages/User/Settings'));
 
 declare global {
 	interface Window { hls: Hls, plyr: Plyr }
@@ -53,8 +53,6 @@ const App: Component = () => {
 			<Route path={'/'} component={Home}/>
 			<Route path={'/browse'} component={Browse}/>
 			<Route path={'/watch/:id'} component={Watch}/>
-			<Route path={'/search/:query'} component={Search}/>
-
 
 			<Route path={'/view/:id'} component={View} data={animeData}>
 				<Route path={'/'} component={Description}/>
@@ -64,7 +62,10 @@ const App: Component = () => {
 
 			<Route path={'/profile/:user'} element={<Profile/>}/>
 
-			<Route path={'/user/settings'} element={<RR><Settings/></RR>}/>
+			<Route path={'/user'}>
+				<Route path={'/settings'} element={<RR><UserSettings/></RR>}/>
+				<Route path={'/profile'} element={<RR><UserProfile/></RR>}/>
+			</Route>
 		</Routes>
 	);
 };

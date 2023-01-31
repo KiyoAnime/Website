@@ -8,6 +8,12 @@ import dayjs from "dayjs";
 import {animeData} from "@/App";
 import CopyOnClick from "@/components/CopyOnClick";
 import classNames from "classnames";
+import Container from "@/components/Container";
+
+interface Aired {
+	end?: string;
+	start: string;
+}
 
 interface ItemProps {
 	id: number;
@@ -21,7 +27,7 @@ const View: Component = () => {
 	const info = useRouteData<typeof animeData>();
 	const icon = 'h-5 w-5 mr-1';
 	const stats = 'hidden md:block';
-	const [aired, setAired] = createSignal<{ start: string; end: string|undefined; }|undefined>();
+	const [aired, setAired] = createSignal<Aired|undefined>();
 
 	createEffect(() => {
 		if (info.loading) return;
@@ -32,9 +38,10 @@ const View: Component = () => {
 	}, [info.loading]);
 
 	return (
-		<PageBlock title={`Kiyo`} loading={info.loading}>
-			<div class={'flex justify-center mt-12 md:justify-start sm:mt-20 md:mt-28'}>
-				<div class={'flex flex-col items-center md:flex-row md:items-start'}>
+		<PageBlock title={info()?.titles.english ? info()?.titles.english : info()?.title} loading={info.loading}>
+			<img src={info()?.banner} alt={info()?.title} class={'hidden rounded-lg brightness-50 blur-sm md:block'}/>
+			<Container size={'medium'} class={'relative z-2'}>
+				<div class={'flex flex-col items-center mt-8 md:flex-row md:items-start md:-mt-12 lg:-mt-36'}>
 					<div class={'flex flex-col w-64 shrink-0'}>
 						<img src={info()?.thumbnail} alt={info()?.title} class={'h-96 w-full rounded-t-xl'}/>
 						<div class={'flex flex-row justify-center py-2 px-2.5 bg-secondary rounded-b-xl md:flex-col md:justify-start'}>
@@ -61,8 +68,8 @@ const View: Component = () => {
 							</div>
 						</div>
 						<span class={'hidden py-1 px-2 text-center md:block'}>
-							<a href={`https://anilist.co/anime/${info()?.id}/`} target={'_blank'}>AniList</a>&nbsp;&bull;&nbsp;
-							<a href={`https://myanimelist.net/anime/${info()?.mal}`} target={'_blank'}>MyAnimeList</a>
+							<a href={`https://anilist.co/anime/${info()?.id}`} target={'_blank'} class={'mr-1'}>AniList</a>&bull;
+							<a href={`https://myanimelist.net/anime/${info()?.mal}`} target={'_blank'} class={'ml-1'}>MyAnimeList</a>
 						</span>
 					</div>
 					<div class={'flex flex-col items-center md:items-start md:ml-4'}>
@@ -110,7 +117,7 @@ const View: Component = () => {
 						</div>
 					</div>
 				</div>
-			</div>
+			</Container>
 		</PageBlock>
 	)
 };

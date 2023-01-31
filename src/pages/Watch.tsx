@@ -37,27 +37,17 @@ const Watch: Component = () => {
 
 	createEffect(async () => {
 		if (info.loading) return;
-		document.title = `${info()?.title} • Kiyo`;
 		setRange({ start: info()?.episodes![0].number, end: range.perPage });
 		await setEp(1, false);
 	}, [info.loading]);
 
 	document.addEventListener('keydown', (e) => {
-		if (e.key == " " || e.code == "Space" || e.keyCode == 32) {
+		if (e.code == "Space") {
 			e.preventDefault();
-			if (playerMode() === 'kiyo') {
-				window.plyr?.togglePlay();
-				setPaused(!paused());
-			} else {
-				const player = document.getElementById('player') as HTMLVideoElement;
-				if (player.paused) {
-					player.play();
-				} else {
-					player.pause();
-				}
-			}
+			window.plyr?.togglePlay();
+			setPaused(!paused());
 		}
-	});
+	})
 
 	const syncAnilist = async () => {
 		if (!episode()?.toString()) return;
@@ -111,7 +101,7 @@ const Watch: Component = () => {
 	};
 
 	return (
-		<PageBlock title={'Kiyo'} loading={info.loading} flash={{ type: 'flex', key: 'watch' }}>
+		<PageBlock title={info()?.title} loading={info.loading} flash={{ type: 'flex', key: 'watch' }}>
 			<div class={'flex justify-center'}>
 				<div class={'flex flex-col w-full mt-4 max-w-7xl'}>
 					<Switch>

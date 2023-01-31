@@ -1,4 +1,4 @@
-import {Component, onMount, ParentProps, Show} from "solid-js";
+import {Component, createEffect, ParentProps, Show} from "solid-js";
 import Navigation from "@/elements/Navigation";
 import Container from "@/components/Container";
 import Loader from "@/components/Loader";
@@ -15,11 +15,14 @@ interface Props {
 interface Gradient {
 	color1?: string;
 	color2?: string;
-	position: 'to right'|'to bottom'|'to bottom right';
+	position: 'to top'|'to right'|'to bottom'|'to bottom right';
 }
 
 const PageBlock: Component<ParentProps<Props>> = (props) => {
-	onMount(() => {if (props.title) document.title = props.title});
+	createEffect(() => {
+		if (props.loading) return;
+		if (props.title) document.title = `${props.title} • Kiyo`;
+	}, [props.loading])
 
 	return (
 		<div class={'h-screen'} style={{ "background-image": props.bgGradient ? `linear-gradient(${props.bgGradient.position}, ${props.bgGradient.color1}, ${props.bgGradient.color2})` : 'none' }}>

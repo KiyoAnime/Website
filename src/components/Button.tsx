@@ -5,12 +5,14 @@ import {A} from "@solidjs/router";
 type Props =  {
 	url?: string;
 	nav?: boolean;
+	active?: string;
 	loading?: boolean;
 	onClick?: () => void;
 	type?: 'submit'|'button';
 } | {
 	nav: true;
 	url: string;
+	active?: string;
 	loading?: boolean;
 	onClick?: () => void;
 	type?: 'submit'|'button';
@@ -22,21 +24,21 @@ type BtnProps = Props & {
 
 const BaseBtn: Component<ParentProps<BtnProps>> = (props) => (
 	<Switch>
-		<Match when={!!props.nav} keyed={false}>
-			<A href={props.url!} onClick={props.onClick}>
-				<Btn {...props}/>
-			</A>
-		</Match>
 		<Match when={!props.nav} keyed={false}>
 			<a href={props.url} onClick={props.onClick}>
 				<Btn {...props}/>
 			</a>
 		</Match>
+		<Match when={!!props.nav} keyed={false}>
+			<A href={props.url!} onClick={props.onClick} activeClass={props.active} end>
+				<Btn {...props}/>
+			</A>
+		</Match>
 	</Switch>
 );
 
 const Btn: Component<ParentProps<BtnProps>> = (props) => (
-	<button class={classNames('inline-flex items-center justify-center px-5 h-10 text-center whitespace-nowrap text-gray-200 no-underline rounded-md hover:bg-tertiary', props.className, props.loading && 'cursor-not-allowed', !!props.nav && 'hidden h-11 px-[0.875rem] lg:text-xl md:inline-flex')} disabled={props.loading} type={props.type}>
+	<button class={classNames('inline-flex items-center justify-center px-5 h-10 text-center whitespace-nowrap text-gray-200 no-underline rounded-md hover:bg-quaternary', props.className, props.loading && 'cursor-not-allowed', !!props.nav && 'hidden h-11 px-[0.875rem] lg:text-xl md:inline-flex')} disabled={props.loading} type={props.type}>
 		<Switch>
 			<Match keyed={false} when={props.loading}>
 				<svg class={'animate-spin text-gray-600 fill-gray-200 h-4 w-4'} viewBox={'0 0 100 101'}>

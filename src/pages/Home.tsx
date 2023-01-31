@@ -44,7 +44,7 @@ const Home: Component = () => {
 	});
 
 	return (
-		<PageBlock title={'Home • Kiyo'} loading={recent.loading || trending.loading}>
+		<PageBlock title={'Home'} loading={recent.loading || trending.loading}>
 			<section>
 				<Swiper
 					spaceBetween={25}
