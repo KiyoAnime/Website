@@ -1,7 +1,7 @@
 import {Component, createSignal, onMount, Show} from "solid-js";
 import PageBlock from "@/elements/PageBlock";
 import {A, useParams} from "@solidjs/router";
-import profile, { ProfileResult } from "@/api/user/profile/profile";
+import profile, { ProfileResult } from "@/api/user/profile/getProfile";
 
 const Profile: Component = () => {
     const { user } = useParams();

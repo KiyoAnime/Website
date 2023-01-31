@@ -2,7 +2,7 @@ import http, {ApiRes} from "@/api/http";
 import {UserStore} from "@/store";
 
 interface Response extends ApiRes {
-	data: UserStore;
+	data: any;
 }
 
 export default (): Promise<Response> => {

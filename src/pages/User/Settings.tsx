@@ -5,9 +5,9 @@ import Header from "@/components/Header";
 import Box from "@/components/Box";
 import Form, { Value } from "@/components/Form";
 import store from "@/store";
-import update from "@/api/user/update";
-import Flash, {clearFlash, setFlash} from "@/components/Flash";
-import {httpToHuman} from "@/helpers";
+import update, {updatePlayer} from "@/api/user/update";
+import Flash, {setFlash} from "@/components/Flash";
+import {autoClearFlash, httpToHuman} from "@/helpers";
 import Btn from "@/components/Button";
 import cookie from 'js-cookie';
 import TabNavigation from "@/components/TabNavigation";
@@ -25,9 +25,7 @@ const Settings: Component = () => {
 		update({ email: values.email, avatar: values.avatar, profileName: values.profileName }).then((res) => {
 			if (!res.error) setFlash({ key: 'account', type: 'success', message: 'Successfully updated user information.' });
 			setInfoSub(false);
-			setTimeout(() => {
-				clearFlash();
-			}, 5000);
+			autoClearFlash();
 		}).catch((err) => {
 			setFlash({ key: 'account', type: 'warn', message: httpToHuman(err) });
 			setInfoSub(false);
@@ -40,6 +38,14 @@ const Settings: Component = () => {
 
 	const playerSubmit = (values: Value) => {
 		setPlayerSub(true);
+		updatePlayer({ autoNext: values.autoNext, autoSkip: values.autoSkip }).then((res) => {
+			if (!res.error) setFlash({ key: 'account', type: 'success', message: 'Successfully updated player settings.' });
+			setPlayerSub(false);
+			autoClearFlash();
+		}).catch((err) => {
+			setFlash({ key: 'account', type: 'warn', message: httpToHuman(err) });
+			setPlayerSub(false);
+		})
 	};
 
 	const passSubmit = (values: Value) => {
@@ -78,8 +84,8 @@ const Settings: Component = () => {
 				</Box>
 				<Box icon={play} title={'Player Settings'} class={`${boxStyles} relative`}>
 					<Form items={[
-						{ id: 'autoSkip', type: 'checkbox', label: 'Auto Skip Intro' },
-						{ id: 'autoNext', type: 'checkbox', label: 'Auto Next Episode' },
+						{ id: 'autoSkip', type: 'checkbox', label: 'Auto Skip Intro', value: store.config?.autoSkip },
+						{ id: 'autoNext', type: 'checkbox', label: 'Auto Next Episode', value: store.config?.autoNext },
 					]} submitting={playerSub()} onSubmit={playerSubmit}>
 						<div class={'absolute bottom-4 right-4'}>
 							<Btn.Blue type={'submit'} loading={playerSub()}>Update</Btn.Blue>

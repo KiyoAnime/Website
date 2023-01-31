@@ -10,7 +10,7 @@ import {Converter} from "showdown";
 import store from "@/store";
 import Btn from "@/components/Button";
 import bio from "@/api/user/profile/bio";
-import {httpToHuman} from "@/helpers";
+import {autoClearFlash, httpToHuman} from "@/helpers";
 import design from "@/api/user/profile/design";
 import config from "@/api/user/profile/config";
 
@@ -25,9 +25,7 @@ const Profile: Component = () => {
 		bio({ bio: values.bio }).then((res) => {
 			if (!res.error) setFlash({ key: 'account', type: 'success', message: 'Successfully updated profile bio.' });
 			setBioSubmitting(false);
-			setTimeout(() => {
-				clearFlash();
-			}, 5000);
+			autoClearFlash();
 		}).catch((err) => {
 			setFlash({ key: 'account', type: 'warn', message: httpToHuman(err) });
 			setBioSubmitting(false);
@@ -39,9 +37,7 @@ const Profile: Component = () => {
 		design({ gradient: { end: values.end, start: values.start } }).then((res) => {
 			if (!res.error) setFlash({ key: 'account', type: 'success', message: 'Successfully updated profile design.' });
 			setDesignSubmitting(false);
-			setTimeout(() => {
-				clearFlash();
-			}, 5000);
+			autoClearFlash();
 		}).catch((err) => {
 			setFlash({ key: 'account', type: 'warn', message: httpToHuman(err) });
 			setDesignSubmitting(false);
@@ -53,9 +49,7 @@ const Profile: Component = () => {
 		config({ publicEmail: values.publicEmail, publicProfile: values.publicProfile }).then((res) => {
 			if (!res.error) setFlash({ key: 'account', type: 'success', message: 'Successfully updated profile config.' });
 			setConfigSubmitting(false);
-			setTimeout(() => {
-				clearFlash();
-			}, 5000);
+			autoClearFlash();
 		}).catch((err) => {
 			setFlash({ key: 'account', type: 'warn', message: httpToHuman(err) });
 			setConfigSubmitting(false);
@@ -93,8 +87,8 @@ const Profile: Component = () => {
 				</Box>
 				<Box icon={adjustmentsHorizontal} title={'Profile Config'} class={`${boxStyles} relative`}>
 					<Form items={[
-						{ id: 'publicProfile', type: 'checkbox', label: 'Public Profile', value: store.user?.config.publicProfile },
-						{ id: 'publicEmail', type: 'checkbox', label: 'Show Email', value: store.user?.config.publicEmail }
+						{ id: 'publicProfile', type: 'checkbox', label: 'Public Profile', value: store.config?.publicProfile },
+						{ id: 'publicEmail', type: 'checkbox', label: 'Show Email', value: store.config?.publicEmail }
 					]} submitting={configSubmitting()} onSubmit={configSubmit}>
 						<div class={'absolute bottom-4 right-4'}>
 							<Btn.Blue type={'submit'} loading={configSubmitting()}>Update</Btn.Blue>

@@ -132,9 +132,10 @@ const Watch: Component = () => {
 							</div>
 							<div class={'flex flex-col py-3 bg-secondary'}>
 								<span class={'inline-flex items-center ml-4'}>
-									<Icon path={folderOpen} class={'h-7 w-7'}/>
-									<h3 class={'ml-2'}>{info()?.title} - EP: {episode()}</h3>
+									<Icon path={folderOpen} class={'h-7 w-7 shrink-0'}/>
+									<h3 class={'ml-2 line-clamp-1'}>{info()?.title}</h3>
 								</span>
+								<span class={'ml-4 text-sm'}>Episode: {episode()}</span>
 								<span class={'ml-4 text-sm'}>Mode: {dub() ? 'Dub' : 'Sub'} | Server: {playerMode() === 'kiyo' ? 'Gogo Anime' : 'Vidstreaming'}</span>
 								<span class={'ml-4 text-sm'}>Genres: {info()?.genres.join(', ')}</span>
 								<div class={'inline-flex justify-between items-center mt-4'}>

@@ -17,6 +17,7 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 	const [email, setEmail] = createSignal('');
 	const [view, setView] = createSignal('check');
 	const [style, setStyle] = createSignal('h-80');
+	const [captcha, setCaptcha] = createSignal(false);
 	const [title, setTitle] = createSignal('Welcome Back');
 	const [checkSubmitting, setCheckSubmitting] = createSignal(false);
 	const [loginSubmitting, setLoginSubmitting] = createSignal(false);
@@ -50,6 +51,7 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 	};
 
 	const loginSubmit = (values: Value) => {
+		if (!captcha()) return inputError({ id: 'email', message: 'You must submit the captcha.' });
 		setLoginSubmitting(true);
 		login(values.email, values.password).then((res) => {
 			const exp = new Date();
@@ -63,12 +65,12 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 	};
 
 	const registerSubmit = (values: Value) => {
+		if (!captcha()) return inputError({ id: 'email', message: 'You must submit the captcha.' });
 		setRegisterSubmitting(true);
 		if (values.password !== values.passwordConf) {
 			inputError({ id: 'passwordConf', message: 'Passwords do not match.' });
 			return setRegisterSubmitting(false);
 		}
-		clearFlash();
 		register(values.email, values.username, values.password).then((res) => {
 			if (!res.error) window.location.reload();
 		}).catch((res) => {
@@ -99,7 +101,7 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 								<span class={'cursor-pointer hover:text-accent-blue'}>Forgot Password?</span>
 							</span>
 							<div class={'mt-3'}>
-								<HCaptcha id={'captcha'} sitekey={'cc87a83a-6974-4b66-93ba-08c9b0e1c1ac'} theme={'dark'}/>
+								<HCaptcha id={'captcha'} sitekey={'cc87a83a-6974-4b66-93ba-08c9b0e1c1ac'} theme={'dark'} onVerify={() => setCaptcha(true)}/>
 							</div>
 							<div class={'absolute bottom-6 right-6'}>
 								<Btn.Blue type={'submit'} loading={loginSubmitting()}>Login</Btn.Blue>
@@ -114,7 +116,7 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 							{ id: 'passwordConf', type: 'password', label: 'Confirm Password', validation: { type: 'string', message: 'You must confirm your password.' } }
 						]} color={'bg-primary'} submitting={registerSubmitting()} onSubmit={registerSubmit}>
 							<div class={'mt-5'}>
-								<HCaptcha sitekey={'cc87a83a-6974-4b66-93ba-08c9b0e1c1ac'} theme={'dark'}/>
+								<HCaptcha sitekey={'cc87a83a-6974-4b66-93ba-08c9b0e1c1ac'} theme={'dark'} onVerify={() => setCaptcha(true)}/>
 							</div>
 							<div class={'absolute bottom-6 right-6'}>
 								<Btn.Blue type={'submit'} loading={registerSubmitting()}>Register</Btn.Blue>

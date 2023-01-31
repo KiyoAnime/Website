@@ -25,7 +25,7 @@ const Badge: Component<ParentProps<{ nsfw?: boolean }>> = (props) => (<span clas
 
 const View: Component = () => {
 	const info = useRouteData<typeof animeData>();
-	const icon = 'h-5 w-5 mr-1';
+	const icon = 'h-5 w-5 mr-1 shrink-0';
 	const stats = 'hidden md:block';
 	const [aired, setAired] = createSignal<Aired|undefined>();
 
@@ -39,7 +39,7 @@ const View: Component = () => {
 
 	return (
 		<PageBlock title={info()?.titles.english ? info()?.titles.english : info()?.title} loading={info.loading}>
-			<img src={info()?.banner} alt={info()?.title} class={'hidden rounded-lg brightness-50 blur-sm md:block'}/>
+			<img src={info()?.banner} alt={info()?.title} class={'hidden rounded-lg brightness-50 blur-[3px] md:block'}/>
 			<Container size={'medium'} class={'relative z-2'}>
 				<div class={'flex flex-col items-center mt-8 md:flex-row md:items-start md:-mt-12 lg:-mt-36'}>
 					<div class={'flex flex-col w-64 shrink-0'}>
