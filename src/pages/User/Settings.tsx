@@ -1,6 +1,6 @@
 import {Component, createSignal} from "solid-js";
 import PageBlock from "@/elements/PageBlock";
-import { bolt, cog_8Tooth, informationCircle, lockClosed, play, userCircle } from "solid-heroicons/outline";
+import {bolt, cog_8Tooth, informationCircle, link, lockClosed, play, userCircle} from "solid-heroicons/outline";
 import Header from "@/components/Header";
 import Box from "@/components/Box";
 import Form, { Value } from "@/components/Form";
@@ -63,7 +63,8 @@ const Settings: Component = () => {
 		<PageBlock title={'Settings'}>
 			<TabNavigation tabs={[
 				{ key: 'settings', label: 'Settings', icon: cog_8Tooth },
-				{ key: 'profile', label: 'Profile', icon: userCircle }
+				{ key: 'profile', label: 'Profile', icon: userCircle },
+				{ key: 'integrations', label: 'Integrations', icon: link }
 			]} base={'user'}/>
 			<Header icon={cog_8Tooth} title={'Settings'} description={'View or change your account information and settings.'} class={'mt-4'}/>
 			<Flash key={'account'} type={'flex'}/>

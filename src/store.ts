@@ -23,6 +23,12 @@ export interface UserStore {
 		badges?: number[];
 		gradient: { start: string; end: string; };
 	};
+	integrations: {
+		discord?: {
+			id: string;
+			tag: string;
+		};
+	};
 }
 
 const [store, setStore] = createStore<Store>({ user: undefined });

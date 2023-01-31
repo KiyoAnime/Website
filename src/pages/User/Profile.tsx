@@ -1,7 +1,7 @@
 import {Component, createSignal} from "solid-js";
 import PageBlock from "@/elements/PageBlock";
 import Header from "@/components/Header";
-import {adjustmentsHorizontal, cog_8Tooth, paintBrush, pencilSquare, userCircle} from "solid-heroicons/outline";
+import {adjustmentsHorizontal, cog_8Tooth, link, paintBrush, pencilSquare, userCircle} from "solid-heroicons/outline";
 import TabNavigation from "@/components/TabNavigation";
 import Flash, {clearFlash, setFlash} from "@/components/Flash";
 import Box from "@/components/Box";
@@ -60,7 +60,8 @@ const Profile: Component = () => {
 		<PageBlock title={'Profile'}>
 			<TabNavigation tabs={[
 				{ key: 'settings', label: 'Settings', icon: cog_8Tooth },
-				{ key: 'profile', label: 'Profile', icon: userCircle }
+				{ key: 'profile', label: 'Profile', icon: userCircle },
+				{ key: 'integrations', label: 'Integrations', icon: link }
 			]} base={'user'}/>
 			<Header icon={userCircle} title={'Profile'} description={'Customize your profiles appearance.'} class={'mt-4'}/>
 			<Flash key={'profile'} type={'flex'}/>

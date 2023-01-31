@@ -18,9 +18,11 @@ import View from "@/pages/View/View";
 import Order from "@/pages/View/Order";
 import Advanced from "@/pages/View/Advanced";
 import Description from "@/pages/View/Description";
+import Integrations from "@/pages/User/Integrations";
 
 const UserProfile = lazy(() => import('@/pages/User/Profile'));
 const UserSettings = lazy(() => import('@/pages/User/Settings'));
+const UserIntegrations = lazy(() => import('@/pages/User/Integrations'));
 
 declare global {
 	interface Window { hls: Hls, plyr: Plyr }
@@ -66,6 +68,7 @@ const App: Component = () => {
 			<Route path={'/user'}>
 				<Route path={'/settings'} element={<RR><UserSettings/></RR>}/>
 				<Route path={'/profile'} element={<RR><UserProfile/></RR>}/>
+				<Route path={'/integrations'} element={<RR><Integrations/></RR>}/>
 			</Route>
 		</Routes>
 	);
