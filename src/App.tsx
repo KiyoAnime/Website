@@ -25,12 +25,16 @@ const UserSettings = lazy(() => import('@/pages/User/Settings'));
 const UserIntegrations = lazy(() => import('@/pages/User/Integrations'));
 
 declare global {
-	interface Window { hls: Hls, plyr: Plyr }
+	interface Window {
+		hls: Hls,
+		plyr: Plyr,
+		interval: NodeJS.Timer
+	}
 }
 
 export const animeData = ({ params }: RouteDataFuncArgs) => {
 	const [anime] = createResource(async () => {
-		return await getInfo(parseInt(params.id), false).then((res) => res.data);
+		return await getInfo(parseInt(params.id), false, false).then((res) => res.data);
 	});
 	return anime;
 };

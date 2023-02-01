@@ -1,4 +1,16 @@
-import {Component, createEffect, createResource, createSignal, For, JSX, Match, ParentProps, Show, Switch} from "solid-js";
+import {
+	Component,
+	createEffect,
+	createResource,
+	createSignal,
+	For,
+	JSX,
+	Match,
+	onMount,
+	ParentProps,
+	Show,
+	Switch
+} from "solid-js";
 import PageBlock from "@/elements/PageBlock";
 import {useParams} from "@solidjs/router";
 import Plyr from 'plyr';
@@ -14,8 +26,7 @@ import store from "@/store";
 import {setFlash} from "@/components/Flash";
 import Input from "@/components/Input";
 import {httpToHuman} from "@/helpers";
-import syncAnime from "@/api/sync";
-import cookie from 'js-cookie';
+import progress from "@/api/user/progress";
 // const Control: Component<ParentProps<{ onClick: JSX.EventHandlerUnion<HTMLButtonElement, Event> }>> = (props) => (
 // 	<button class={'inline-flex items-center h-7 p-2 text-gray-200 bg-cyan-700 rounded'} onClick={props.onClick}>
 // 		{props.children}
@@ -29,67 +40,22 @@ const Watch: Component = () => {
 	const [episode, setEpisode] = createSignal<number | undefined>();
 	const [range, setRange] = createStore({ start: 0, end: 0, perPage: 88 });
 	const [dub, setDub] = createSignal(false);
-	const [paused, setPaused] = createSignal(false);
+	const [timer, setTimer] = createSignal(0);
 
 	const [info] = createResource(async () => {
-		return getInfo(parseInt(id), true).then((res) => res.data);
+		return getInfo(parseInt(id), true, true).then((res) => res.data);
 	});
 
 	createEffect(async () => {
 		if (info.loading) return;
 		setRange({ start: info()?.episodes![0].number, end: range.perPage });
-		await setEp(1, false);
-	}, [info.loading]);
-
-	document.addEventListener('keydown', (e) => {
-		if (e.code == "Space") {
-			e.preventDefault();
-			window.plyr?.togglePlay();
-			setPaused(!paused());
-		}
-	})
-
-	const syncAnilist = async () => {
-		if (!episode()?.toString()) return;
-		if (episode()! !== range.end) await syncAnime(id, 'CURRENT', episode()!.toString(), cookie.get('anilistToken')!)
-		else await syncAnime(id, 'COMPLETED', episode()!.toString(), cookie.get('anilistToken')!)
-	};
-
-	const setEp = async (ep: number, dub: boolean): Promise<void> => {
-		if (!store.user) return setFlash({ type: 'info', key: 'watch', message: 'You must sign up or login to Kiyo to use our services.' });
-		if (!info()?.episodes) return;
-		await getUrl(info()?.episodes![ep - 1].id!, dub).then(async (res) => {
-			setEpisode(ep);
+		getUrl(info()?.id!, info()?.episodes![info()?.progress ? info()?.progress! - 1 : 0].id!, false).then((res) => {
 			setEmbedded(res.data.embedded);
-			document.title = `Episode ${ep} • ${info()?.title} • Kiyo`;
-			if (!res.data.url) return setPlayerMode('embedded');
-			const player = document.getElementById('player') as HTMLVideoElement;
-			if (!player) return;
-			setDub(dub);
-			if (player.canPlayType('application/vnd.apple.mpegurl')) return player.src = res.data.url;
-			if (!Hls.isSupported()) return setPlayerMode('embedded');
-			window.hls = new Hls({maxBufferLength: 30, maxBufferSize: 5242880, maxMaxBufferLength: 30});
-			window.hls.loadSource(res.data.url);
-			window.hls.on(Hls.Events.MANIFEST_PARSED, () => {
-				const availableQualities = window.hls.levels.map((level) => level.height).reverse();
-				window.plyr = new Plyr('#player', {
-					controls: ['play-large', 'play', 'volume', 'progress', 'current-time', 'mute', 'settings', 'pip', 'airplay', 'fullscreen'],
-					quality: {
-						forced: true,
-						options: availableQualities,
-						onChange: (e) => updateQuality(e),
-						default: availableQualities.filter((q) => q === 1080 || q === 720)[0]
-					}
-				});
-				window.plyr.play();
-				syncAnilist();
-			});
-			window.hls.attachMedia(player);
-			syncAnilist();
-		}).catch((err) => {
-			return setFlash({ type: 'warn', key: 'watch', message: httpToHuman(err) });
-		});
-	};
+			setEpisode(info()?.progress || 1);
+			if (!res.data.url) return;
+			startPlayer(res.data.url, res.data.progress);
+		}).catch((err) => setFlash({ type: 'warn', key: 'watch', message: httpToHuman(err) }));
+	}, [info.loading]);
 
 	const updateQuality = (quality: number) => {
 		if (!window.hls) return;
@@ -97,6 +63,48 @@ const Watch: Component = () => {
 			if (level.height === quality) {
 				window.hls.currentLevel = index;
 			}
+		});
+	};
+
+	const setEp = async (ep: number, dub: boolean): Promise<void> => {
+		if (!info()?.episodes) return;
+		await getUrl(info()?.id!, info()?.episodes![ep - 1].id!, dub).then(async (res) => {
+			setEmbedded(res.data.embedded);
+			setEpisode(ep);
+			document.title = `Episode ${ep} • ${info()?.title} • Kiyo`;
+			if (!res.data.url) return setPlayerMode('embedded');
+			setDub(dub);
+			startPlayer(res.data.url);
+		}).catch((err) => setFlash({ type: 'warn', key: 'watch', message: httpToHuman(err) }));
+	};
+
+	const startPlayer = (url: string, currentTime?: number) => {
+		if (!store.user) return setFlash({ type: 'info', key: 'watch', message: 'You must sign up or login to Kiyo to use our services.' });
+		const player = document.getElementById('player') as HTMLVideoElement;
+		if (!player) return;
+		document.title = `Episode ${episode()} • ${info()?.title} • Kiyo`;
+		if (player.canPlayType('application/vnd.apple.mpegurl')) return player.src = url;
+		if (!Hls.isSupported()) return setPlayerMode('embedded');
+		clearInterval(window.interval);
+		window.hls = new Hls({maxBufferLength: 30, maxBufferSize: 5242880, maxMaxBufferLength: 30});
+		window.hls.loadSource(url);
+		window.hls.on(Hls.Events.MANIFEST_PARSED, async () => {
+			const availableQualities = window.hls.levels.map((level) => level.height).reverse();
+			window.plyr = new Plyr('#player', {
+				controls: ['play-large', 'play', 'volume', 'progress', 'current-time', 'mute', 'settings', 'pip', 'airplay', 'fullscreen'],
+				quality: {
+					forced: true,
+					options: availableQualities,
+					onChange: (e) => updateQuality(e),
+					default: availableQualities.filter((q) => q === 1080 || q === 720)[0]
+				}
+			});
+			await window.hls.attachMedia(player);
+			await window.plyr.play();
+			if (currentTime) window.plyr.currentTime = currentTime;
+			window.interval = setInterval(() => {
+				progress(({ id: info()?.id!, episode: episode()!, progress: window.plyr.currentTime })).then(() => {}).catch(() => {});
+			}, 15000);
 		});
 	};
 

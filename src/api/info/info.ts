@@ -35,6 +35,7 @@ export interface Anime {
 	genres: string[];
 	released: number;
 	thumbnail: string;
+	progress?: number;
 	description: string;
 	episodes?: Episode[];
 	episodeCount: number;
@@ -43,9 +44,9 @@ export interface Anime {
 	titles: { english?: string; romaji?: string; native?: string; };
 }
 
-const getInfo = (id: number, episodes: boolean): Promise<Response> => {
+const getInfo = (id: number, episodes: boolean, progress: boolean): Promise<Response> => {
 	return new Promise((resolve, reject) => {
-		http.get(`/info/${id}?episodes=${episodes}`).then((res) => resolve(res.data)).catch(reject);
+		http.get(`/info/${id}?episodes=${episodes}&progress=${progress}`).then((res) => resolve(res.data)).catch(reject);
 	});
 };
 
