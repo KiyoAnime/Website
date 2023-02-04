@@ -12,11 +12,13 @@ import classNames from "classnames";
 import banner from '@/assets/banner.png';
 import {inputError} from "@/components/Form/Form";
 import Btn from "@/components/Button";
+import discord from '@/assets/icons/discord.svg';
+import { getUrl } from "@/api/integrations/discord";
 
 const Auth: Component<{ open: boolean }> = (props)=> {
 	const [email, setEmail] = createSignal('');
 	const [view, setView] = createSignal('check');
-	const [style, setStyle] = createSignal('h-80');
+	const [style, setStyle] = createSignal('h-96');
 	const [captcha, setCaptcha] = createSignal(false);
 	const [title, setTitle] = createSignal('Welcome Back');
 	const [checkSubmitting, setCheckSubmitting] = createSignal(false);
@@ -25,8 +27,14 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 
 	const reset = () => {
 		clearFlash();
-		setStyle('h-80')
+		setStyle('h-96')
 		setView('check');
+	};
+
+	const discordRedirect = () => {
+		getUrl().then((res) => {
+			location.href = res.data;
+		});
 	};
 
 	const checkSubmit = (values: Value) => {
@@ -87,6 +95,12 @@ const Auth: Component<{ open: boolean }> = (props)=> {
 				<Switch>
 					<Match when={view() === 'check'} keyed={false}>
 						<Form items={[{ id: 'email', type: 'email', label: 'Email', validation: { type: emailRegex, message: 'Please specify a valid email.' } }]} color={'bg-primary'} submitting={checkSubmitting()} onSubmit={checkSubmit}>
+							<div class={'flex justify-center'}>
+								<div onClick={discordRedirect} class={'flex justify-center items-center h-10 w-2/3 bg-[#5865F2] rounded-md cursor-pointer'}>
+									<img src={discord} alt={'Discord'} class={'h-6 w-6 mr-2'}/>
+									<span class={'text-gray-100'}>Login with Discord</span>
+								</div>
+							</div>
 							<div class={'absolute bottom-6 right-6'}>
 								<Btn.Blue type={'submit'} loading={checkSubmitting()}>Next</Btn.Blue>
 							</div>

@@ -18,7 +18,7 @@ const Box: Component<ParentProps<Props>> = (props) => (
 					<Icon path={props.icon as IconI} class={'h-7 w-7 mr-1.5'}/>
 				</Match>
 				<Match when={typeof props.icon === 'string'} keyed={false}>
-					<img src={props.icon as string} alt={props.title} class={'h-7 w-7 mr-1.5'}/>
+					<img src={props.icon as string} alt={props.title} class={'h-6 w-6 mr-1.5'}/>
 				</Match>
 			</Switch>
 			<h5>{props.title}</h5>
