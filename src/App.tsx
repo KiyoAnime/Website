@@ -18,7 +18,8 @@ import View from "@/pages/View/View";
 import Order from "@/pages/View/Order";
 import Advanced from "@/pages/View/Advanced";
 import Description from "@/pages/View/Description";
-import Integrations from "@/pages/User/Integrations";
+
+const Discord = lazy(() => import('@/pages/Callback/Discord'));
 
 const UserProfile = lazy(() => import('@/pages/User/Profile'));
 const UserSettings = lazy(() => import('@/pages/User/Settings'));
@@ -72,7 +73,11 @@ const App: Component = () => {
 			<Route path={'/user'}>
 				<Route path={'/settings'} element={<RR><UserSettings/></RR>}/>
 				<Route path={'/profile'} element={<RR><UserProfile/></RR>}/>
-				<Route path={'/integrations'} element={<RR><Integrations/></RR>}/>
+				<Route path={'/integrations'} element={<RR><UserIntegrations/></RR>}/>
+			</Route>
+
+			<Route path={'/callback'}>
+				<Route path={'/discord'} component={Discord}/>
 			</Route>
 		</Routes>
 	);

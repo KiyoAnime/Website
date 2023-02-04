@@ -5,11 +5,7 @@ import {InputClickEvent} from "@/types";
 import search from "@/api/search";
 import Card from "@/components/Card";
 import { genres } from "@/helpers";
-import {adjustmentsHorizontal, chevronDoubleLeft, chevronDoubleRight} from "solid-heroicons/outline";
-import {createStore} from "solid-js/store";
-import Btn from "@/components/Button";
-import classNames from "classnames";
-import {Icon} from "solid-heroicons";
+import {adjustmentsHorizontal} from "solid-heroicons/outline";
 import Pagination from "@/components/Pagination";
 
 const Browse: Component = () => {
