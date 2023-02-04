@@ -13,7 +13,9 @@ module.exports = {
 				quaternary: 'var(--quaternary-color)',
 				background: 'var(--background-color)',
 				'accent-blue': 'var(--accent-color-blue)',
-				'accent-pink': 'var(--accent-color-pink)'
+				'accent-pink': 'var(--accent-color-pink)',
+				'accent-blue-light': 'var(--accent-color-blue-light)',
+				'accent-pink-light': 'var(--accent-color-pink-light)'
 			}
 		},
 	},

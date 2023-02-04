@@ -1,19 +1,25 @@
-import {Component, createSignal, For, createResource} from "solid-js";
+import {Component, createSignal, For, createResource, ParentProps, JSX} from "solid-js";
 import PageBlock from "@/elements/PageBlock";
 import Box from "@/components/Box";
 import {InputClickEvent} from "@/types";
 import search from "@/api/search";
 import Card from "@/components/Card";
 import { genres } from "@/helpers";
-import {adjustmentsHorizontal} from "solid-heroicons/outline";
+import {adjustmentsHorizontal, chevronDoubleLeft, chevronDoubleRight} from "solid-heroicons/outline";
+import {createStore} from "solid-js/store";
+import Btn from "@/components/Button";
+import classNames from "classnames";
+import {Icon} from "solid-heroicons";
+import Pagination from "@/components/Pagination";
 
 const Browse: Component = () => {
 	const [query, setQuery] = createSignal<string|undefined>();
 	const [selectedGenres, setSelectedGenres] = createSignal<string[]>([]);
+	const [page, setPage] = createSignal(1);
 
 	if (location.search) setQuery(Object.fromEntries(new URLSearchParams(location.search)).query);
 	const [animes, { refetch }] = createResource(async () => {
-		return await search(query(), selectedGenres().length > 0 ? `[${selectedGenres().join(',')}]` : undefined).then((res) => res.data);
+		return await search(query(), selectedGenres().length > 0 ? `[${selectedGenres().join(',')}]` : undefined, page()).then((res) => res.data);
 	});
 
 	const toggle = (event: InputClickEvent) => {
@@ -22,6 +28,11 @@ const Browse: Component = () => {
 			const newGenres = selectedGenres().filter((g) => g !== genre);
 			setSelectedGenres(newGenres);
 		} else setSelectedGenres([...selectedGenres(), genre]);
+		refetch();
+	};
+
+	const changePage = (page: number) => {
+		setPage(page);
 		refetch();
 	};
 
@@ -44,6 +55,24 @@ const Browse: Component = () => {
 					</For>
 				</Box>
 			</div>
+			<Pagination
+				page={page()}
+				class={'mt-2'}
+				items={[
+					{ id: 1, onClick: () => changePage(1) },
+					{ id: 2, onClick: () => changePage(2) },
+					{ id: 3, onClick: () => changePage(3) },
+					{ id: 4, onClick: () => changePage(4) },
+					{ id: 5, onClick: () => changePage(5) },
+					{ id: 6, onClick: () => changePage(6) },
+					{ id: 7, onClick: () => changePage(7) },
+					{ id: 8, onClick: () => changePage(8) },
+					{ id: 9, onClick: () => changePage(9) },
+					{ id: 10, onClick: () => changePage(10) }
+				]}
+				back={{ disabled: 'text-gray-400', onClick: () => changePage(page() > 1 ? page() - 1 : 1) }}
+				forward={{ disabled: 'text-gray-400', onClick: () => changePage(page() < 10 ? page() + 1 : 10) }}
+			/>
 		</PageBlock>
 	);
 };

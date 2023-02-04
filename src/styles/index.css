@@ -11,6 +11,8 @@
         --background-color: rgb(8, 8, 8);
         --accent-color-blue: rgb(0, 173, 217);
         --accent-color-pink: rgb(230, 80, 178);
+        --accent-color-blue-light: rgb(5, 205, 255);
+        --accent-color-pink-light: rgb(237, 126, 198);
 
         --plyr-menu-radius: 0.375rem;
         --modal-color: rgb(229 231 235);

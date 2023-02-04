@@ -46,7 +46,7 @@ export interface Anime {
 
 const getInfo = (id: number, episodes: boolean, progress: boolean): Promise<Response> => {
 	return new Promise((resolve, reject) => {
-		http.get(`/info/${id}?episodes=${episodes}&progress=${progress}`).then((res) => resolve(res.data)).catch(reject);
+		http.get(`/info/${id}?episodes=${episodes}${progress ? `&progress=true` : ''}`).then((res) => resolve(res.data)).catch(reject);
 	});
 };
 

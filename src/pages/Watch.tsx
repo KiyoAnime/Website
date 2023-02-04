@@ -6,7 +6,6 @@ import {
 	For,
 	JSX,
 	Match,
-	onMount,
 	ParentProps,
 	Show,
 	Switch
@@ -27,6 +26,7 @@ import {setFlash} from "@/components/Flash";
 import Input from "@/components/Input";
 import {httpToHuman} from "@/helpers";
 import progress from "@/api/user/progress";
+
 // const Control: Component<ParentProps<{ onClick: JSX.EventHandlerUnion<HTMLButtonElement, Event> }>> = (props) => (
 // 	<button class={'inline-flex items-center h-7 p-2 text-gray-200 bg-cyan-700 rounded'} onClick={props.onClick}>
 // 		{props.children}
@@ -40,7 +40,6 @@ const Watch: Component = () => {
 	const [episode, setEpisode] = createSignal<number | undefined>();
 	const [range, setRange] = createStore({ start: 0, end: 0, perPage: 88 });
 	const [dub, setDub] = createSignal(false);
-	const [timer, setTimer] = createSignal(0);
 
 	const [info] = createResource(async () => {
 		return getInfo(parseInt(id), true, true).then((res) => res.data);
@@ -146,8 +145,8 @@ const Watch: Component = () => {
 								<span class={'ml-4 text-sm'}>Episode: {episode()}</span>
 								<span class={'ml-4 text-sm'}>Mode: {dub() ? 'Dub' : 'Sub'} | Server: {playerMode() === 'kiyo' ? 'Gogo Anime' : 'Vidstreaming'}</span>
 								<span class={'ml-4 text-sm'}>Genres: {info()?.genres.join(', ')}</span>
-								<div class={'inline-flex justify-between items-center mt-4'}>
-									<div class={'w-14'}>
+								<div class={'grid grid-cols-2 content-between mt-4 md:grid-cols-[repeat(20,_minmax(0,_1fr))]'}>
+									<div class={'w-14 ml-auto order-1'}>
 										<Switch>
 											<Match when={range.end < range.perPage * 2} keyed={false}>
 												<Icon path={chevronLeft} class={'h-14 w-14 text-gray-500 cursor-not-allowed'}/>
@@ -157,7 +156,7 @@ const Watch: Component = () => {
 											</Match>
 										</Switch>
 									</div>
-									<div class={'flex flex-wrap w-full justify-center gap-[0.25rem]'}>
+									<div class={'flex flex-wrap w-full justify-center col-span-2 order-3 gap-[0.25rem] md:col-[span_18_/_span_18] md:order-2'}>
 										<For each={info()?.episodes}>
 											{(e) => (
 												<Show when={e.number >= range.start && e.number <= range.end} keyed={false}>
@@ -166,7 +165,7 @@ const Watch: Component = () => {
 											)}
 										</For>
 									</div>
-									<div class={'w-14'}>
+									<div class={'w-14 mr-auto order-2 md:order-3'}>
 										<Switch>
 											<Match when={range.end >= info()!.episodes!.length+1} keyed={false}>
 												<Icon path={chevronRight} class={'h-14 w-14 text-gray-500 cursor-not-allowed'}/>

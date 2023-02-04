@@ -13,8 +13,11 @@ export interface SearchResult {
 	type: 'TV'|'OVA'|'MOVIE'|'SPECIAL';
 }
 
-export default (query?: string, genres?: string): Promise<Response> => {
+export default (query?: string, genres?: string, page?: number): Promise<Response> => {
+	const queryVar = query ? `?query=${query}` : '';
+	const genresVar = genres ? `${query ? '&' : '?'}genres=${genres}` : '';
+	const pageVar = page ? `${query || genres ? '&' : '?'}page=${page}` : '';
 	return new Promise((resolve, reject) => {
-		http.get(`/search${query ? `?query=${query}` : ''}${genres ? `${query ? '&' : '?'}genres=${genres}` : ''}`).then((res) => resolve(res.data)).catch(reject);
+		http.get(`/search${queryVar}${genresVar}${pageVar}`).then((res) => resolve(res.data)).catch(reject);
 	});
 };
